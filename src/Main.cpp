@@ -9,19 +9,19 @@
 
 void MakeMeshes(WEngine::Mesh &mesh)
 {
-  // define vertex coordinate
   float vertices[] = {
-      -0.5f,
-      -0.5f,
-      .0f,
-      0.5f,
-      -0.5f,
-      .0f,
-      0.f,
-      0.5f,
-      .0f,
+      // positions        // colors 
+      0.5f, 0.5f, 0.0f,   1.f, .0f, .0f,   // top right
+      0.5f, -0.5f, 0.0f,  .0f, 1.f, .0f,  // bottom right
+      -0.5f, -0.5f, 0.0f, .0f, .0f, 1.f,// bottom left
+      -0.5f, 0.5f, 0.0f,  .5f, .5f, .5f   // top left
   };
-  mesh.AssignVerticies(vertices, 9);
+  unsigned int indices[] = {
+      // note that we start from 0!
+      0, 1, 3, // first triangle
+      1, 2, 3  // second triangle
+  };
+  mesh.Init(vertices, 24, indices, 6);
 }
 
 void LoadShaders(WEngine::ShaderProgram &sp)

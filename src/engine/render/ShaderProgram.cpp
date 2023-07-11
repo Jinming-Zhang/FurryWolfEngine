@@ -1,7 +1,10 @@
 #include <fstream>
 #include <iostream>
+#include <math.h>
 #include "glad/glad.h"
+#include "GLFW/glfw3.h"
 #include "engine/render/ShaderProgram.h"
+#include "engine/util/Utils.h"
 
 namespace WEngine
 {
@@ -32,7 +35,9 @@ namespace WEngine
 
     unsigned int shaderId;
     shaderId = glCreateShader(shaderType);
-    const char *shaderCode = content.c_str();
+    // const char *shaderCode = content.c_str();
+    std::string cd = Utils::ReadFile(filePath).c_str();
+    const char *shaderCode = cd.c_str();
 
     glShaderSource(shaderId, 1, &shaderCode, NULL);
     glCompileShader(shaderId);
@@ -48,6 +53,7 @@ namespace WEngine
     glAttachShader(shaderProgramId, shaderId);
     shaderIds.push_back(shaderId);
   }
+
   void ShaderProgram::LinkShaders()
   {
     glLinkProgram(shaderProgramId);
@@ -69,7 +75,10 @@ namespace WEngine
 
   void ShaderProgram::UseProgram()
   {
+    float g{sinf(glfwGetTime()) / 2.f + .5f};
+    int clrLocation{glGetUniformLocation(shaderProgramId, "ourColor")};
     glUseProgram(shaderProgramId);
+    glUniform4f(clrLocation, .0f, g, .5f, 1.f);
   }
   ShaderProgram::~ShaderProgram()
   {

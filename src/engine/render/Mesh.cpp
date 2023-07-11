@@ -6,39 +6,52 @@ namespace WEngine
 {
   Mesh::Mesh() {}
 
-  void Mesh::AssignVerticies(float *vertices, int count)
+  void Mesh::Init(float *vertices, int vCount, unsigned int *indices, int iCount)
   {
+    // allocate memory for vao, vbo, ebo
     glGenVertexArrays(1, &vao);
-    // allocate memory for vbo
     glGenBuffers(1, &vbo);
-    if (vao == 0 || vbo == 0)
+    glGenBuffers(1, &ebo);
+    if (vao == 0 || vbo == 0 || ebo == 0)
     {
-      std::cout << "Error generating VAO or VBO\n";
+      std::cout << "Error generating VAO, VBO, or EBO\n";
       abort();
     }
 
+    indicesCount = iCount;
     glBindVertexArray(vao);
 
     // bind the vbo object to buffer
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     // copy data to the buffer, so there is no need to store the vertices variable as a member to this mesh, for now
-    glBufferData(GL_ARRAY_BUFFER, count * sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glBufferData(GL_ARRAY_BUFFER, vCount * sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // set up ebo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, iCount * sizeof(indices[0]), indices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
   }
 
-  void Mesh::UseMesh()
-  {
-  }
   void Mesh::Render()
   {
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    // glBindVertexArray(0);
+    if (wireframeMode)
+    {
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   }
+
   Mesh::~Mesh()
   {
     glDeleteBuffers(1, &vbo);

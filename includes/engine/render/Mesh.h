@@ -6,11 +6,15 @@ namespace WEngine
   private:
     unsigned int vao;
     unsigned int vbo;
+    unsigned int ebo;
+    unsigned int indicesCount;
 
   public:
-    Mesh(/* args */);
-    void AssignVerticies(float *verticies, int count);
-    void UseMesh();
+    bool wireframeMode = false;
+
+  public:
+    Mesh();
+    void Init(float *verticies, int vCount, unsigned int *indices, int iCount);
     void Render();
 
     ~Mesh();

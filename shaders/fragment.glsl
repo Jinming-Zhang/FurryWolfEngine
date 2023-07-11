@@ -1,6 +1,8 @@
 #version 330 core
+in vec4 vertexColor;
+uniform vec4 ourColor;
 out vec4 finalClr;
 void main()
 {
-  finalClr = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+  finalClr = vertexColor;
 }
