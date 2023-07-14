@@ -4,7 +4,15 @@
 #include "glad/glad.h"
 namespace WEngine
 {
-  Mesh::Mesh() {}
+  Mesh::Mesh()
+  {
+    vao = 0;
+    vbo = 0;
+    ebo = 0;
+    indicesCount = 0;
+    transform = glm::mat4{1.f};
+    shaderToUse = nullptr;
+  }
 
   void Mesh::Init(float *vertices, int vCount, unsigned int *indices, int iCount)
   {
@@ -48,6 +56,8 @@ namespace WEngine
 
   void Mesh::Render()
   {
+    shaderToUse->SetModel(transform);
+    shaderToUse->UseProgram();
     glBindVertexArray(vao);
     if (wireframeMode)
     {
@@ -57,10 +67,16 @@ namespace WEngine
     glBindVertexArray(0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   }
+
   void Mesh::SetTransform(glm::mat4 transform)
   {
+    this->transform = transform;
   }
 
+  void Mesh::SetShader(PhongShader *shader)
+  {
+    this->shaderToUse = shader;
+  }
   Mesh::~Mesh()
   {
     glDeleteBuffers(1, &vbo);

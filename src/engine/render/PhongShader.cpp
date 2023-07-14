@@ -58,6 +58,7 @@ namespace WEngine
     int clrLocation{glGetUniformLocation(shaderProgramId, "ourColor")};
     glUniform4f(clrLocation, .0f, g, .5f, 1.f);
 
+    // set textures
     for (size_t i{0}; i < albedoTextures.size(); ++i)
     {
       std::string texturePrefix{"texture"};
@@ -68,9 +69,12 @@ namespace WEngine
     }
     glUniform1f(glGetUniformLocation(shaderProgramId, "mixPct"), .2f);
 
-    glm::mat4 transform{1.f};
-    transform = glm::rotate(transform, glm::radians(-90.f), glm::vec3(.0f, .0f, 1.f));
-    transform = glm::scale(transform, glm::vec3(.5f, .5f, .5f));
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+  }
+  void PhongShader::SetModel(glm::mat4 newModel)
+  {
+    model = newModel;
   }
 }
