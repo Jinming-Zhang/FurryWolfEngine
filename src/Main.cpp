@@ -6,7 +6,8 @@
 #include "engine/window/WolfGlfwWindow.h"
 #include "engine/render/Mesh.h"
 #include "engine/render/Texture.h"
-#include "engine/render/ShaderProgram.h"
+#include "engine/render/Shader.h"
+#include "engine/render/PhongShader.h"
 
 void MakeMeshes(WEngine::Mesh &mesh)
 {
@@ -25,11 +26,17 @@ void MakeMeshes(WEngine::Mesh &mesh)
   mesh.Init(vertices, 32, indices, 6);
 }
 
-void LoadShaders(WEngine::ShaderProgram &sp)
+void LoadShaders(WEngine::PhongShader &sp)
 {
+  WEngine::Shader vShader{};
+  vShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/vertex.glsl", GL_VERTEX_SHADER);
+
+  WEngine::Shader fShader{};
+  fShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
+
   sp.Initialize();
-  sp.AddShader("/home/wolf/Desktop/FurryWolfEngine/shaders/vertex.glsl", GL_VERTEX_SHADER);
-  sp.AddShader("/home/wolf/Desktop/FurryWolfEngine/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
+  sp.AddShader(vShader);
+  sp.AddShader(fShader);
   sp.LinkShaders();
 }
 
@@ -47,24 +54,16 @@ int main(int argc, char const *argv[])
 
   WEngine::Mesh mesh;
   MakeMeshes(mesh);
-  WEngine::ShaderProgram sp;
+  WEngine::PhongShader sp;
   LoadShaders(sp);
+
   WEngine::TextureLoadConfig texLoadConfig1{};
-  texLoadConfig1.flipY = false;
-  texLoadConfig1.internalFormat = GL_RGB;
-  texLoadConfig1.textureUnit = GL_TEXTURE0;
-  WEngine::Texture texture;
-  texture.LoadTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container.jpg", texLoadConfig1);
+  sp.AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container.jpg", texLoadConfig1);
+  texLoadConfig1.flipY = true;
+  texLoadConfig1.internalFormat = GL_RGBA;
+  texLoadConfig1.textureUnit = GL_TEXTURE1;
+  sp.AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/awesomeface.png", texLoadConfig1);
 
-  WEngine::Texture texture2;
-  WEngine::TextureLoadConfig texLoadConfig2{};
-  texLoadConfig2.flipY = true;
-  texLoadConfig2.internalFormat = GL_RGBA;
-  texLoadConfig2.textureUnit = GL_TEXTURE1;
-  texture2.LoadTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/awesomeface.png", texLoadConfig2);
-
-  texture.Use(GL_TEXTURE0);
-  texture2.Use(GL_TEXTURE1);
   while (!window->ShouldClose())
   {
     window->PollEvents();

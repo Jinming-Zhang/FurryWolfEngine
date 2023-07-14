@@ -9,7 +9,6 @@ namespace WEngine
   Texture::~Texture() {}
   bool Texture::LoadTexture(std::string path, const TextureLoadConfig &config)
   {
-    this->textureUnit = config.textureUnit;
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
 
@@ -38,9 +37,9 @@ namespace WEngine
     glBindTexture(GL_TEXTURE_2D, 0);
     return true;
   }
-  void Texture::Use(int tu)
+  void Texture::Use(int textureUnit)
   {
-    glActiveTexture(tu);
+    glActiveTexture(textureUnit);
     glBindTexture(GL_TEXTURE_2D, textureId);
   }
 }

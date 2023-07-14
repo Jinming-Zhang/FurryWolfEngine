@@ -14,12 +14,11 @@ namespace WEngine
   {
   private:
     unsigned int textureId;
-    unsigned int textureUnit;
 
   public:
     Texture();
     bool LoadTexture(std::string path, const TextureLoadConfig &config);
-    void Use(int tu);
+    void Use(int textureUnit);
     ~Texture();
   };
 }
