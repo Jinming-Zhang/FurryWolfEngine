@@ -6,11 +6,96 @@
 #include "engine/math/glm/gtc/matrix_transform.hpp"
 
 #include "engine/window/IWindow.h"
+#include "engine/inputs/InputSystem.h"
 #include "engine/window/WolfGlfwWindow.h"
 #include "engine/render/Mesh.h"
+#include "engine/render/VerticesMesh.h"
 #include "engine/render/Texture.h"
 #include "engine/render/Shader.h"
 #include "engine/render/PhongShader.h"
+#include "engine/render/Camera.h"
+
+void MakeMeshe(WEngine::Mesh &mesh);
+void LoadShaders(WEngine::PhongShader &sp);
+void MakeCubeMeshes(std::vector<WEngine::VerticesMesh *> &cubeMeshes, WEngine::PhongShader *shaderToUse);
+
+int main(int argc, char const *argv[])
+{
+  std::cout << "Wolf Engine\n";
+
+  std::unique_ptr<IWindow> window{std::make_unique<WEngine::WolfGlfwWindow>()};
+
+  if (!window->Init(800, 600, "Fuck My Life"))
+  {
+    std::cout << "Error loading gl\n";
+    return -1;
+  }
+
+  WEngine::InputSystem::Instance()->SetWindowContext(window.get());
+  WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+  WEngine::PhongShader sp;
+  LoadShaders(sp);
+
+  WEngine::Mesh mesh;
+  MakeMeshe(mesh);
+  WEngine::Mesh mesh2;
+  MakeMeshe(mesh2);
+
+  mesh.SetShader(&sp);
+  mesh2.SetShader(&sp);
+
+  std::vector<WEngine::VerticesMesh *> vMeshes{};
+  MakeCubeMeshes(vMeshes, &sp);
+
+  glm::mat4 model{1.f};
+  model = glm::rotate(model, glm::radians(-55.f), glm::vec3{1.f, .0f, .0f});
+  mesh.SetTransform(model);
+
+  glm::mat4 model2{1.f};
+  model2 = glm::scale(model2, glm::vec3(.5f, .5f, .5f));
+  model2 = glm::rotate(model2, glm::radians(-55.f), glm::vec3{1.f, .0f, .0f});
+  model2 = glm::translate(model2, glm::vec3{1.5f, 0.f, 0.f});
+  mesh2.SetTransform(model2);
+
+  WEngine::Camera *camera{WEngine::Camera::Main()};
+  camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
+
+  glEnable(GL_DEPTH_TEST);
+  float currTime{(float)glfwGetTime()};
+  float prevTime = currTime;
+  const float cap{1.f / 60.f};
+  while (!window->ShouldClose())
+  {
+    currTime = glfwGetTime();
+    if (currTime - prevTime < cap)
+    {
+      continue;
+    }
+    float delta = currTime - prevTime;
+    prevTime = currTime;
+    WEngine::InputSystem::DeltaTime = delta;
+
+    window->PollEvents();
+    WEngine::InputSystem::Instance()->Update();
+    glClearColor(.2f, .3f, .3f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    camera->Update(delta);
+    sp.SetView(camera->GetClippedViewMatrix());
+    for (auto vMesh : vMeshes)
+    {
+      vMesh->Update(delta);
+      vMesh->Render();
+    }
+    // mesh.Render();
+    // mesh2.Render();
+
+    window->SwapBuffers();
+  }
+
+  return 0;
+}
 
 void MakeMeshe(WEngine::Mesh &mesh)
 {
@@ -50,60 +135,72 @@ void LoadShaders(WEngine::PhongShader &sp)
 
   sp.LinkShaders();
 }
-
-int main(int argc, char const *argv[])
+void MakeCubeMeshes(std::vector<WEngine::VerticesMesh *> &cubeMeshes, WEngine::PhongShader *shaderToUse)
 {
-  std::cout << "Wolf Engine\n";
+  float vertices[] = {
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-  std::unique_ptr<IWindow> window{std::make_unique<WolfGlfwWindow>()};
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
 
-  if (!window->Init(800, 600, "Fuck My Life"))
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
+
+  glm::vec3 cubePositions[] = {
+      glm::vec3(0.0f, 0.0f, 0.0f),
+      glm::vec3(2.0f, 5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f),
+      glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3(2.4f, -0.4f, -3.5f),
+      glm::vec3(-1.7f, 3.0f, -7.5f),
+      glm::vec3(1.3f, -2.0f, -2.5f),
+      glm::vec3(1.5f, 2.0f, -2.5f),
+      glm::vec3(1.5f, 0.2f, -1.5f),
+      glm::vec3(-1.3f, 1.0f, -1.5f)};
+  std::cout << sizeof(cubePositions) / sizeof(glm::vec3) << std::endl;
+  for (size_t i{0}; i < 10; ++i)
   {
-    std::cout << "Error loading gl\n";
-    return -1;
+    glm::vec3 pos = cubePositions[i];
+    WEngine::VerticesMesh *vMesh{new WEngine::VerticesMesh{vertices, 180}};
+    vMesh->SetShader(shaderToUse);
+    glm::mat4 transform{1.f};
+    transform = glm::translate(transform, pos);
+    transform = glm::rotate(transform, glm::radians(i * 20.f), glm::vec3(1.f, .3f, .5f));
+    vMesh->SetTransform(transform);
+    cubeMeshes.push_back(vMesh);
   }
-
-  WEngine::PhongShader sp;
-  LoadShaders(sp);
-
-  WEngine::Mesh mesh;
-  MakeMeshe(mesh);
-  WEngine::Mesh mesh2;
-  MakeMeshe(mesh2);
-
-  mesh.SetShader(&sp);
-  mesh2.SetShader(&sp);
-
-  glm::mat4 model{1.f};
-  model = glm::rotate(model, glm::radians(-55.f), glm::vec3{1.f, .0f, .0f});
-  mesh.SetTransform(model);
-
-  glm::mat4 model2{1.f};
-  model2 = glm::scale(model2, glm::vec3(.5f, .5f, .5f));
-  model2 = glm::rotate(model2, glm::radians(-55.f), glm::vec3{1.f, .0f, .0f});
-  model2 = glm::translate(model2, glm::vec3{1.5f, 0.f, 0.f});
-  mesh2.SetTransform(model2);
-
-  while (!window->ShouldClose())
-  {
-    window->PollEvents();
-    glClearColor(.2f, .3f, .3f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glm::mat4 view{1.f};
-    view = glm::translate(view, glm::vec3(.0f, .0f, -3.f));
-
-    glm::mat4 projection{1.f};
-    projection = glm::perspective(glm::radians(45.f), 800.f / 600.f, .1f, 100.f);
-
-    sp.SetView(view);
-    sp.SetProjection(projection);
-
-    mesh.Render();
-    mesh2.Render();
-
-    window->SwapBuffers();
-  }
-
-  return 0;
 }

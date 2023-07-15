@@ -1,12 +1,13 @@
 #pragma once
 #include "engine/math/glm/glm.hpp"
-
 #include "engine/render/PhongShader.h"
+#include "engine/components/Component.h"
+
 namespace WEngine
 {
-  class Mesh
+  class Mesh : public Component
   {
-  private:
+  protected:
     unsigned int vao;
     unsigned int vbo;
     unsigned int ebo;
@@ -20,7 +21,7 @@ namespace WEngine
   public:
     Mesh();
     void Init(float *verticies, int vCount, unsigned int *indices, int iCount);
-    void Render();
+    virtual void Render();
     void SetTransform(glm::mat4 transform);
     void SetShader(PhongShader *shader);
 

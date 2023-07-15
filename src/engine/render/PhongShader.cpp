@@ -70,8 +70,8 @@ namespace WEngine
     glUniform1f(glGetUniformLocation(shaderProgramId, "mixPct"), .2f);
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "view"), 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "cameraMatrix"), 1, GL_FALSE, glm::value_ptr(view));
+    // glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
   }
   void PhongShader::SetModel(glm::mat4 newModel)
   {

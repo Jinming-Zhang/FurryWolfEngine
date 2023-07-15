@@ -1,25 +1,34 @@
 #pragma once
+#include <utility>
 #include "GLFW/glfw3.h"
-class InputSystem
+#include "engine/window/IWindow.h"
+namespace WEngine
 {
-private:
-  GLFWwindow *window;
+  class InputSystem
+  {
+  private:
+    IWindow *window;
+    static InputSystem *instance;
+    InputSystem();
 
-public:
-  InputSystem(GLFWwindow *window);
-  bool KeyPressed(int key);
-  void Update();
-  ~InputSystem();
-};
+  private:
+    std::pair<float, float> prevMousePos;
+    std::pair<float, float> currMousePos;
 
-InputSystem::InputSystem(GLFWwindow *window) : window{window} {}
+  public:
+    static float DeltaTime;
 
-InputSystem::~InputSystem() {}
+  public:
+    static InputSystem *Instance();
+    void SetWindowContext(IWindow *windowContext);
+    void Update();
+    void SetInputMode(int mode, int value);
+    bool KeyPressed(int key);
 
-bool InputSystem::KeyPressed(int key)
-{
-  return (glfwGetKey(window, key) == GLFW_PRESS);
-}
-void InputSystem::Update()
-{
+    std::pair<float, float> GetMousePosition();
+    std::pair<float, float> GetMousePositionDelta();
+
+    ~InputSystem();
+  };
+
 }
