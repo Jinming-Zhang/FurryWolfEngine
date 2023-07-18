@@ -4,12 +4,12 @@
 #include "GLFW/glfw3.h"
 #include "engine/math/glm/glm.hpp"
 
-#include "engine/render/Camera.h"
+#include "engine/components/CameraComponent.h"
 #include "engine/inputs/InputSystem.h"
 
 namespace WEngine
 {
-  Camera::Camera()
+  CameraComponent::CameraComponent()
   {
     fov = 45.f;
     minFov = 10.f;
@@ -33,9 +33,9 @@ namespace WEngine
     prevMousePos = std::pair(400.0f, 300.0f);
     firstMouse = true;
   }
-  Camera::~Camera() {}
+  CameraComponent::~CameraComponent() {}
 
-  void Camera::Update(float deltaTime)
+  void CameraComponent::Update(float deltaTime)
   {
     if (InputSystem::Instance()->KeyPressed(GLFW_KEY_EQUAL))
     {
@@ -107,7 +107,7 @@ namespace WEngine
     cameraFront = glm::normalize(-direction);
   }
 
-  glm::mat4 Camera::calculateViewMatrix() const
+  glm::mat4 CameraComponent::calculateViewMatrix() const
   {
     if (freeCam)
     {
@@ -121,7 +121,7 @@ namespace WEngine
     }
   }
 
-  glm::mat4 Camera::calculateViewMatrixManual(glm::vec3 pos, glm::vec3 target, glm::vec3 worldUp) const
+  glm::mat4 CameraComponent::calculateViewMatrixManual(glm::vec3 pos, glm::vec3 target, glm::vec3 worldUp) const
   {
     // calculate view coordinates
     // glm::vec3 zAxis = glm::normalize(target - pos);
@@ -159,18 +159,18 @@ namespace WEngine
     return lookat;
   }
 
-  void Camera::SetProjection(float fovDeg, float ratio, float near, float far)
+  void CameraComponent::SetProjection(float fovDeg, float ratio, float near, float far)
   {
     projection = glm::perspective(glm::radians(fovDeg), ratio, near, far);
   }
 
-  Camera *Camera::instance = nullptr;
-  Camera *Camera::Main()
+  CameraComponent *CameraComponent::instance = nullptr;
+  CameraComponent *CameraComponent::Main()
   {
-    if (Camera::instance == nullptr)
+    if (CameraComponent::instance == nullptr)
     {
-      Camera::instance = new Camera();
+      CameraComponent::instance = new CameraComponent();
     }
-    return Camera::instance;
+    return CameraComponent::instance;
   }
 }

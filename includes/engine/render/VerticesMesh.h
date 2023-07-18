@@ -3,13 +3,20 @@
 #include "GLFW/glfw3.h"
 #include "engine/math/glm/gtc/matrix_transform.hpp"
 #include "engine/render/Mesh.h"
+#include "engine/components/TransformComponent.h"
+
+#include "engine/render/ShaderProgram.h"
+#include "engine/render/PhongShader.h"
 namespace WEngine
 {
   class VerticesMesh : public Mesh
   {
   private:
   public:
-    VerticesMesh(float *vertices, int count) : Mesh()
+    VerticesMesh() : Mesh()
+    {
+    }
+    virtual void Init(float *vertices, int count)
     {
       glGenVertexArrays(1, &vao);
       glGenBuffers(1, &vbo);
@@ -32,12 +39,18 @@ namespace WEngine
 
     virtual void Update(float deltaTime) override
     {
-      transform = glm::rotate(transform, glm::radians(50.f) * deltaTime, glm::vec3(.5f, 1.f, .0f));
+      if (TransformComponent *tf = gameObject->GetComponent<TransformComponent *>())
+      {
+        // glm::mat4 &rot = tf->GetRotationMatrix();
+        // rot = glm::rotate(rot, glm::radians(50.f) * deltaTime, glm::vec3(.5f, 1.f, .0f));
+      }
+      Render();
     }
 
     virtual void Render() override
     {
-      shaderToUse->SetModel(transform);
+      TransformComponent *tf = gameObject->GetComponent<TransformComponent *>();
+      shaderToUse->SetModel(tf->CalcModelMat());
       shaderToUse->UseProgram();
       if (wireframeMode)
       {

@@ -1,7 +1,11 @@
 #include <cstring>
 #include <iostream>
-#include "engine/render/Mesh.h"
 #include "glad/glad.h"
+#include "engine/render/Mesh.h"
+#include "engine/render/ShaderProgram.h"
+#include "engine/core/GameObject.h"
+#include "engine/components/TransformComponent.h"
+
 namespace WEngine
 {
   Mesh::Mesh()
@@ -10,7 +14,6 @@ namespace WEngine
     vbo = 0;
     ebo = 0;
     indicesCount = 0;
-    transform = glm::mat4{1.f};
     shaderToUse = nullptr;
   }
 
@@ -54,9 +57,14 @@ namespace WEngine
     glBindVertexArray(0);
   }
 
+  void Mesh::Update(float deltaTime)
+  {
+    Render();
+  }
+
   void Mesh::Render()
   {
-    shaderToUse->SetModel(transform);
+    shaderToUse->SetModel(gameObject->GetComponent<TransformComponent *>()->CalcModelMat());
     shaderToUse->UseProgram();
     glBindVertexArray(vao);
     if (wireframeMode)
@@ -68,12 +76,7 @@ namespace WEngine
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   }
 
-  void Mesh::SetTransform(glm::mat4 transform)
-  {
-    this->transform = transform;
-  }
-
-  void Mesh::SetShader(PhongShader *shader)
+  void Mesh::SetShader(ShaderProgram *shader)
   {
     this->shaderToUse = shader;
   }

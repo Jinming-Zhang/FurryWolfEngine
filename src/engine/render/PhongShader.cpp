@@ -69,12 +69,18 @@ namespace WEngine
     }
     glUniform1f(glGetUniformLocation(shaderProgramId, "mixPct"), .2f);
 
+    GLint objectColorLocation = glGetUniformLocation(shaderProgramId, "objectColor");
+    if (objectColorLocation != -1)
+    {
+      glUniform3f(objectColorLocation, 1.f, .5f, .31f);
+    }
+
+    GLint lightColorLocation = glGetUniformLocation(shaderProgramId, "lightColor");
+    if (lightColorLocation != -1)
+    {
+      glUniform3f(lightColorLocation, 1.f, 1.f, 1.f);
+    }
     glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "cameraMatrix"), 1, GL_FALSE, glm::value_ptr(view));
-    // glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-  }
-  void PhongShader::SetModel(glm::mat4 newModel)
-  {
-    model = newModel;
   }
 }

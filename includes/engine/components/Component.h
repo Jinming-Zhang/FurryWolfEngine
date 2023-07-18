@@ -1,12 +1,20 @@
 #pragma once
-class Component
+namespace WEngine
 {
-private:
-  /* data */
-public:
-  Component() {}
-  virtual void Update(float deltaTime) {}
-  virtual void FixedUpdate(float fixedDeltaTime) {}
-  virtual void LateUpdate(float deltaTime) {}
-  ~Component() {}
-};
+  class GameObject;
+  class Component
+  {
+    friend class GameObject;
+
+  protected:
+    GameObject *gameObject;
+
+  public:
+    Component() {}
+    virtual void Update(float deltaTime) {}
+    virtual void FixedUpdate(float fixedDeltaTime) {}
+    virtual void LateUpdate(float deltaTime) {}
+    ~Component() {}
+  };
+
+}

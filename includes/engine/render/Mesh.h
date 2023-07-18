@@ -1,6 +1,5 @@
 #pragma once
 #include "engine/math/glm/glm.hpp"
-#include "engine/render/PhongShader.h"
 #include "engine/components/Component.h"
 
 namespace WEngine
@@ -12,8 +11,7 @@ namespace WEngine
     unsigned int vbo;
     unsigned int ebo;
     unsigned int indicesCount;
-    glm::mat4 transform;
-    PhongShader *shaderToUse;
+    class ShaderProgram *shaderToUse;
 
   public:
     bool wireframeMode = false;
@@ -21,9 +19,9 @@ namespace WEngine
   public:
     Mesh();
     void Init(float *verticies, int vCount, unsigned int *indices, int iCount);
+    virtual void Update(float deltaTime) override;
     virtual void Render();
-    void SetTransform(glm::mat4 transform);
-    void SetShader(PhongShader *shader);
+    void SetShader(ShaderProgram *shader);
 
     ~Mesh();
   };
