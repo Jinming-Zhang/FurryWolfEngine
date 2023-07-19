@@ -2,12 +2,14 @@
 namespace WEngine
 {
   class GameObject;
+  class FurryWolfEngine;
   class Component
   {
     friend class GameObject;
 
   protected:
     GameObject *gameObject;
+    FurryWolfEngine *engine;
 
   public:
     Component() {}

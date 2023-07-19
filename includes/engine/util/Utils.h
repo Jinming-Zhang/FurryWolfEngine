@@ -16,6 +16,8 @@ namespace WEngine
       if (!fin.is_open())
       {
         return nullptr;
+        printf("Invalid file path: %s\n", path.c_str());
+        abort();
       }
       std::stringstream strstream;
       strstream << fin.rdbuf();

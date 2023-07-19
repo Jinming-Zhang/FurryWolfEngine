@@ -4,10 +4,17 @@
 
 #include "engine/components/TransformComponent.h"
 #include "engine/components/CameraComponent.h"
+#include "engine/components/LightComponent.h"
 
 #include "engine/render/Mesh.h"
 #include "engine/render/VerticesMesh.h"
 #include "engine/render/LightSourceShaderProgram.h"
+
+#include "engine/render/Material.h"
+#include "engine/render/materials/LightSourceMaterial.h"
+#include "engine/render/materials/PhongModelMaterial.h"
+
+#include "game/FancyLight.h"
 namespace WEngine
 {
   class SceneMaker
@@ -86,63 +93,76 @@ namespace WEngine
     engine->camera = CameraComponent::Main();
     engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
     // light source
-    GameObject *lightSource = engine->CreateGameObject();
-    VerticesMesh *lightMesh = lightSource->AddComponent<VerticesMesh>();
-    lightMesh->Init(SceneMaker::cubeVertices, 180);
+    GameObject *lightGo = engine->CreateGameObject();
     glm::mat4 model = glm::mat4{1.f};
     model = glm::translate(model, glm::vec3(1.2f, 1.f, 2.f));
     model = glm::scale(model, glm::vec3(.2f));
-    lightSource->GetComponent<TransformComponent *>()->SetModel(model);
-    lightMesh->SetShader(engine->lightSourceSp);
+    lightGo->GetComponent<TransformComponent *>()->SetModel(model);
+    lightGo->GetComponent<TransformComponent *>()->SetPosition(1.2f, 1.f, 2.f);
+    // light source mesh
+    VerticesMesh *lightMesh = lightGo->AddComponent<VerticesMesh>();
+    lightMesh->Init(SceneMaker::cubeVertices, 288);
+    Material *lightGoMat = engine->CreateMaterial<LightSourceMaterial>();
+    lightGoMat->SetShader(engine->lightSourceSp);
+    lightMesh->SetMaterial(lightGoMat);
+    // light component
+    LightComponent *light = lightGo->AddComponent<LightComponent>();
+    light->SetShader(engine->phongShader);
+    light->SetColor(glm::vec3(1.f, 1.f, 1.f));
+    lightGo->AddComponent<FancyLight>();
 
     // toy
     GameObject *toy = engine->CreateGameObject();
     VerticesMesh *vMesh = toy->AddComponent<VerticesMesh>();
     toy->GetComponent<TransformComponent *>()->SetPosition(.0f, .0f, .0f);
-    vMesh->Init(SceneMaker::cubeVertices, 180);
-    vMesh->SetShader(engine->phongShader);
+    vMesh->Init(SceneMaker::cubeVertices, 288);
+    PhongModelMaterial *phongMat = engine->CreateMaterial<PhongModelMaterial>();
+    phongMat->SetObjColor(1.f, .5f, .31f);
+    phongMat->SetShader(engine->phongShader);
+    vMesh->SetMaterial(phongMat);
   }
 
   float SceneMaker::cubeVertices[] = {
-      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-      0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+      // position            tex coord   normal
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
 
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 
-      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
 
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
 }

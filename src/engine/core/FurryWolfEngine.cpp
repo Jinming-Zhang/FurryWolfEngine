@@ -21,6 +21,8 @@
 #include "engine/render/Shader.h"
 #include "engine/render/PhongShader.h"
 #include "engine/render/LightSourceShaderProgram.h"
+#include "engine/render/Material.h"
+#include "engine/render/materials/PhongModelMaterial.h"
 
 #include "engine/components/CameraComponent.h"
 
@@ -48,38 +50,38 @@ namespace WEngine
     }
 
     WEngine::InputSystem::Instance()->SetWindowContext(window);
-    WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     LoadShaders();
+    InitDefaultResources();
 
     return true;
   }
 
   void FurryWolfEngine::LoadShaders()
   {
-    phongShader = new PhongShader();
     WEngine::Shader vertexShader{};
     vertexShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/vertex.glsl", GL_VERTEX_SHADER);
 
     WEngine::Shader fragmentShader{};
     fragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
 
-    WEngine::Shader lightingModelFragmentShader{};
-    lightingModelFragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/lightingModelFragment.glsl", GL_FRAGMENT_SHADER);
+    // WEngine::Shader lightingModelFragmentShader{};
+    // lightingModelFragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/lightingModelFragment.glsl", GL_FRAGMENT_SHADER);
 
     WEngine::Shader lightsourceFragmentShader{};
     lightsourceFragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/lightSourceFragment.glsl", GL_FRAGMENT_SHADER);
 
+    phongShader = new ShaderProgram();
     phongShader->Initialize();
     phongShader->AddShader(vertexShader);
     phongShader->AddShader(fragmentShader);
 
-    WEngine::TextureLoadConfig texLoadConfig1{};
-    phongShader->AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container.jpg", texLoadConfig1);
-    texLoadConfig1.flipY = true;
-    texLoadConfig1.internalFormat = GL_RGBA;
-    texLoadConfig1.textureUnit = GL_TEXTURE1;
-    phongShader->AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/awesomeface.png", texLoadConfig1);
-
+    // WEngine::TextureLoadConfig texLoadConfig1{};
+    // phongShader->AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container.jpg", texLoadConfig1);
+    // texLoadConfig1.flipY = true;
+    // texLoadConfig1.internalFormat = GL_RGBA;
+    // texLoadConfig1.textureUnit = GL_TEXTURE1;
+    // phongShader->AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/awesomeface.png", texLoadConfig1);
     phongShader->LinkShaders();
 
     lightSourceSp = new LightSourceShaderProgram();
@@ -113,9 +115,6 @@ namespace WEngine
       glClearColor(.2f, .3f, .3f, 1.f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      phongShader->SetView(camera->GetClippedViewMatrix());
-      lightSourceSp->SetView(camera->GetClippedViewMatrix());
-
       for (auto &go : gameobjects)
       {
         go->Update(delta);
@@ -128,8 +127,9 @@ namespace WEngine
 
   GameObject *FurryWolfEngine::CreateGameObject()
   {
-    std::unique_ptr<GameObject> go{std::make_unique<GameObject>()};
+    std::unique_ptr<GameObject> go{new GameObject()};
     go->AddComponent<TransformComponent>();
+    go->engine = this;
     gameobjects.push_back(std::move(go));
 
     return gameobjects[gameobjects.size() - 1].get();
@@ -139,5 +139,23 @@ namespace WEngine
   {
     // SceneMaker::MakeLotsCubeScene(this);
     SceneMaker::MakeLightScene(this);
+  }
+  void FurryWolfEngine::InitDefaultResources()
+  {
+    WEngine::Shader vertexShader{};
+    vertexShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/vertex.glsl", GL_VERTEX_SHADER);
+
+    WEngine::Shader fragmentShader{};
+    fragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
+
+    defaultShader = new PhongShader();
+    defaultShader->Initialize();
+    defaultShader->AddShader(vertexShader);
+    defaultShader->AddShader(fragmentShader);
+    defaultShader->LinkShaders();
+
+    defaultMaterial = new PhongModelMaterial();
+    defaultMaterial->SetObjColor(1.f, 192.f / 255.f, 203.f / 255.f);
+    defaultMaterial->SetShader(defaultShader);
   }
 }

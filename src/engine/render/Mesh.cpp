@@ -64,8 +64,7 @@ namespace WEngine
 
   void Mesh::Render()
   {
-    shaderToUse->SetModel(gameObject->GetComponent<TransformComponent *>()->CalcModelMat());
-    shaderToUse->UseProgram();
+    material->Use(gameObject);
     glBindVertexArray(vao);
     if (wireframeMode)
     {

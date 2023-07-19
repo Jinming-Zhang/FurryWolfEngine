@@ -7,11 +7,14 @@ namespace WEngine
 {
   class GameObject
   {
+    friend class FurryWolfEngine;
+
   private:
     std::vector<std::unique_ptr<Component>> components;
+    FurryWolfEngine *engine;
+    GameObject();
 
   public:
-    GameObject();
     virtual void Update(float deltaTime);
     virtual void FixedUpdate(float fixedDeltaTime);
     virtual void LateUpdate(float deltaTime);
@@ -22,6 +25,7 @@ namespace WEngine
       if (Component *c = dynamic_cast<Component *>(cmp.get()))
       {
         c->gameObject = this;
+        c->engine = engine;
       }
       components.push_back(std::move(cmp));
       return (T *)components[components.size() - 1].get();

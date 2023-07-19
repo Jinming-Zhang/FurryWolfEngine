@@ -54,33 +54,21 @@ namespace WEngine
   {
     ShaderProgram::UseProgram();
 
-    float g{sinf(glfwGetTime()) / 2.f + .5f};
-    int clrLocation{glGetUniformLocation(shaderProgramId, "ourColor")};
-    glUniform4f(clrLocation, .0f, g, .5f, 1.f);
+    // float g{sinf(glfwGetTime()) / 2.f + .5f};
+    // int clrLocation{glGetUniformLocation(shaderProgramId, "ourColor")};
+    // glUniform4f(clrLocation, .0f, g, .5f, 1.f);
 
-    // set textures
-    for (size_t i{0}; i < albedoTextures.size(); ++i)
-    {
-      std::string texturePrefix{"texture"};
-      albedoTextures.at(i)->Use(GL_TEXTURE0 + i);
-      std::string textureStr{texturePrefix.append(std::to_string(i))};
-      unsigned int uniformLocation = glGetUniformLocation(shaderProgramId, textureStr.c_str());
-      glUniform1i(uniformLocation, i);
-    }
-    glUniform1f(glGetUniformLocation(shaderProgramId, "mixPct"), .2f);
-
-    GLint objectColorLocation = glGetUniformLocation(shaderProgramId, "objectColor");
-    if (objectColorLocation != -1)
-    {
-      glUniform3f(objectColorLocation, 1.f, .5f, .31f);
-    }
-
-    GLint lightColorLocation = glGetUniformLocation(shaderProgramId, "lightColor");
-    if (lightColorLocation != -1)
-    {
-      glUniform3f(lightColorLocation, 1.f, 1.f, 1.f);
-    }
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "cameraMatrix"), 1, GL_FALSE, glm::value_ptr(view));
+    // // set textures
+    // for (size_t i{0}; i < albedoTextures.size(); ++i)
+    // {
+    //   std::string texturePrefix{"texture"};
+    //   albedoTextures.at(i)->Use(GL_TEXTURE0 + i);
+    //   std::string textureStr{texturePrefix.append(std::to_string(i))};
+    //   unsigned int uniformLocation = glGetUniformLocation(shaderProgramId, textureStr.c_str());
+    //   glUniform1i(uniformLocation, i);
+    // }
+    // SetFloat("mixPct", .2f);
+    // SetVec3("objectColor", 1.f, .5f, .31f);
+    // SetVec3("lightColor", 1.f, 1.f, 1.f);
   }
 }

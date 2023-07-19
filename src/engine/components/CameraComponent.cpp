@@ -45,6 +45,10 @@ namespace WEngine
     {
       moveSpeed -= 1;
     }
+    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_R))
+    {
+      enableRotate = !enableRotate;
+    }
 
     // notice the position is actually the opposite of where we are moving, since we really are moving all the objects in the scene in the opposite direction of where we want to move the camera.
     const float cameraSpeed{moveSpeed * deltaTime};
@@ -75,7 +79,10 @@ namespace WEngine
     fov = glm::clamp(fov, minFov, maxFov);
 
     projection = glm::perspective(glm::radians(fov), 800.f / 600.f, .1f, 100.f);
-
+    if (!enableRotate)
+    {
+      return;
+    }
     std::pair<float, float> mousePos = InputSystem::Instance()->GetMousePosition();
     std::pair<float, float> mouseDelta = std::pair(
         mousePos.first - prevMousePos.first,
@@ -93,10 +100,12 @@ namespace WEngine
     yaw += mouseDelta.first * yawSpeed * deltaTime;
     pitch += mouseDelta.second * pitchSpeed * deltaTime;
     pitch = glm::clamp(pitch, -89.f, 89.f);
+#ifdef VERBOSE
     if (mouseDelta.first + mouseDelta.second > 0.0001f)
     {
       printf("Mouse diff: %f, %f\n", mouseDelta.first, mouseDelta.second);
     }
+#endif
 
     // calculate camera direction
     glm::vec3 direction{.0f};
