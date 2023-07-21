@@ -7,7 +7,7 @@ namespace WEngine
 {
   Texture::Texture() {}
   Texture::~Texture() {}
-  bool Texture::LoadTexture(std::string path, const TextureLoadConfig &config)
+  bool Texture::LoadTexture(const std::string& path, const TextureLoadConfig &config)
   {
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);

@@ -17,7 +17,7 @@ namespace WEngine
 
   public:
     Texture();
-    bool LoadTexture(std::string path, const TextureLoadConfig &config);
+    bool LoadTexture(const std::string &path, const TextureLoadConfig &config);
     void Use(int textureUnit);
     ~Texture();
   };

@@ -120,6 +120,14 @@ namespace WEngine
     phongMat->SetObjColor(1.f, .5f, .31f);
     phongMat->SetShader(engine->phongShader);
     vMesh->SetMaterial(phongMat);
+
+    WEngine::TextureLoadConfig texLoadConfig{};
+    texLoadConfig.internalFormat = GL_RGBA;
+    std::string albedoPath{"/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container2.png"};
+    std::string specularPath{"/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container2_specular.png"};
+    phongMat->LoadAlbedoMap(albedoPath, texLoadConfig);
+    texLoadConfig.textureUnit = GL_TEXTURE1;
+    phongMat->LoadSpecularMap(specularPath, texLoadConfig);
   }
 
   float SceneMaker::cubeVertices[] = {

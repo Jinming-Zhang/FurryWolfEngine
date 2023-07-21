@@ -1,3 +1,5 @@
+
+#include "engine/render/Texture.h"
 #include "engine/render/materials/PhongModelMaterial.h"
 #include "engine/render/ShaderProgram.h"
 #include "engine/components/CameraComponent.h"
@@ -8,16 +10,34 @@ namespace WEngine
   {
     objColor = glm::vec3(1.f);
     shininess = 32.f;
-    specularStrength = .5f;
   }
   PhongModelMaterial::~PhongModelMaterial() {}
 
+  bool PhongModelMaterial::LoadAlbedoMap(const std::string &path, const TextureLoadConfig &config)
+  {
+    albedoMap.reset(new Texture());
+    return albedoMap->LoadTexture(path, config);
+  }
+  bool PhongModelMaterial::LoadNormalMap(const std::string &path, const TextureLoadConfig &config)
+  {
+    normalMap.reset(new Texture());
+    return normalMap->LoadTexture(path, config);
+  }
+  bool PhongModelMaterial::LoadSpecularMap(const std::string &path, const TextureLoadConfig &config)
+  {
+    specularMap.reset(new Texture());
+    return specularMap->LoadTexture(path, config);
+  }
+
   void PhongModelMaterial::Use(GameObject *go)
   {
+    albedoMap->Use(GL_TEXTURE0);
+    specularMap->Use(GL_TEXTURE2);
+
     Material::Use(go);
-    shaderToUse->SetVec3("material.ambient", objColor.r, objColor.g, objColor.b);
-    shaderToUse->SetVec3("material.diffuse", objColor.r, objColor.g, objColor.b);
-    shaderToUse->SetVec3("material.specular", specularStrength, specularStrength, specularStrength);
+    // set texture unit location
+    shaderToUse->SetInt("material.albedoMap", 0);
+    shaderToUse->SetInt("material.specularMap", 2);
 
     shaderToUse->SetFloat("material.shininess", shininess);
 

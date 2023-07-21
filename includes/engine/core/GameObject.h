@@ -15,6 +15,8 @@ namespace WEngine
     GameObject();
 
   public:
+    virtual void Awake(){}
+    virtual void Start(){}
     virtual void Update(float deltaTime);
     virtual void FixedUpdate(float fixedDeltaTime);
     virtual void LateUpdate(float deltaTime);

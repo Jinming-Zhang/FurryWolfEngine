@@ -76,12 +76,6 @@ namespace WEngine
     phongShader->AddShader(vertexShader);
     phongShader->AddShader(fragmentShader);
 
-    // WEngine::TextureLoadConfig texLoadConfig1{};
-    // phongShader->AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container.jpg", texLoadConfig1);
-    // texLoadConfig1.flipY = true;
-    // texLoadConfig1.internalFormat = GL_RGBA;
-    // texLoadConfig1.textureUnit = GL_TEXTURE1;
-    // phongShader->AddAlbedoTexture("/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/awesomeface.png", texLoadConfig1);
     phongShader->LinkShaders();
 
     lightSourceSp = new LightSourceShaderProgram();
@@ -94,6 +88,15 @@ namespace WEngine
   void FurryWolfEngine::Start()
   {
     CreateScene();
+
+    for (auto &go : gameobjects)
+    {
+      go->Awake();
+    }
+    for (auto &go : gameobjects)
+    {
+      go->Start();
+    }
     glEnable(GL_DEPTH_TEST);
     float currTime{(float)glfwGetTime()};
     float prevTime = currTime;
