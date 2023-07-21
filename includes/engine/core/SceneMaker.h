@@ -5,6 +5,7 @@
 #include "engine/components/TransformComponent.h"
 #include "engine/components/CameraComponent.h"
 #include "engine/components/LightComponent.h"
+#include "engine/components/DirectionalLightComponent.h"
 
 #include "engine/render/Mesh.h"
 #include "engine/render/VerticesMesh.h"
@@ -106,10 +107,9 @@ namespace WEngine
     lightGoMat->SetShader(engine->lightSourceSp);
     lightMesh->SetMaterial(lightGoMat);
     // light component
-    LightComponent *light = lightGo->AddComponent<LightComponent>();
+    DirectionalLightComponent *light = lightGo->AddComponent<DirectionalLightComponent>();
     light->SetShader(engine->phongShader);
     light->SetColor(glm::vec3(1.f, 1.f, 1.f));
-    lightGo->AddComponent<FancyLight>();
 
     // toy
     GameObject *toy = engine->CreateGameObject();
@@ -123,8 +123,8 @@ namespace WEngine
 
     WEngine::TextureLoadConfig texLoadConfig{};
     texLoadConfig.internalFormat = GL_RGBA;
-    std::string albedoPath{"/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container2.png"};
-    std::string specularPath{"/home/wolf/Desktop/FurryWolfEngine/assets/images/textures/container2_specular.png"};
+    std::string albedoPath{"assets/images/textures/container2.png"};
+    std::string specularPath{"assets/images/textures/container2_specular.png"};
     phongMat->LoadAlbedoMap(albedoPath, texLoadConfig);
     texLoadConfig.textureUnit = GL_TEXTURE1;
     phongMat->LoadSpecularMap(specularPath, texLoadConfig);

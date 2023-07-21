@@ -8,7 +8,7 @@ namespace WEngine
 {
   class LightComponent : public Component
   {
-  private:
+  protected:
     glm::vec3 color;
     float intensity;
     std::shared_ptr<ShaderProgram> shaderToUse;

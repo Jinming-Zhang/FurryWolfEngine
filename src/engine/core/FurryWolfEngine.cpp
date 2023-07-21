@@ -50,7 +50,7 @@ namespace WEngine
     }
 
     WEngine::InputSystem::Instance()->SetWindowContext(window);
-    // WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     LoadShaders();
     InitDefaultResources();
 
@@ -60,16 +60,13 @@ namespace WEngine
   void FurryWolfEngine::LoadShaders()
   {
     WEngine::Shader vertexShader{};
-    vertexShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/vertex.glsl", GL_VERTEX_SHADER);
+    vertexShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/phongVert.vert", GL_VERTEX_SHADER);
 
     WEngine::Shader fragmentShader{};
-    fragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
-
-    // WEngine::Shader lightingModelFragmentShader{};
-    // lightingModelFragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/lightingModelFragment.glsl", GL_FRAGMENT_SHADER);
+    fragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/phongFrag.frag", GL_FRAGMENT_SHADER);
 
     WEngine::Shader lightsourceFragmentShader{};
-    lightsourceFragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/lightSourceFragment.glsl", GL_FRAGMENT_SHADER);
+    lightsourceFragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/lightSourceFrag.frag", GL_FRAGMENT_SHADER);
 
     phongShader = new ShaderProgram();
     phongShader->Initialize();
@@ -146,10 +143,10 @@ namespace WEngine
   void FurryWolfEngine::InitDefaultResources()
   {
     WEngine::Shader vertexShader{};
-    vertexShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/vertex.glsl", GL_VERTEX_SHADER);
+    vertexShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/phongVert.vert", GL_VERTEX_SHADER);
 
     WEngine::Shader fragmentShader{};
-    fragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
+    fragmentShader.CompileShader("/home/wolf/Desktop/FurryWolfEngine/shaders/phongFrag.frag", GL_FRAGMENT_SHADER);
 
     defaultShader = new PhongShader();
     defaultShader->Initialize();
