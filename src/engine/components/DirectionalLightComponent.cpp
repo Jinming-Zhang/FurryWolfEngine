@@ -6,7 +6,7 @@ namespace WEngine
 
   DirectionalLightComponent::DirectionalLightComponent()
   {
-    direction = -1.f * glm::vec3(-.5f, -.5f, -.5f);
+    direction = glm::vec3(-.2f, -1.0f, -.3f);
   }
 
   DirectionalLightComponent::~DirectionalLightComponent()

@@ -18,7 +18,7 @@ namespace WEngine
     ~CameraComponent();
 
   private:
-    bool enableRotate=false;
+    bool enableRotate = false;
     // member variables
     glm::mat4 projection;
     glm::vec3 cameraTarget;
@@ -58,6 +58,7 @@ namespace WEngine
       return glm::ortho(.0f, 800.f, .0f, 600.f, .01f, 100.f) * calculateViewMatrix();
     }
     const glm::vec3 &GetPosition() const { return position; }
+    const glm::vec3 &GetFront() const { return cameraFront; }
 
     void SetPosition(glm::vec3 pos)
     {

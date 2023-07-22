@@ -73,9 +73,11 @@ namespace WEngine
     int location{glGetUniformLocation(shaderProgramId, name.c_str())};
     if (location == -1)
     {
+#ifdef VERBOSE
       printf("ShaderProgram: Cannot locate location for uniform variable: [%s]\nIf the variable does exist in the shader, this could also happen if the variable is not used and stripped out by the compiler.\n", name.c_str());
+#endif
 #ifdef PERFETTO
-      std::cout<<"STRIKE FOR PERFECTION DETECTED! PROGRAM ABORTING!\n";
+      std::cout << "STRIKE FOR PERFECTION DETECTED! PROGRAM ABORTING!\n";
       abort();
 #endif
     }

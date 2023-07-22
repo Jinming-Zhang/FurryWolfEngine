@@ -12,8 +12,8 @@
 
 #include "engine/core/GameObject.h"
 #include "engine/window/IWindow.h"
-#include "engine/inputs/InputSystem.h"
 #include "engine/window/WolfGlfwWindow.h"
+#include "engine/inputs/InputSystem.h"
 #include "engine/render/Mesh.h"
 #include "engine/render/VerticesMesh.h"
 #include "engine/render/Texture.h"
@@ -24,12 +24,16 @@
 #include "engine/render/Material.h"
 #include "engine/render/materials/PhongModelMaterial.h"
 
+#include "engine/components/SpotLightComponent.h"
+#include "engine/components/PointLightComponent.h"
+
 #include "engine/components/CameraComponent.h"
 
 #include "engine/components/TransformComponent.h"
 
 namespace WEngine
 {
+  WEngineConfig FurryWolfEngine::engineConfig = WEngineConfig{4, 4};
   class TransformComponent;
   FurryWolfEngine::FurryWolfEngine()
   {
@@ -114,6 +118,10 @@ namespace WEngine
 
       glClearColor(.2f, .3f, .3f, 1.f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+      phongShader->UseProgram();
+      phongShader->SetInt("pLightsCount", PointLightComponent::PointLightIndexer);
+      phongShader->SetInt("spLightsCount", SpotLightComponent::SpotLightIndexer);
 
       for (auto &go : gameobjects)
       {

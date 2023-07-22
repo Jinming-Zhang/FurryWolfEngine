@@ -1,11 +1,14 @@
 #pragma once
 #include "engine/core/FurryWolfEngine.h"
 #include "engine/core/GameObject.h"
+#include "engine/core/GameObjectFactory.h"
 
 #include "engine/components/TransformComponent.h"
 #include "engine/components/CameraComponent.h"
 #include "engine/components/LightComponent.h"
 #include "engine/components/DirectionalLightComponent.h"
+#include "engine/components/PointLightComponent.h"
+#include "engine/components/SpotLightComponent.h"
 
 #include "engine/render/Mesh.h"
 #include "engine/render/VerticesMesh.h"
@@ -22,6 +25,7 @@ namespace WEngine
   {
   private:
     static float cubeVertices[];
+    static glm::vec3 cubePositions[];
 
   public:
     SceneMaker() {}
@@ -53,18 +57,6 @@ namespace WEngine
     engine->mesh1->SetShader(engine->phongShader);
     engine->mesh2->SetShader(engine->phongShader);
 
-    glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),
-        glm::vec3(-1.3f, 1.0f, -1.5f)};
-
     for (size_t i{0}; i < 10; ++i)
     {
       GameObject *go = engine->CreateGameObject();
@@ -89,11 +81,19 @@ namespace WEngine
     engine->camera = CameraComponent::Main();
     engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
   }
+
   void SceneMaker::MakeLightScene(FurryWolfEngine *engine)
   {
+
+    GameObject *cameraGo = engine->CreateGameObject();
     engine->camera = CameraComponent::Main();
+    engine->camera->gameObject = cameraGo;
     engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
-    // light source
+    SpotLightComponent *flashLight = engine->camera->gameObject->AddComponent<SpotLightComponent>();
+    flashLight->SetShader(engine->phongShader);
+    flashLight->SetColor(glm::vec3(1.f));
+
+    // directional light source
     GameObject *lightGo = engine->CreateGameObject();
     glm::mat4 model = glm::mat4{1.f};
     model = glm::translate(model, glm::vec3(1.2f, 1.f, 2.f));
@@ -107,20 +107,39 @@ namespace WEngine
     lightGoMat->SetShader(engine->lightSourceSp);
     lightMesh->SetMaterial(lightGoMat);
     // light component
-    DirectionalLightComponent *light = lightGo->AddComponent<DirectionalLightComponent>();
-    light->SetShader(engine->phongShader);
-    light->SetColor(glm::vec3(1.f, 1.f, 1.f));
+    DirectionalLightComponent *dLight = lightGo->AddComponent<DirectionalLightComponent>();
+    dLight->SetShader(engine->phongShader);
+    dLight->SetColor(0.f * glm::vec3(1.f, 1.f, 1.f));
+
+    // point lights
+    glm::vec3 pointLightPositions[] = {
+        glm::vec3(0.7f, 0.2f, 2.0f),
+        glm::vec3(2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f, 2.0f, -12.0f),
+        glm::vec3(0.0f, 0.0f, -3.0f)};
+    for (int i = 0; i < 4; ++i)
+    {
+      GameObject *pLightGO = GameObjectFactory::CreatePointLightGo(engine);
+      // mesh
+      VerticesMesh *lightMesh = pLightGO->AddComponent<VerticesMesh>();
+      lightMesh->Init(SceneMaker::cubeVertices, 288);
+      Material *lightGoMat = engine->CreateMaterial<LightSourceMaterial>();
+      lightGoMat->SetShader(engine->lightSourceSp);
+      lightMesh->SetMaterial(lightGoMat);
+
+      PointLightComponent *pLightCmp = pLightGO->GetComponent<PointLightComponent *>();
+      pLightCmp->SetShader(engine->phongShader);
+      pLightCmp->SetColor(glm::vec3(1.f, 1.f, 1.f));
+      glm::mat4 model{1.0f};
+      model = glm::translate(model, pointLightPositions[i]);
+      pLightCmp->transform->SetModel(model);
+    }
 
     // toy
-    GameObject *toy = engine->CreateGameObject();
-    VerticesMesh *vMesh = toy->AddComponent<VerticesMesh>();
-    toy->GetComponent<TransformComponent *>()->SetPosition(.0f, .0f, .0f);
-    vMesh->Init(SceneMaker::cubeVertices, 288);
+    // material
     PhongModelMaterial *phongMat = engine->CreateMaterial<PhongModelMaterial>();
     phongMat->SetObjColor(1.f, .5f, .31f);
     phongMat->SetShader(engine->phongShader);
-    vMesh->SetMaterial(phongMat);
-
     WEngine::TextureLoadConfig texLoadConfig{};
     texLoadConfig.internalFormat = GL_RGBA;
     std::string albedoPath{"assets/images/textures/container2.png"};
@@ -128,6 +147,20 @@ namespace WEngine
     phongMat->LoadAlbedoMap(albedoPath, texLoadConfig);
     texLoadConfig.textureUnit = GL_TEXTURE1;
     phongMat->LoadSpecularMap(specularPath, texLoadConfig);
+
+    for (size_t i{0}; i < 10; ++i)
+    {
+      GameObject *toy = engine->CreateGameObject();
+      VerticesMesh *vMesh = toy->AddComponent<VerticesMesh>();
+      vMesh->Init(SceneMaker::cubeVertices, 288);
+      vMesh->SetMaterial(phongMat);
+      TransformComponent *transform = toy->GetComponent<TransformComponent *>();
+      glm::vec3 pos = cubePositions[i];
+      glm::mat4 model{1.f};
+      model = glm::translate(model, pos);
+      model = glm::rotate(model, glm::radians(i * 20.f), glm::vec3(1.f, .3f, .5f));
+      transform->SetModel(model);
+    }
   }
 
   float SceneMaker::cubeVertices[] = {
@@ -173,4 +206,16 @@ namespace WEngine
       0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
       -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
       -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
+
+  glm::vec3 SceneMaker::cubePositions[] = {
+      glm::vec3(0.0f, 0.0f, 0.0f),
+      glm::vec3(2.0f, 5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f),
+      glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3(2.4f, -0.4f, -3.5f),
+      glm::vec3(-1.7f, 3.0f, -7.5f),
+      glm::vec3(1.3f, -2.0f, -2.5f),
+      glm::vec3(1.5f, 2.0f, -2.5f),
+      glm::vec3(1.5f, 0.2f, -1.5f),
+      glm::vec3(-1.3f, 1.0f, -1.5f)};
 }

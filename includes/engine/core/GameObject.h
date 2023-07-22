@@ -1,7 +1,11 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <iostream>
 #include "engine/components/Component.h"
+#include "engine/components/TransformComponent.h"
+#include "engine/components/PointLightComponent.h"
+#include "engine/components/SpotLightComponent.h"
 
 namespace WEngine
 {
@@ -15,23 +19,11 @@ namespace WEngine
     GameObject();
 
   public:
-    virtual void Awake(){}
-    virtual void Start(){}
+    virtual void Awake() {}
+    virtual void Start() {}
     virtual void Update(float deltaTime);
     virtual void FixedUpdate(float fixedDeltaTime);
     virtual void LateUpdate(float deltaTime);
-    template <typename T>
-    T *AddComponent()
-    {
-      std::unique_ptr<T> cmp = std::make_unique<T>();
-      if (Component *c = dynamic_cast<Component *>(cmp.get()))
-      {
-        c->gameObject = this;
-        c->engine = engine;
-      }
-      components.push_back(std::move(cmp));
-      return (T *)components[components.size() - 1].get();
-    }
     template <typename T>
     T GetComponent()
     {
@@ -43,6 +35,26 @@ namespace WEngine
         }
       }
       return nullptr;
+    }
+    template <typename T>
+    T *AddComponent()
+    {
+      std::unique_ptr<T> cmp = std::make_unique<T>();
+      if (Component *c = dynamic_cast<Component *>(cmp.get()))
+      {
+        c->gameObject = this;
+        c->engine = engine;
+        if (TransformComponent *transform = GetComponent<TransformComponent *>())
+        {
+          c->transform = transform;
+        }
+        else
+        {
+          std::cout << "Cannot find transform component on gameobject!\n";
+        }
+      }
+      components.push_back(std::move(cmp));
+      return (T *)components[components.size() - 1].get();
     }
     ~GameObject() {}
   };

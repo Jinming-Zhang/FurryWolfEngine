@@ -5,6 +5,12 @@
 
 namespace WEngine
 {
+  struct WEngineConfig
+  {
+    int MAX_POINT_LIGHTS;
+    int MAX_SPOT_LIGHTS;
+  };
+
   class GameObject;
   class WolfGlfwWindow;
   class PhongShader;
@@ -44,6 +50,7 @@ namespace WEngine
   public:
     class PhongModelMaterial *defaultMaterial;
     PhongShader *defaultShader;
+    static WEngineConfig engineConfig;
 
   public:
     // resource creation methods
