@@ -61,6 +61,7 @@ namespace WEngine
       if (Material *mat = dynamic_cast<Material *>(obj))
       {
         mat->engine = this;
+        mat->SetShader(phongShader);
       }
       return obj;
     }

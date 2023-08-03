@@ -17,9 +17,7 @@ namespace WEngine
   {
   private:
   public:
-    VerticesMesh() : Mesh()
-    {
-    }
+    VerticesMesh() : Mesh() { }
     virtual void Init(float *vertices, int count)
     {
       glGenVertexArrays(1, &vao);
@@ -47,11 +45,6 @@ namespace WEngine
 
     virtual void Update(float deltaTime) override
     {
-      // if (TransformComponent *tf = gameObject->GetComponent<TransformComponent *>())
-      // {
-      // glm::mat4 &rot = tf->GetRotationMatrix();
-      // rot = glm::rotate(rot, glm::radians(50.f) * deltaTime, glm::vec3(.5f, 1.f, .0f));
-      // }
       Render();
     }
 

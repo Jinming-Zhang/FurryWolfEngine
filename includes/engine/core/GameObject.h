@@ -1,11 +1,14 @@
 #pragma once
+
 #include <vector>
 #include <memory>
 #include <iostream>
+
 #include "engine/components/Component.h"
 #include "engine/components/TransformComponent.h"
 #include "engine/components/PointLightComponent.h"
 #include "engine/components/SpotLightComponent.h"
+#include "engine/components/ModelComponent.h"
 
 namespace WEngine
 {

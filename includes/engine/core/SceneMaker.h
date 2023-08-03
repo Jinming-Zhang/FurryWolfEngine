@@ -1,5 +1,6 @@
 #pragma once
 #include "engine/core/FurryWolfEngine.h"
+#include "engine/core/ResourceManager.h"
 #include "engine/core/GameObject.h"
 #include "engine/core/GameObjectFactory.h"
 
@@ -17,6 +18,8 @@
 #include "engine/render/Material.h"
 #include "engine/render/materials/LightSourceMaterial.h"
 #include "engine/render/materials/PhongModelMaterial.h"
+
+#include "engine/components/ModelComponent.h"
 
 #include "game/FancyLight.h"
 namespace WEngine
@@ -117,7 +120,7 @@ namespace WEngine
         glm::vec3(2.3f, -3.3f, -4.0f),
         glm::vec3(-4.0f, 2.0f, -12.0f),
         glm::vec3(0.0f, 0.0f, -3.0f)};
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 1; ++i)
     {
       GameObject *pLightGO = GameObjectFactory::CreatePointLightGo(engine);
       // mesh
@@ -140,13 +143,14 @@ namespace WEngine
     PhongModelMaterial *phongMat = engine->CreateMaterial<PhongModelMaterial>();
     phongMat->SetObjColor(1.f, .5f, .31f);
     phongMat->SetShader(engine->phongShader);
-    WEngine::TextureLoadConfig texLoadConfig{};
-    texLoadConfig.internalFormat = GL_RGBA;
+    // WEngine::TextureLoadConfig texLoadConfig{};
+    // texLoadConfig.internalFormat = GL_RGBA;
     std::string albedoPath{"assets/images/textures/container2.png"};
     std::string specularPath{"assets/images/textures/container2_specular.png"};
-    phongMat->LoadAlbedoMap(albedoPath, texLoadConfig);
-    texLoadConfig.textureUnit = GL_TEXTURE1;
-    phongMat->LoadSpecularMap(specularPath, texLoadConfig);
+    auto albedoMap1 = ResourceManager::Instance()->LoadTexture(albedoPath);
+    auto specularMap1 = ResourceManager::Instance()->LoadTexture(specularPath);
+    phongMat->AddAlbedoMap(albedoMap1);
+    phongMat->AddSpecularMap(specularMap1);
 
     for (size_t i{0}; i < 10; ++i)
     {
@@ -161,6 +165,12 @@ namespace WEngine
       model = glm::rotate(model, glm::radians(i * 20.f), glm::vec3(1.f, .3f, .5f));
       transform->SetModel(model);
     }
+
+    // import model
+    GameObject *backpackModel = engine->CreateGameObject();
+    ModelComponent *modelCmp = backpackModel->AddComponent<ModelComponent>();
+    // modelCmp->Init("./assets/models/obj/Wolf_obj.obj");
+    modelCmp->Init("./assets/models/backpack/backpack.obj");
   }
 
   float SceneMaker::cubeVertices[] = {
@@ -208,7 +218,8 @@ namespace WEngine
       -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
 
   glm::vec3 SceneMaker::cubePositions[] = {
-      glm::vec3(0.0f, 0.0f, 0.0f),
+      glm::vec3(1.5f, 2.0f, -2.5f),
+      // glm::vec3(0.0f, 0.0f, 0.0f),
       glm::vec3(2.0f, 5.0f, -15.0f),
       glm::vec3(-1.5f, -2.2f, -2.5f),
       glm::vec3(-3.8f, -2.0f, -12.3f),

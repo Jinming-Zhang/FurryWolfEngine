@@ -7,7 +7,7 @@ namespace WEngine
 {
   Texture::Texture() {}
   Texture::~Texture() {}
-  bool Texture::LoadTexture(const std::string& path, const TextureLoadConfig &config)
+  bool Texture::LoadTexture(const std::string &path, const TextureLoadConfig &config)
   {
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
@@ -18,13 +18,26 @@ namespace WEngine
     stbi_set_flip_vertically_on_load(config.flipY);
     unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 
+    std::string imgExt = path.substr(path.find_last_of('.') + 1);
+    GLint internalFormat;
+    if (imgExt == "jpg")
+    {
+      internalFormat = GL_RGB;
+    }
+    else if (imgExt == "png")
+    {
+      internalFormat = GL_RGBA;
+    }
+
     if (!data)
     {
       std::cout << "Error loading texture image: " << path << std::endl;
+      glDeleteTextures(1, &textureId);
+      glBindTexture(GL_TEXTURE_2D, 0);
       return false;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, config.internalFormat, width, height, 0, config.internalFormat, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     // wrap mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

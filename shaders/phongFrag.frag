@@ -2,10 +2,14 @@
 out vec4 finalClr;
 
 struct Material {
-  sampler2D albedoMap;
+  int albedoMapsCount;
+  sampler2D albedoMap0;
+  sampler2D albedoMap1;
+  sampler2D albedoMap2;
   sampler2D normalMap;
-  sampler2D specularMap;
-  vec3 specular;
+  int specularMapsCount;
+  sampler2D specularMap0;
+  sampler2D specularMap1;
   float shininess;
 };
 
@@ -75,8 +79,20 @@ void main() {
 }
 
 vec3 calcLightColor(Light baseLight, vec3 direction, float attenuation) {
-  vec3 texColor = vec3(texture(material.albedoMap, texCoord));
-  vec3 specu = vec3(texture(material.specularMap, texCoord));
+  vec3 texColor = vec3(0.0f);
+  texColor += vec3(texture(material.albedoMap0, texCoord));
+  if (material.albedoMapsCount >= 2) {
+    texColor += vec3(texture(material.albedoMap1, texCoord));
+  }
+  if (material.albedoMapsCount >= 3) {
+    texColor += vec3(texture(material.albedoMap2, texCoord));
+  }
+  vec3 specu = vec3(.0f);
+  specu += vec3(texture(material.specularMap0, texCoord));
+  if (material.specularMapsCount >= 2) {
+    specu += vec3(texture(material.specularMap1, texCoord));
+  }
+
   vec3 objAmbient = texColor;
   vec3 objDiffuse = texColor;
   vec3 objSpecular = specu * texColor;

@@ -47,14 +47,14 @@ namespace WEngine
     std::cout << "Wolf Engine\n";
     window = new WEngine::WolfGlfwWindow{};
 
-    if (!window->Init(800, 600, "Fuck My Life"))
+    if (!window->Init(800, 600, "0w0"))
     {
       std::cout << "Error loading gl\n";
       return false;
     }
 
     WEngine::InputSystem::Instance()->SetWindowContext(window);
-    WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     LoadShaders();
     InitDefaultResources();
 
