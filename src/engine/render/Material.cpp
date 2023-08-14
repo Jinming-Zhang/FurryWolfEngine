@@ -6,13 +6,9 @@
 
 namespace WEngine
 {
-  Material::Material(/* args */)
-  {
-  }
+  Material::Material() {}
+  Material::~Material() {}
 
-  Material::~Material()
-  {
-  }
   void Material::Use(GameObject *go)
   {
     shaderToUse->UseProgram();

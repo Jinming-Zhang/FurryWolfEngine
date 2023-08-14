@@ -10,15 +10,16 @@
 #include "engine/core/FurryWolfEngine.h"
 #include "engine/core/GameObject.h"
 #include "engine/core/ResourceManager.h"
-#include "engine/components/ModelComponent.h"
-#include "engine/components/IndexedDrawMeshComponent.h"
+#include "engine/components/meshes/ModelComponent.h"
+#include "engine/render/meshes/IndexedDrawMesh.h"
+
 #include "engine/render/materials/PhongModelMaterial.h"
 
 namespace WEngine
 {
   ModelComponent::ModelComponent()
   {
-    meshes = std::vector<IndexedDrawMeshComponent *>();
+    meshes = std::vector<IndexedDrawMesh *>();
     directory = std::string();
   }
   ModelComponent::~ModelComponent() {}
@@ -61,11 +62,11 @@ namespace WEngine
     }
   }
 
-  IndexedDrawMeshComponent *ModelComponent::processMesh(aiMesh *mesh, const aiScene *scene)
+  IndexedDrawMesh *ModelComponent::processMesh(aiMesh *mesh, const aiScene *scene)
   {
-    IndexedDrawMeshComponent *indMesh = gameObject->AddComponent<IndexedDrawMeshComponent>();
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    IndexedDrawMesh *indMesh = new IndexedDrawMesh();
+    std::vector<Vertex> vertices{};
+    std::vector<unsigned int> indices{};
 
     for (size_t i{0}; i < mesh->mNumVertices; ++i)
     {
@@ -119,7 +120,8 @@ namespace WEngine
         mat->AddSpecularMap(speculars[i]);
       }
     }
-    indMesh->SetPhongMaterial(mat);
+
+    phongMat = mat;
     return indMesh;
   }
 
@@ -142,11 +144,12 @@ namespace WEngine
     return textures;
   }
 
-  void ModelComponent::Update(float deltaTime)
+  void ModelComponent::Render()
   {
     for (size_t i{0}; i < meshes.size(); ++i)
     {
-      meshes[i]->Render();
+      phongMat->Use(gameObject);
+      meshes[i]->Draw();
     }
   }
 }

@@ -30,5 +30,6 @@ namespace WEngine
     static ResourceManager *Instance();
     const std::shared_ptr<Texture> LoadTexture(std::string path);
     bool UnloadTexture(std::string path);
+    void PrintResourcesUsage();
   };
 }

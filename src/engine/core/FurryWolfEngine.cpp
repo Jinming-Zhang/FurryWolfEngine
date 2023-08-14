@@ -14,8 +14,6 @@
 #include "engine/window/IWindow.h"
 #include "engine/window/WolfGlfwWindow.h"
 #include "engine/inputs/InputSystem.h"
-#include "engine/render/Mesh.h"
-#include "engine/render/VerticesMesh.h"
 #include "engine/render/Texture.h"
 
 #include "engine/render/Shader.h"
@@ -129,16 +127,32 @@ namespace WEngine
         go->LateUpdate(delta);
       }
       camera->Update(delta);
+
+      for (auto &go : gameobjects)
+      {
+        go->Render();
+      }
+
       window->SwapBuffers();
     }
   }
 
-  GameObject *FurryWolfEngine::CreateGameObject()
+  GameObject *FurryWolfEngine::CreateGameObject(std::string name)
   {
-    std::unique_ptr<GameObject> go{new GameObject()};
-    go->AddComponent<TransformComponent>();
-    go->engine = this;
-    gameobjects.push_back(std::move(go));
+    GameObject *go;
+    if (name == "")
+    {
+      go = new GameObject();
+    }
+    else
+    {
+      go = new GameObject(name);
+    }
+
+    std::unique_ptr<GameObject> goPtr{go};
+    goPtr->AddComponent<TransformComponent>();
+    goPtr->engine = this;
+    gameobjects.push_back(std::move(goPtr));
 
     return gameobjects[gameobjects.size() - 1].get();
   }

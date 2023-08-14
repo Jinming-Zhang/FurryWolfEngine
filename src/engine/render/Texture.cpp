@@ -6,7 +6,29 @@
 namespace WEngine
 {
   Texture::Texture() {}
-  Texture::~Texture() {}
+  Texture::Texture(const Texture &&texture)
+  {
+    textureId = texture.textureId;
+  }
+  Texture &Texture::operator=(Texture &&texture)
+  {
+    if (this != &texture)
+    {
+      textureId = texture.textureId;
+    }
+    return *this;
+  }
+  void Texture::Destroy()
+  {
+    std::cout << "Texture " << textureId << " destroyed\n";
+    glDeleteTextures(1, &textureId);
+    textureId = 0;
+  }
+  Texture::~Texture()
+  {
+    std::cout << "Texture " << textureId << " destructor called\n";
+    Destroy();
+  }
   bool Texture::LoadTexture(const std::string &path, const TextureLoadConfig &config)
   {
     glGenTextures(1, &textureId);
@@ -54,5 +76,9 @@ namespace WEngine
   {
     glActiveTexture(textureUnit);
     glBindTexture(GL_TEXTURE_2D, textureId);
+  }
+  Texture::operator std::string() const
+  {
+    return std::to_string(textureId);
   }
 }

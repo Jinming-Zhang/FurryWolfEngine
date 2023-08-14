@@ -1,0 +1,22 @@
+#include <vector>
+#include "engine/render/meshes/VerticesDrawMesh.h"
+#include "engine/components/meshes/VerticesDrawMeshComponent.h"
+namespace WEngine
+{
+  VerticesDrawMeshComponent::VerticesDrawMeshComponent() { mesh = nullptr; }
+  VerticesDrawMeshComponent::~VerticesDrawMeshComponent() {}
+  void VerticesDrawMeshComponent::Init(const std::vector<Vertex> vertices)
+  {
+    if (mesh != nullptr)
+    {
+      delete mesh;
+    }
+    mesh = new VerticesDrawMesh();
+    mesh->Init(vertices);
+  }
+  void VerticesDrawMeshComponent::Render()
+  {
+    material->Use(gameObject);
+    mesh->Draw();
+  }
+}

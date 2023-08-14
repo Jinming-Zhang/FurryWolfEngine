@@ -3,12 +3,12 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include <string>
 
 #include "engine/components/Component.h"
 #include "engine/components/TransformComponent.h"
 #include "engine/components/PointLightComponent.h"
 #include "engine/components/SpotLightComponent.h"
-#include "engine/components/ModelComponent.h"
 
 namespace WEngine
 {
@@ -17,16 +17,22 @@ namespace WEngine
     friend class FurryWolfEngine;
 
   private:
-    std::vector<std::unique_ptr<Component>> components;
+    static int idCounter;
+
+  private:
     FurryWolfEngine *engine;
-    GameObject();
+    std::vector<std::unique_ptr<Component>> components;
+    std::string name;
+    GameObject(std::string name = "GameObject_" + std::to_string(++idCounter));
 
   public:
+    virtual void Rename(const std::string &name) { this->name = name; }
     virtual void Awake() {}
     virtual void Start() {}
     virtual void Update(float deltaTime);
     virtual void FixedUpdate(float fixedDeltaTime);
     virtual void LateUpdate(float deltaTime);
+    virtual void Render();
     template <typename T>
     T GetComponent()
     {

@@ -4,6 +4,8 @@
 #include "GLFW/glfw3.h"
 #include "engine/math/glm/glm.hpp"
 
+#include "engine/core/ResourceManager.h"
+
 #include "engine/components/CameraComponent.h"
 #include "engine/inputs/InputSystem.h"
 
@@ -37,6 +39,11 @@ namespace WEngine
 
   void CameraComponent::Update(float deltaTime)
   {
+    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_P))
+    {
+      ResourceManager::Instance()->PrintResourcesUsage();
+    }
+
     if (InputSystem::Instance()->KeyPressed(GLFW_KEY_EQUAL))
     {
       moveSpeed += 1;

@@ -8,6 +8,10 @@ namespace WEngine
   void LightSourceMaterial::Use(GameObject *go)
   {
     Material::Use(go);
-    shaderToUse->SetVec3("lightSourceColor", .3f, .3f, 1.f);
+    shaderToUse->SetVec3("lightSourceColor", color.r, color.g, color.b);
+  }
+  void LightSourceMaterial::SetColor(glm::vec3 newColor)
+  {
+    color = newColor;
   }
 }

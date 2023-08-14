@@ -4,15 +4,18 @@
 
 #include "assimp/scene.h"
 
-#include "engine/components/Component.h"
-#include "engine/components/IndexedDrawMeshComponent.h"
+#include "engine/components/meshes/MeshComponent.h"
+#include "engine/render/meshes/IndexedDrawMesh.h"
 #include "engine/render/Texture.h"
+
+#include "engine/render/materials/PhongModelMaterial.h"
 namespace WEngine
 {
-  class ModelComponent : public Component
+  class ModelComponent : public MeshComponent
   {
   private:
-    std::vector<IndexedDrawMeshComponent *> meshes;
+    std::vector<IndexedDrawMesh *> meshes;
+    PhongModelMaterial *phongMat;
     // the directory to load textures
     std::string directory;
 
@@ -24,7 +27,7 @@ namespace WEngine
      * @param scene
      */
     void processNode(aiNode *node, const aiScene *scene);
-    IndexedDrawMeshComponent *processMesh(aiMesh *mesh, const aiScene *scene);
+    IndexedDrawMesh *processMesh(aiMesh *mesh, const aiScene *scene);
     /**
      * @brief Parse assimp's aiMesh object into our custom defined mesh object for OpenGL to render
      *
@@ -34,11 +37,11 @@ namespace WEngine
      * @return std::vector<Texture>
      */
     std::vector<std::shared_ptr<Texture>> loadMaterialTextures(aiMaterial *mat, aiTextureType type);
-    virtual void Update(float deltaTime) override;
+    virtual void Render() override;
 
   public:
     ModelComponent();
-    ~ModelComponent();
+    virtual ~ModelComponent();
     void Init(std::string modelPath);
   };
 }

@@ -31,21 +31,20 @@ namespace WEngine
     auto result = textures.find(path);
     if (result == textures.end())
     {
-      Texture texture;
+      std::shared_ptr<Texture> texture = std::make_shared<Texture>();
       TextureLoadConfig config;
       config.flipY = true;
-      if (!texture.LoadTexture(path, config))
+      if (!texture->LoadTexture(path, config))
       {
-        if (!texture.LoadTexture(defaultResourcesPath[typeid(Texture)], config))
+        if (!texture->LoadTexture(defaultResourcesPath[typeid(Texture)], config))
         {
           std::cout << "Error loading texture and failed to load default texture!\n";
           return nullptr;
         }
       }
-      textures.insert({path, Resource<Texture>{std::make_shared<Texture>(std::move(texture)), 1}});
+      textures.insert({path, Resource<Texture>{texture, 0}});
     }
-    Resource<Texture> rsc = textures.at(path);
-    ++rsc.useCount;
+    ++textures.at(path).useCount;
     return textures.at(path).resource;
   }
 
@@ -58,11 +57,24 @@ namespace WEngine
       --rsc.useCount;
       if (rsc.useCount <= 0)
       {
+        rsc.resource->Destroy();
         textures.erase(path);
       }
       return true;
     }
     std::cout << "ResourceManager: UnloadTexture failed, target texture not in the map.\n";
     return false;
+  }
+
+  void ResourceManager::PrintResourcesUsage()
+  {
+    std::cout << "ResourceManager: Printing resources usage:\n";
+
+    std::cout << "Textures usage:\n";
+    for (auto &rsc : textures)
+    {
+      std::cout << "Texture Path: " << rsc.first << std::endl;
+      std::cout << "Id: " << rsc.second.resource << "\tResource use count: " << rsc.second.useCount << "\tSharedPtr use count:" << rsc.second.resource.use_count() << std::endl;
+    }
   }
 }

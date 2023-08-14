@@ -1,5 +1,7 @@
 #pragma once
+
 #include <vector>
+#include <string>
 #include <memory>
 #include "engine/render/Material.h"
 
@@ -31,8 +33,6 @@ namespace WEngine
     ShaderProgram *phongShader;
     LightSourceShaderProgram *lightSourceSp;
 
-    Mesh *mesh1;
-    Mesh *mesh2;
     CameraComponent *camera;
 
   private:
@@ -65,7 +65,7 @@ namespace WEngine
       }
       return obj;
     }
-    GameObject *CreateGameObject();
+    GameObject *CreateGameObject(std::string name = "");
 
   private:
     void CreateScene();

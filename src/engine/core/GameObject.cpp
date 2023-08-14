@@ -1,14 +1,19 @@
+#include <functional>
+
 #include "engine/core/GameObject.h"
 #include "engine/components/Component.h"
+#include "engine/components/meshes/MeshComponent.h"
 #include "engine/components/TransformComponent.h"
 #include "engine/components/PointLightComponent.h"
 #include "engine/components/SpotLightComponent.h"
 
 namespace WEngine
 {
-  GameObject::GameObject()
+  int GameObject::idCounter = 0;
+  GameObject::GameObject(std::string name)
   {
     components = std::vector<std::unique_ptr<Component>>();
+    this->name = name;
   }
 
   void GameObject::Update(float deltaTime)
@@ -30,6 +35,14 @@ namespace WEngine
     for (auto &com : components)
     {
       com->LateUpdate(deltaTime);
+    }
+  }
+  void GameObject::Render()
+  {
+    MeshComponent *mesh = GetComponent<MeshComponent *>();
+    if (mesh)
+    {
+      mesh->Render();
     }
   }
 
