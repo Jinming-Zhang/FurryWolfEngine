@@ -11,4 +11,5 @@ do
 done
 
 echo Defined Macros are: "${defs}"
-g++ --std=c++17 -Wall $defs -o ./build/prog -I./includes $(find src -type f -iname \*\.cpp -o -iname \*\.c) -L/lib/x86_64-linux-gnu  -lGLEW -lglfw -lGL -lm -ldl -L./lib/linux/ -lassimp
+# g++ --std=c++17 -Wall $defs -o ./build/prog -I./includes $(find src -type f -iname \*\.cpp -o -iname \*\.c) -L/lib/x86_64-linux-gnu  -lGLEW -lglfw -lGL -lm -ldl -L./lib/linux/ -lassimp
+g++ --std=c++17 -Wall $defs -o ./build/prog -I./includes $(find src -type f -iname \*\.cpp -o -iname \*\.c) -L./lib/linux -lglfw3 -ldl -lm -lGL -lX11 -lassimp -lz
