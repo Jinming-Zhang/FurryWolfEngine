@@ -50,25 +50,8 @@ namespace WEngine
     normalTexture = new Texture{};
     return normalTexture->LoadTexture(texturePath, config);
   }
-  void PhongShader::UseProgram()
+  void PhongShader::UseProgram() const
   {
     ShaderProgram::UseProgram();
-
-    // float g{sinf(glfwGetTime()) / 2.f + .5f};
-    // int clrLocation{glGetUniformLocation(shaderProgramId, "ourColor")};
-    // glUniform4f(clrLocation, .0f, g, .5f, 1.f);
-
-    // // set textures
-    // for (size_t i{0}; i < albedoTextures.size(); ++i)
-    // {
-    //   std::string texturePrefix{"texture"};
-    //   albedoTextures.at(i)->Use(GL_TEXTURE0 + i);
-    //   std::string textureStr{texturePrefix.append(std::to_string(i))};
-    //   unsigned int uniformLocation = glGetUniformLocation(shaderProgramId, textureStr.c_str());
-    //   glUniform1i(uniformLocation, i);
-    // }
-    // SetFloat("mixPct", .2f);
-    // SetVec3("objectColor", 1.f, .5f, .31f);
-    // SetVec3("lightColor", 1.f, 1.f, 1.f);
   }
 }

@@ -19,9 +19,4 @@ namespace WEngine
   {
     shader->UseProgram();
   }
-
-  void LightComponent::SetShader(ShaderProgram *sp)
-  {
-    shader = sp;
-  }
 }

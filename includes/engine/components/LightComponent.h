@@ -11,15 +11,13 @@ namespace WEngine
   protected:
     glm::vec3 color;
     float intensity;
-    std::shared_ptr<ShaderProgram> shaderToUse;
     ShaderProgram *shader;
 
   public:
     LightComponent();
     glm::vec3 &GetColor() { return color; }
     void SetColor(glm::vec3 newColor) { color = newColor; }
-    void SetShader(std::shared_ptr<ShaderProgram> shader) { shaderToUse = shader; }
-    void SetShader(ShaderProgram *sp);
+    void SetShader(ShaderProgram *shader) { this->shader = shader; }
 
     ~LightComponent();
 

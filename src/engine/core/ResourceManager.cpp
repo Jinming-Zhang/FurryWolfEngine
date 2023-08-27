@@ -14,14 +14,53 @@ namespace WEngine
 
   ResourceManager::~ResourceManager() {}
 
+  void ResourceManager::Init()
+  {
+    // load default texture path
+    defaultResourcesPath[typeid(Texture)] =
+        ("./assets/defaults/missing_texture.png");
+
+    // load shader programs
+    // load and compile vertex shaders
+    WEngine::Shader vertexShader{};
+    vertexShader.CompileShader("./shaders/phongVert.vert", GL_VERTEX_SHADER);
+    // load and compile fragment shaders
+    WEngine::Shader fragmentShader{};
+    fragmentShader.CompileShader("./shaders/phongFrag.frag", GL_FRAGMENT_SHADER);
+    WEngine::Shader lightsourceFragmentShader{};
+    lightsourceFragmentShader.CompileShader("./shaders/lightSourceFrag.frag", GL_FRAGMENT_SHADER);
+
+    // link shaders into shader programs
+    std::unique_ptr<ShaderProgram> defaultShader = std::make_unique<ShaderProgram>();
+    defaultShader->Initialize();
+    defaultShader->AddShader(vertexShader);
+    defaultShader->AddShader(fragmentShader);
+    defaultShader->LinkShaders();
+
+    std::unique_ptr<ShaderProgram> phongShader = std::make_unique<ShaderProgram>();
+    phongShader->Initialize();
+    phongShader->AddShader(vertexShader);
+    phongShader->AddShader(fragmentShader);
+    phongShader->LinkShaders();
+
+    std::unique_ptr<ShaderProgram> lightSourceSp = std::make_unique<ShaderProgram>();
+    lightSourceSp->Initialize();
+    lightSourceSp->AddShader(vertexShader);
+    lightSourceSp->AddShader(lightsourceFragmentShader);
+    lightSourceSp->LinkShaders();
+
+    shaders = std::unordered_map<ShaderProgramType, std::unique_ptr<ShaderProgram>>{};
+    shaders[ShaderProgramType::Default] = std::move(defaultShader);
+    shaders[ShaderProgramType::Phong] = std::move(phongShader);
+    shaders[ShaderProgramType::LightSource] = std::move(lightSourceSp);
+  }
+
   ResourceManager *ResourceManager::Instance()
   {
     if (instance == nullptr)
     {
       instance = new ResourceManager();
-      // load default resources
-      instance->defaultResourcesPath[typeid(Texture)] =
-          ("./assets/defaults/missing_texture.png");
+      instance->Init();
     }
     return instance;
   }
@@ -64,6 +103,19 @@ namespace WEngine
     }
     std::cout << "ResourceManager: UnloadTexture failed, target texture not in the map.\n";
     return false;
+  }
+
+  ShaderProgram &ResourceManager::GetShaderProgram(ShaderProgramType type)
+  {
+    if (shaders.find(type) == shaders.end())
+    {
+      std::cout << "ResourceManager: GetShaderProgram failed, target shader program not in the map.\n";
+      return *shaders[ShaderProgramType::Phong];
+    }
+    else
+    {
+      return *shaders[type];
+    }
   }
 
   void ResourceManager::PrintResourcesUsage()

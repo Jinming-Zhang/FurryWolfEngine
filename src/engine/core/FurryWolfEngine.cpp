@@ -53,35 +53,8 @@ namespace WEngine
 
     WEngine::InputSystem::Instance()->SetWindowContext(window);
     // WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    LoadShaders();
-    InitDefaultResources();
 
     return true;
-  }
-
-  void FurryWolfEngine::LoadShaders()
-  {
-    WEngine::Shader vertexShader{};
-    vertexShader.CompileShader("./shaders/phongVert.vert", GL_VERTEX_SHADER);
-
-    WEngine::Shader fragmentShader{};
-    fragmentShader.CompileShader("./shaders/phongFrag.frag", GL_FRAGMENT_SHADER);
-
-    WEngine::Shader lightsourceFragmentShader{};
-    lightsourceFragmentShader.CompileShader("./shaders/lightSourceFrag.frag", GL_FRAGMENT_SHADER);
-
-    phongShader = new ShaderProgram();
-    phongShader->Initialize();
-    phongShader->AddShader(vertexShader);
-    phongShader->AddShader(fragmentShader);
-
-    phongShader->LinkShaders();
-
-    lightSourceSp = new LightSourceShaderProgram();
-    lightSourceSp->Initialize();
-    lightSourceSp->AddShader(vertexShader);
-    lightSourceSp->AddShader(lightsourceFragmentShader);
-    lightSourceSp->LinkShaders();
   }
 
   void FurryWolfEngine::Start()
@@ -117,9 +90,10 @@ namespace WEngine
       glClearColor(.2f, .3f, .3f, 1.f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      phongShader->UseProgram();
-      phongShader->SetInt("pLightsCount", PointLightComponent::PointLightIndexer);
-      phongShader->SetInt("spLightsCount", SpotLightComponent::SpotLightIndexer);
+      const ShaderProgram &phongShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
+      phongShader.UseProgram();
+      phongShader.SetInt("pLightsCount", PointLightComponent::PointLightIndexer);
+      phongShader.SetInt("spLightsCount", SpotLightComponent::SpotLightIndexer);
 
       for (auto &go : gameobjects)
       {
@@ -161,23 +135,5 @@ namespace WEngine
   {
     // SceneMaker::MakeLotsCubeScene(this);
     SceneMaker::MakeLightScene(this);
-  }
-  void FurryWolfEngine::InitDefaultResources()
-  {
-    WEngine::Shader vertexShader{};
-    vertexShader.CompileShader("./shaders/phongVert.vert", GL_VERTEX_SHADER);
-
-    WEngine::Shader fragmentShader{};
-    fragmentShader.CompileShader("./shaders/phongFrag.frag", GL_FRAGMENT_SHADER);
-
-    defaultShader = new PhongShader();
-    defaultShader->Initialize();
-    defaultShader->AddShader(vertexShader);
-    defaultShader->AddShader(fragmentShader);
-    defaultShader->LinkShaders();
-
-    defaultMaterial = new PhongModelMaterial();
-    defaultMaterial->SetObjColor(1.f, 192.f / 255.f, 203.f / 255.f);
-    defaultMaterial->SetShader(defaultShader);
   }
 }

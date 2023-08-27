@@ -83,13 +83,16 @@ namespace WEngine
 
   void SceneMaker::MakeLightScene(FurryWolfEngine *engine)
   {
+    ShaderProgram *phongShader = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
+    ShaderProgram *lightSourceSp = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::LightSource);
+
     GameObject *cameraGo = engine->CreateGameObject();
     engine->camera = CameraComponent::Main();
     engine->camera->gameObject = cameraGo;
     engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
 
     SpotLightComponent *flashLight = engine->camera->gameObject->AddComponent<SpotLightComponent>();
-    flashLight->SetShader(engine->phongShader);
+    flashLight->SetShader(phongShader);
     flashLight->SetColor(glm::vec3(1.f));
 
     // directional light source
@@ -103,12 +106,12 @@ namespace WEngine
     VerticesDrawMeshComponent *lightMesh = lightGo->AddComponent<VerticesDrawMeshComponent>();
     lightMesh->Init(SceneMaker::cubeVertices);
     LightSourceMaterial *lightGoMat = engine->CreateMaterial<LightSourceMaterial>();
-    lightGoMat->SetShader(engine->lightSourceSp);
+    lightGoMat->SetShader(lightSourceSp);
     lightMesh->SetMaterial(lightGoMat);
 
     // light component
     DirectionalLightComponent *dLight = lightGo->AddComponent<DirectionalLightComponent>();
-    dLight->SetShader(engine->phongShader);
+    dLight->SetShader(phongShader);
     glm::vec3 dLightColor = glm::vec3(1.f, 1.f, 1.f);
     dLight->SetColor(dLightColor);
     lightGoMat->SetColor(dLightColor);
@@ -127,11 +130,11 @@ namespace WEngine
       VerticesDrawMeshComponent *lightMesh = pLightGO->AddComponent<VerticesDrawMeshComponent>();
       lightMesh->Init(SceneMaker::cubeVertices);
       LightSourceMaterial *lightGoMat = engine->CreateMaterial<LightSourceMaterial>();
-      lightGoMat->SetShader(engine->lightSourceSp);
+      lightGoMat->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::LightSource));
       lightMesh->SetMaterial(lightGoMat);
 
       PointLightComponent *pLightCmp = pLightGO->GetComponent<PointLightComponent *>();
-      pLightCmp->SetShader(engine->phongShader);
+      pLightCmp->SetShader(phongShader);
       glm::vec3 pLightColor = glm::vec3(i * .25f);
       pLightCmp->SetColor(pLightColor);
       lightGoMat->SetColor(pLightColor);
@@ -145,7 +148,7 @@ namespace WEngine
     PhongModelMaterial *phongMat = engine->CreateMaterial<PhongModelMaterial>();
     phongMat->SetObjColor(1.f, .5f, .31f);
     phongMat->SetObjColor(1.f, 1.f, 1.f);
-    phongMat->SetShader(engine->phongShader);
+    phongMat->SetShader(phongShader);
     std::string albedoPath{"assets/images/textures/container2.png"};
     std::string specularPath{"assets/images/textures/container2_specular.png"};
     auto albedoMap1 = ResourceManager::Instance()->LoadTexture(albedoPath);
@@ -175,7 +178,7 @@ namespace WEngine
     TransformComponent *backpackTf = backpackModel->GetComponent<TransformComponent *>();
     glm::mat4 backpackModelMat{1.f};
     backpackModelMat = glm::translate(backpackModelMat, glm::vec3(0.f, 0.f, -1.f));
-    backpackModelMat = glm::scale(backpackModelMat, glm::vec3(1.2f));
+    backpackModelMat = glm::scale(backpackModelMat, glm::vec3(0.5f));
     backpackTf->SetModel(backpackModelMat);
 
     // GameObject *indDrawSample = engine->CreateGameObject("IndexedDrawSample");

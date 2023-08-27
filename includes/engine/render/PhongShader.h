@@ -20,6 +20,6 @@ namespace WEngine
     bool AddAlbedoTexture(std::string texturePath, TextureLoadConfig &config);
     bool SetNormalTexture(std::string texturePath, TextureLoadConfig &config);
 
-    virtual void UseProgram() override;
+    virtual void UseProgram() const override;
   };
 }

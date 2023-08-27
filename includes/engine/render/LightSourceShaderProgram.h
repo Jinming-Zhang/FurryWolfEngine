@@ -19,7 +19,7 @@ namespace WEngine
     ~LightSourceShaderProgram();
     glm::vec3 &GetObjectColor() { return objectColor; }
     glm::vec3 &GetLightColor() { return lightColor; }
-    virtual void UseProgram() override;
+    virtual void UseProgram() const override;
   };
 
 

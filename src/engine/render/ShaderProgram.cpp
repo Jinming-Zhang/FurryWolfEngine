@@ -38,7 +38,7 @@ namespace WEngine
     }
   }
 
-  void ShaderProgram::UseProgram()
+  void ShaderProgram::UseProgram() const
   {
     glUseProgram(shaderProgramId);
   }

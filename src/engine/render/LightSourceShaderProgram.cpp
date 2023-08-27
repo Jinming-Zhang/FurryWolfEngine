@@ -4,7 +4,7 @@ namespace WEngine
 {
   LightSourceShaderProgram::LightSourceShaderProgram() {}
 
-  void LightSourceShaderProgram::UseProgram()
+  void LightSourceShaderProgram::UseProgram()const
   {
     ShaderProgram::UseProgram();
   }
