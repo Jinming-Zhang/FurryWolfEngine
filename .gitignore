@@ -403,3 +403,8 @@ FodyWeavers.xsd
 /.vscode/
 /[Bb]uild/
 **/.obsidian/
+
+# Visual Studio Solution files
+**/*.sln
+**/*.vcxproj
+**/*.vcxproj.filters
