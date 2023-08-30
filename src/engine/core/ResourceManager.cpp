@@ -31,12 +31,6 @@ namespace WEngine
     lightsourceFragmentShader.CompileShader("./shaders/lightSourceFrag.frag", GL_FRAGMENT_SHADER);
 
     // link shaders into shader programs
-    std::unique_ptr<ShaderProgram> defaultShader = std::make_unique<ShaderProgram>();
-    defaultShader->Initialize();
-    defaultShader->AddShader(vertexShader);
-    defaultShader->AddShader(fragmentShader);
-    defaultShader->LinkShaders();
-
     std::unique_ptr<ShaderProgram> phongShader = std::make_unique<ShaderProgram>();
     phongShader->Initialize();
     phongShader->AddShader(vertexShader);
@@ -50,7 +44,6 @@ namespace WEngine
     lightSourceSp->LinkShaders();
 
     shaders = std::unordered_map<ShaderProgramType, std::unique_ptr<ShaderProgram>>{};
-    shaders[ShaderProgramType::Default] = std::move(defaultShader);
     shaders[ShaderProgramType::Phong] = std::move(phongShader);
     shaders[ShaderProgramType::LightSource] = std::move(lightSourceSp);
   }
@@ -107,14 +100,19 @@ namespace WEngine
 
   ShaderProgram &ResourceManager::GetShaderProgram(ShaderProgramType type)
   {
+    if (type == ShaderProgramType::Default)
+    {
+      return *shaders[ShaderProgramType::Phong];
+    }
+
     if (shaders.find(type) == shaders.end())
     {
       std::cout << "ResourceManager: GetShaderProgram failed, target shader program not in the map.\n";
-      return *shaders[ShaderProgramType::Phong];
+      return *shaders[ShaderProgramType::Default];
     }
     else
     {
-      return *shaders[type];
+      return *(shaders[type]);
     }
   }
 
