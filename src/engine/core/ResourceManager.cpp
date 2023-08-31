@@ -3,7 +3,6 @@
 
 namespace WEngine
 {
-
   ResourceManager *ResourceManager::instance = nullptr;
   ResourceManager::ResourceManager()
   {
@@ -29,6 +28,8 @@ namespace WEngine
     fragmentShader.CompileShader("./shaders/phongFrag.frag", GL_FRAGMENT_SHADER);
     WEngine::Shader lightsourceFragmentShader{};
     lightsourceFragmentShader.CompileShader("./shaders/lightSourceFrag.frag", GL_FRAGMENT_SHADER);
+    WEngine::Shader depthVisualizerFragmentShader{};
+    depthVisualizerFragmentShader.CompileShader("./shaders/depthVisualizer.frag", GL_FRAGMENT_SHADER);
 
     // link shaders into shader programs
     std::unique_ptr<ShaderProgram> phongShader = std::make_unique<ShaderProgram>();
@@ -43,9 +44,16 @@ namespace WEngine
     lightSourceSp->AddShader(lightsourceFragmentShader);
     lightSourceSp->LinkShaders();
 
+    std::unique_ptr<ShaderProgram> depthVisualizer = std::make_unique<ShaderProgram>();
+    depthVisualizer->Initialize();
+    depthVisualizer->AddShader(vertexShader);
+    depthVisualizer->AddShader(depthVisualizerFragmentShader);
+    depthVisualizer->LinkShaders();
+
     shaders = std::unordered_map<ShaderProgramType, std::unique_ptr<ShaderProgram>>{};
     shaders[ShaderProgramType::Phong] = std::move(phongShader);
     shaders[ShaderProgramType::LightSource] = std::move(lightSourceSp);
+    shaders[ShaderProgramType::DepthVisualizer] = std::move(depthVisualizer);
   }
 
   ResourceManager *ResourceManager::Instance()
@@ -102,7 +110,7 @@ namespace WEngine
   {
     if (type == ShaderProgramType::Default)
     {
-      return *shaders[ShaderProgramType::Phong];
+      return *shaders[ShaderProgramType::DepthVisualizer];
     }
 
     if (shaders.find(type) == shaders.end())

@@ -19,16 +19,11 @@ namespace WEngine
   private:
     IndexedDrawMesh *mesh;
     std::vector<std::unique_ptr<Texture>> textures;
-    PhongModelMaterial *phongMat;
 
   public:
     IndexedDrawMeshComponent();
     bool Init(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
     virtual void Render() override;
     virtual ~IndexedDrawMeshComponent();
-
-  public:
-    // getter setters
-    void SetPhongMaterial(PhongModelMaterial *mat);
   };
 }

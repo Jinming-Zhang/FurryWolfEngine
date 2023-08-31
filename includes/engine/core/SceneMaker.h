@@ -23,6 +23,7 @@
 #include "engine/render/Material.h"
 #include "engine/render/materials/LightSourceMaterial.h"
 #include "engine/render/materials/PhongModelMaterial.h"
+#include "engine/render/materials/DepthVisualizerMaterial.h"
 
 #include "game/FancyLight.h"
 namespace WEngine
@@ -37,6 +38,7 @@ namespace WEngine
     SceneMaker() {}
     static void MakeLotsCubeScene(FurryWolfEngine *engine);
     static void MakeLightScene(FurryWolfEngine *engine);
+    static void MakeDepthVisualizationScene(FurryWolfEngine *engine);
     ~SceneMaker() {}
   };
 
@@ -185,6 +187,33 @@ namespace WEngine
     // IndexedDrawMeshComponent *indDrawSampleMeshCmp = indDrawSample->AddComponent<IndexedDrawMeshComponent>();
     // indDrawSampleMeshCmp->Init(cubeVertices, std::vector<unsigned int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36});
     // indDrawSampleMeshCmp->SetPhongMaterial(phongMat);
+  }
+  void SceneMaker::MakeDepthVisualizationScene(FurryWolfEngine *engine)
+  {
+    GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
+    GameObject *cube1 = GameObjectFactory::CreateCubeMeshGO(engine);
+    GameObject *cube2 = GameObjectFactory::CreateCubeMeshGO(engine);
+
+    glm::mat4 model{1.f};
+    model = glm::translate(model, glm::vec3(-1.f, 0.f, -1.f));
+    cube1->GetComponent<TransformComponent *>()->SetModel(model);
+
+    model = glm::mat4{1.f};
+    model = glm::translate(model, glm::vec3(2.f, 0.f, 0.f));
+    cube2->GetComponent<TransformComponent *>()->SetModel(model);
+
+    model = glm::mat4{1.f};
+    model = glm::translate(model, glm::vec3{0.0f, -2.f, .0f});
+    model = glm::rotate(model, glm::radians(90.f), glm::vec3{1.f, .0f, .0f});
+    model = glm::scale(model, glm::vec3{10.f});
+    plane->GetComponent<TransformComponent *>()->SetModel(model);
+
+    cube1->GetComponent<MeshComponent *>()
+        ->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
+    cube2->GetComponent<MeshComponent *>()->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
+
+    engine->camera = CameraComponent::Main();
+    engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
   }
 
   std::vector<Vertex> SceneMaker::cubeVertices = std::vector<Vertex>{

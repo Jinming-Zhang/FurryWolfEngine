@@ -7,8 +7,10 @@ namespace WEngine
   {
   private:
   public:
-    GameObjectFactory(/* args */);
+    GameObjectFactory() = delete;
     ~GameObjectFactory();
     static GameObject *CreatePointLightGo(FurryWolfEngine *engine);
+    static GameObject *CreatePlaneMeshGO(FurryWolfEngine *engine);
+    static GameObject *CreateCubeMeshGO(FurryWolfEngine *engine);
   };
 }

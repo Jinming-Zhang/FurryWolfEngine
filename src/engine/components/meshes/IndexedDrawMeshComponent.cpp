@@ -19,11 +19,7 @@ namespace WEngine
 
   void IndexedDrawMeshComponent::Render()
   {
-    phongMat->Use(gameObject);
+    material->Use(gameObject);
     mesh->Draw();
-  }
-  void IndexedDrawMeshComponent::SetPhongMaterial(PhongModelMaterial *mat)
-  {
-    phongMat = mat;
   }
 }
