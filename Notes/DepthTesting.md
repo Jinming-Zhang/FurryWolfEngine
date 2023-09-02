@@ -41,3 +41,15 @@ Following is a list of available depth test functions:
 |`GL_GEQUAL`|Passes if the fragment's depth value is greater than or equal to the stored depth value.|
 
 ## Depth Value Precision
+The depth value has a range between $[0,1]$, which is relevant to the projection's near and far plane.
+If we use a *linear depth buffer* such that the depth value is linear proportional to the distance between near and far plane, then the objects that's closer to the camera will have depth value close to 0. However since usually objects closer to the camera are also what interests to the player, it's better for them to have a higher precision.
+
+A *non-linear depth buffer* is more commonly used, which has depth values proportional to $\frac{1}{z}$. This results in enormous precision when z is small (when object is close to the near plane), and much less precision when z is far away. 
+$$F_{depth}=\frac{1/z−1/near}{1/far−1/near}$$ ![[nonLinearDepthValueGraph.png]]
+Notice that for z value between 1 and 2 (distance from the camera to the vertex), the depth value is between 0 and 0.5, which takes half of the $[0,1]$ range of the depth value.
+
+We can use the following equation to revert the non-linear depth value to the linear version:
+```cpp
+float z = depth * 2.0 - 1.0; // back to NDC
+float z = depth * 2.0 - 1.0; // back to NDCfloat linearDepth = (2.0 * near * far) / (far + near - z * (far - near));
+```
