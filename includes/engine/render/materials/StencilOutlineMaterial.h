@@ -8,7 +8,9 @@ namespace WEngine
   private:
     /* data */
   public:
+    class Mesh *tmpMesh;
     StencilOutlineMaterial(/* args */);
     ~StencilOutlineMaterial();
+    virtual void Use(GameObject *go) override;
   };
 }

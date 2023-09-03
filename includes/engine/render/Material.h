@@ -5,6 +5,10 @@ namespace WEngine
 {
   class GameObject;
   class FurryWolfEngine;
+  /**
+   * @brief Material is a class that is used to set up the shader variables for a mesh.
+   * Each subclass/type of material should have all the fields needed for the shader as member fields.
+   */
   class Material
   {
     friend class FurryWolfEngine;

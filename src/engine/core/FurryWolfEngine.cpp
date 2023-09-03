@@ -69,10 +69,11 @@ namespace WEngine
     {
       go->Start();
     }
-    glEnable(GL_DEPTH_TEST);
     float currTime{(float)glfwGetTime()};
     float prevTime = currTime;
     const float cap{1.f / 60.f};
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
     while (!window->ShouldClose())
     {
       currTime = glfwGetTime();
@@ -88,7 +89,7 @@ namespace WEngine
       InputSystem::Instance()->Update();
 
       glClearColor(.2f, .3f, .3f, 1.f);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
       const ShaderProgram &phongShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
       phongShader.UseProgram();
