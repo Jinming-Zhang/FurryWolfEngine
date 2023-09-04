@@ -43,5 +43,6 @@ namespace WEngine
     ModelComponent();
     virtual ~ModelComponent();
     void Init(std::string modelPath);
+    virtual void DrawMeshOnly() override;
   };
 }

@@ -24,6 +24,7 @@ namespace WEngine
     IndexedDrawMeshComponent();
     bool Init(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
     virtual void Render() override;
+    virtual void DrawMeshOnly() override;
     virtual ~IndexedDrawMeshComponent();
   };
 }

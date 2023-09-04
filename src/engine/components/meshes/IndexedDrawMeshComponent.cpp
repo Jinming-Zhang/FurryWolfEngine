@@ -20,6 +20,11 @@ namespace WEngine
   void IndexedDrawMeshComponent::Render()
   {
     material->Use(gameObject);
+    // DrawMeshOnly();
+  }
+
+  void IndexedDrawMeshComponent::DrawMeshOnly()
+  {
     mesh->Draw();
   }
 }

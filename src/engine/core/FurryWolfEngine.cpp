@@ -88,7 +88,8 @@ namespace WEngine
       window->PollEvents();
       InputSystem::Instance()->Update();
 
-      glClearColor(.2f, .3f, .3f, 1.f);
+      // glClearColor(.2f, .3f, .3f, 1.f);
+      glClearColor(.1f, .1f, .1f, 1.f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
       const ShaderProgram &phongShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
@@ -99,8 +100,12 @@ namespace WEngine
       for (auto &go : gameobjects)
       {
         go->Update(delta);
+      }
+      for (auto &go : gameobjects)
+      {
         go->LateUpdate(delta);
       }
+
       camera->Update(delta);
 
       for (auto &go : gameobjects)

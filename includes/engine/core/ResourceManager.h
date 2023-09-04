@@ -15,6 +15,7 @@ namespace WEngine
     Phong,
     LightSource,
     DepthVisualizer,
+    Outliner
   };
 
   template <typename T>

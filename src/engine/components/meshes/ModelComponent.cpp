@@ -146,9 +146,13 @@ namespace WEngine
 
   void ModelComponent::Render()
   {
+    phongMat->Use(gameObject);
+    DrawMeshOnly();
+  }
+  void ModelComponent::DrawMeshOnly()
+  {
     for (size_t i{0}; i < meshes.size(); ++i)
     {
-      phongMat->Use(gameObject);
       meshes[i]->Draw();
     }
   }

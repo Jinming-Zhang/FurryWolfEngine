@@ -19,6 +19,7 @@ namespace WEngine
   protected:
     Material();
     class ShaderProgram *shaderToUse;
+    unsigned int renderPathNeeded = 1;
 
   public:
     void SetShader(ShaderProgram *shader) { shaderToUse = shader; }

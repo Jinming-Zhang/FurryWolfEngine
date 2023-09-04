@@ -17,6 +17,10 @@ namespace WEngine
   void VerticesDrawMeshComponent::Render()
   {
     material->Use(gameObject);
+    DrawMeshOnly();
+  }
+  void VerticesDrawMeshComponent::DrawMeshOnly()
+  {
     mesh->Draw();
   }
 }

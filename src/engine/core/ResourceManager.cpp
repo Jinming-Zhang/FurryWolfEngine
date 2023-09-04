@@ -30,6 +30,8 @@ namespace WEngine
     lightsourceFragmentShader.CompileShader("./shaders/lightSourceFrag.frag", GL_FRAGMENT_SHADER);
     WEngine::Shader depthVisualizerFragmentShader{};
     depthVisualizerFragmentShader.CompileShader("./shaders/depthVisualizer.frag", GL_FRAGMENT_SHADER);
+    WEngine::Shader outlinerFragmentShader{};
+    outlinerFragmentShader.CompileShader("./shaders/outliner.frag", GL_FRAGMENT_SHADER);
 
     // link shaders into shader programs
     std::unique_ptr<ShaderProgram> phongShader = std::make_unique<ShaderProgram>();
@@ -50,10 +52,17 @@ namespace WEngine
     depthVisualizer->AddShader(depthVisualizerFragmentShader);
     depthVisualizer->LinkShaders();
 
+    std::unique_ptr<ShaderProgram> outlinerShaderProgram = std::make_unique<ShaderProgram>();
+    outlinerShaderProgram->Initialize();
+    outlinerShaderProgram->AddShader(vertexShader);
+    outlinerShaderProgram->AddShader(outlinerFragmentShader);
+    outlinerShaderProgram->LinkShaders();
+
     shaders = std::unordered_map<ShaderProgramType, std::unique_ptr<ShaderProgram>>{};
     shaders[ShaderProgramType::Phong] = std::move(phongShader);
     shaders[ShaderProgramType::LightSource] = std::move(lightSourceSp);
     shaders[ShaderProgramType::DepthVisualizer] = std::move(depthVisualizer);
+    shaders[ShaderProgramType::Outliner] = std::move(outlinerShaderProgram);
   }
 
   ResourceManager *ResourceManager::Instance()

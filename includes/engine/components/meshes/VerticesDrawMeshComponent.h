@@ -15,5 +15,6 @@ namespace WEngine
     virtual ~VerticesDrawMeshComponent();
     void Init(const std::vector<Vertex> vertices);
     virtual void Render() override;
+    virtual void DrawMeshOnly() override;
   };
 }
