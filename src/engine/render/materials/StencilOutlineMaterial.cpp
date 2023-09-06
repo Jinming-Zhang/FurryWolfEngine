@@ -17,7 +17,6 @@ namespace WEngine
   void StencilOutlineMaterial::Use(GameObject *go)
   {
     MeshComponent *meshToDraw = go->GetComponent<MeshComponent *>();
-
     // draw object shaper to stencil buffer.
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glStencilMask(0xFF);

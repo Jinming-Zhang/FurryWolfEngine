@@ -191,9 +191,9 @@ namespace WEngine
   }
   void SceneMaker::MakeDepthVisualizationScene(FurryWolfEngine *engine)
   {
-    // GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
+    GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
     GameObject *cube1 = GameObjectFactory::CreateCubeMeshGO(engine);
-    // GameObject *cube2 = GameObjectFactory::CreateCubeMeshGO(engine);
+    GameObject *cube2 = GameObjectFactory::CreateCubeMeshGO(engine);
 
     glm::mat4 model{1.f};
     model = glm::translate(model, glm::vec3(-1.f, 0.f, -1.f));
@@ -201,19 +201,19 @@ namespace WEngine
 
     model = glm::mat4{1.f};
     model = glm::translate(model, glm::vec3(2.f, 0.f, 0.f));
-    // cube2->GetComponent<TransformComponent *>()->SetModel(model);
+    cube2->GetComponent<TransformComponent *>()->SetModel(model);
 
     model = glm::mat4{1.f};
     model = glm::translate(model, glm::vec3{0.0f, -2.f, .0f});
     model = glm::rotate(model, glm::radians(90.f), glm::vec3{1.f, .0f, .0f});
     model = glm::scale(model, glm::vec3{10.f});
-    // plane->GetComponent<TransformComponent *>()->SetModel(model);
+    plane->GetComponent<TransformComponent *>()->SetModel(model);
 
     StencilOutlineMaterial *outlineMat = engine->CreateMaterial<StencilOutlineMaterial>();
     cube1->GetComponent<MeshComponent *>()
         ->SetMaterial(outlineMat);
 
-    // cube2->GetComponent<MeshComponent *>()->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
+    cube2->GetComponent<MeshComponent *>()->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
 
     engine->camera = CameraComponent::Main();
     engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
