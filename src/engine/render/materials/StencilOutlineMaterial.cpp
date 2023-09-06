@@ -17,12 +17,12 @@ namespace WEngine
   void StencilOutlineMaterial::Use(GameObject *go)
   {
     MeshComponent *meshToDraw = go->GetComponent<MeshComponent *>();
-    shaderToUse = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::DepthVisualizer);
-    Material::Use(go);
+
     // draw object shaper to stencil buffer.
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glStencilMask(0xFF);
+    shaderToUse = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::DepthVisualizer);
+    Material::Use(go);
     meshToDraw->DrawMeshOnly();
 
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -37,8 +37,7 @@ namespace WEngine
     meshToDraw->DrawMeshOnly();
 
     glStencilMask(0xFF);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
     glEnable(GL_DEPTH_TEST);
-    glStencilMask(0x00);
   }
 }

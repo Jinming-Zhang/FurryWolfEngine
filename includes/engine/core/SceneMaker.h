@@ -191,7 +191,7 @@ namespace WEngine
   }
   void SceneMaker::MakeDepthVisualizationScene(FurryWolfEngine *engine)
   {
-    GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
+    // GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
     GameObject *cube1 = GameObjectFactory::CreateCubeMeshGO(engine);
     // GameObject *cube2 = GameObjectFactory::CreateCubeMeshGO(engine);
 
@@ -207,7 +207,7 @@ namespace WEngine
     model = glm::translate(model, glm::vec3{0.0f, -2.f, .0f});
     model = glm::rotate(model, glm::radians(90.f), glm::vec3{1.f, .0f, .0f});
     model = glm::scale(model, glm::vec3{10.f});
-    plane->GetComponent<TransformComponent *>()->SetModel(model);
+    // plane->GetComponent<TransformComponent *>()->SetModel(model);
 
     StencilOutlineMaterial *outlineMat = engine->CreateMaterial<StencilOutlineMaterial>();
     cube1->GetComponent<MeshComponent *>()
