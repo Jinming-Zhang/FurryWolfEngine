@@ -72,4 +72,31 @@ namespace WEngine
     return go;
   }
 
+  GameObject *GameObjectFactory::CreateSphereMeshGO(FurryWolfEngine *engine, int segments, int rings)
+  {
+    GameObject *go = engine->CreateGameObject();
+    IndexedDrawMeshComponent *mesh = go->AddComponent<IndexedDrawMeshComponent>();
+
+    float pi{3.1415926f};
+    std::vector<Vertex> vertices{};
+    float deltaTheta{2.f * pi / segments};
+    float deltaPhi = pi / rings;
+
+    float theta0{0.f};
+    float phi0{0.f};
+    for (int phiInd = 0; phiInd < rings; ++phiInd)
+    {
+    }
+
+    std::vector<unsigned int> planeIndices = {
+        // note that we start from 0!
+        0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
+    };
+    mesh->Init(vertices, planeIndices);
+    mesh->SetMaterial(engine->CreateMaterial<PhongModelMaterial>());
+    mesh->GetMaterial()->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Default));
+
+    return go;
+  }
 }
