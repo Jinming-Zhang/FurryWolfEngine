@@ -5,6 +5,7 @@
 
 #include "engine/math/glm/glm.hpp"
 
+#include "engine/components/DirectionalLightComponent.h"
 #include "engine/components/PointLightComponent.h"
 
 #include "engine/components/meshes/IndexedDrawMeshComponent.h"
@@ -20,6 +21,15 @@ namespace WEngine
     GameObject *go = engine->CreateGameObject();
     go->AddComponent<PointLightComponent>();
     return go;
+  }
+  GameObject *GameObjectFactory::CreateDirectionalLightGo(FurryWolfEngine *engine)
+  {
+    GameObject *lightGo = engine->CreateGameObject();
+    DirectionalLightComponent *dLight = lightGo->AddComponent<DirectionalLightComponent>();
+    dLight->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::LightSource));
+    glm::vec3 dLightColor = glm::vec3(1.f, 1.f, 1.f);
+    dLight->SetColor(dLightColor);
+    return lightGo;
   }
   GameObject *GameObjectFactory::CreatePlaneMeshGO(FurryWolfEngine *engine)
   {
@@ -50,6 +60,7 @@ namespace WEngine
         Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.5f, .5f, .5f), glm::vec2(0.f, 1.f)},
         Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
     };
+
     vmeshcmp->Init(planeVertices);
     PhongModelMaterial *mat = engine->CreateMaterial<PhongModelMaterial>();
     mat->SetBaseColor(.0f, 100.f, 100.f);

@@ -14,6 +14,7 @@ namespace WEngine
   StencilOutlineMaterial::~StencilOutlineMaterial()
   {
   }
+
   void StencilOutlineMaterial::Use(GameObject *go)
   {
     MeshComponent *meshToDraw = go->GetComponent<MeshComponent *>();

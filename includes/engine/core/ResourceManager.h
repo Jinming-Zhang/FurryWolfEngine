@@ -43,7 +43,7 @@ namespace WEngine
 
   public:
     // Resources
-    const std::shared_ptr<Texture> LoadTexture(std::string path);
+    const std::shared_ptr<Texture> LoadTexture(std::string path, TextureLoadConfig config = TextureLoadConfig{});
     bool UnloadTexture(std::string path);
     ShaderProgram &GetShaderProgram(ShaderProgramType type);
     void PrintResourcesUsage();

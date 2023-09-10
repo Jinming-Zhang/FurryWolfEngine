@@ -18,7 +18,10 @@ namespace WEngine
     // load default texture path
     defaultResourcesPath[typeid(Texture)] =
         ("./assets/defaults/missing_texture.png");
-    LoadTexture("./assets/defaults/defaultTexture.png");
+    TextureLoadConfig config;
+    config.flipY = true;
+    config.clapMode = GL_CLAMP_TO_EDGE;
+    LoadTexture("./assets/defaults/defaultTexture.png", config);
 
     // load shader programs
     // load and compile vertex shaders
@@ -76,13 +79,12 @@ namespace WEngine
     return instance;
   }
 
-  const std::shared_ptr<Texture> ResourceManager::LoadTexture(std::string path)
+  const std::shared_ptr<Texture> ResourceManager::LoadTexture(std::string path, TextureLoadConfig config)
   {
     auto result = textures.find(path);
     if (result == textures.end())
     {
       std::shared_ptr<Texture> texture = std::make_shared<Texture>();
-      TextureLoadConfig config;
       config.flipY = true;
       if (!texture->LoadTexture(path, config))
       {
@@ -133,6 +135,7 @@ namespace WEngine
       return *(shaders[type]);
     }
   }
+
 
   void ResourceManager::PrintResourcesUsage()
   {

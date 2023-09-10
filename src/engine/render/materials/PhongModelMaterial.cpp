@@ -13,6 +13,7 @@ namespace WEngine
   unsigned int PhongModelMaterial::SPECULAR_MAP_COUNT = 2;
   PhongModelMaterial::PhongModelMaterial()
   {
+    shaderToUse = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
     albedoMaps = std::vector<std::shared_ptr<Texture>>();
     specularMaps = std::vector<std::shared_ptr<Texture>>();
     baseColor = glm::vec3(1.f);

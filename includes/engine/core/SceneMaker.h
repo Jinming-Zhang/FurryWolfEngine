@@ -195,6 +195,7 @@ namespace WEngine
     GameObject *cube1 = GameObjectFactory::CreateCubeMeshGO(engine);
     GameObject *cube2 = GameObjectFactory::CreateCubeMeshGO(engine);
     GameObject *sphere1 = GameObjectFactory::CreateSphereMeshGO(engine);
+    GameObjectFactory::CreateDirectionalLightGo(engine);
     sphere1->Rename("sphere");
 
     glm::mat4 model{1.f};
@@ -219,7 +220,9 @@ namespace WEngine
     cube1->GetComponent<MeshComponent *>()
         ->SetMaterial(outlineMat);
 
-    cube2->GetComponent<MeshComponent *>()->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
+    PhongModelMaterial *cube2Mat = engine->CreateMaterial<PhongModelMaterial>();
+    cube2Mat->SetBaseColor(1.f, .5f, .91f);
+    cube2->GetComponent<MeshComponent *>()->SetMaterial(cube2Mat);
 
     sphere1->GetComponent<MeshComponent *>()->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
 

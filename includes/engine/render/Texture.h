@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-
 #include "glad/glad.h"
 
 namespace WEngine
@@ -8,6 +7,7 @@ namespace WEngine
   struct TextureLoadConfig
   {
     bool flipY = true;
+    GLint clapMode = GL_REPEAT;
   };
 
   /**
