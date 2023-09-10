@@ -12,7 +12,7 @@ namespace WEngine
   private:
     static unsigned int ALBEDO_MAP_COUNT;
     static unsigned int SPECULAR_MAP_COUNT;
-    glm::vec3 objColor;
+    glm::vec3 baseColor;
     float shininess;
     std::unique_ptr<Texture> normalMap;
 
@@ -21,13 +21,11 @@ namespace WEngine
 
   public:
     PhongModelMaterial();
-    // bool AddAlbedoMap(const std::string &path, const TextureLoadConfig &config);
     bool AddAlbedoMap(std::shared_ptr<Texture> texture);
     bool LoadNormalMap(const std::string &path, const TextureLoadConfig &config);
-    // bool AddSpecularMap(const std::string &path, const TextureLoadConfig &config);
     bool AddSpecularMap(std::shared_ptr<Texture> texture);
     ~PhongModelMaterial();
-    void SetObjColor(float r, float g, float b) { objColor = glm::vec3(r, g, b); }
+    void SetBaseColor(float r, float g, float b) { baseColor = glm::vec3(r, g, b); }
     virtual void Use(GameObject *go) override;
   };
 

@@ -18,6 +18,7 @@ namespace WEngine
     // load default texture path
     defaultResourcesPath[typeid(Texture)] =
         ("./assets/defaults/missing_texture.png");
+    LoadTexture("./assets/defaults/defaultTexture.png");
 
     // load shader programs
     // load and compile vertex shaders

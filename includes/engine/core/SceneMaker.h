@@ -149,8 +149,8 @@ namespace WEngine
     // toy
     // material
     PhongModelMaterial *phongMat = engine->CreateMaterial<PhongModelMaterial>();
-    phongMat->SetObjColor(1.f, .5f, .31f);
-    phongMat->SetObjColor(1.f, 1.f, 1.f);
+    phongMat->SetBaseColor(1.f, .5f, .31f);
+    phongMat->SetBaseColor(1.f, 1.f, 1.f);
     phongMat->SetShader(phongShader);
     std::string albedoPath{"assets/images/textures/container2.png"};
     std::string specularPath{"assets/images/textures/container2_specular.png"};
@@ -194,6 +194,8 @@ namespace WEngine
     GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
     GameObject *cube1 = GameObjectFactory::CreateCubeMeshGO(engine);
     GameObject *cube2 = GameObjectFactory::CreateCubeMeshGO(engine);
+    GameObject *sphere1 = GameObjectFactory::CreateSphereMeshGO(engine);
+    sphere1->Rename("sphere");
 
     glm::mat4 model{1.f};
     model = glm::translate(model, glm::vec3(-1.f, 0.f, -1.f));
@@ -209,14 +211,26 @@ namespace WEngine
     model = glm::scale(model, glm::vec3{10.f});
     plane->GetComponent<TransformComponent *>()->SetModel(model);
 
+    model = glm::mat4{1.f};
+    model = glm::translate(model, glm::vec3{1.f, 1.f, -2.f});
+    sphere1->GetComponent<TransformComponent *>()->SetModel(model);
+
     StencilOutlineMaterial *outlineMat = engine->CreateMaterial<StencilOutlineMaterial>();
     cube1->GetComponent<MeshComponent *>()
         ->SetMaterial(outlineMat);
 
     cube2->GetComponent<MeshComponent *>()->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
 
+    sphere1->GetComponent<MeshComponent *>()->SetMaterial(engine->CreateMaterial<DepthVisualizerMaterial>());
+
+    GameObject *cameraGo = engine->CreateGameObject();
     engine->camera = CameraComponent::Main();
+    engine->camera->gameObject = cameraGo;
     engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
+
+    SpotLightComponent *flashLight = engine->camera->gameObject->AddComponent<SpotLightComponent>();
+    flashLight->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong));
+    flashLight->SetColor(glm::vec3(1.f));
   }
 
   std::vector<Vertex> SceneMaker::cubeVertices = std::vector<Vertex>{

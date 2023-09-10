@@ -12,6 +12,7 @@ public:
 
   // inputs
   virtual bool IsKeyPressed(int keyCode) = 0;
+  virtual bool IsKeyReleased(int keyCode) = 0;
   virtual void SetInputMode(int mode, int value) = 0;
   virtual std::pair<float, float> GetMousePosition() = 0;
 

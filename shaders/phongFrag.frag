@@ -44,6 +44,8 @@ in vec3 normal;
 in vec3 fragPos;
 
 uniform vec3 eyePos;
+
+uniform vec3 baseColor;
 uniform Material material;
 uniform DirectionalLight dLight;
 
@@ -93,7 +95,7 @@ vec3 calcLightColor(Light baseLight, vec3 direction, float attenuation) {
     specu += vec3(texture(material.specularMap1, texCoord));
   }
 
-  vec3 objAmbient = texColor;
+  vec3 objAmbient = texColor*baseColor;
   vec3 objDiffuse = texColor;
   vec3 objSpecular = specu * texColor;
 

@@ -25,6 +25,7 @@ namespace WEngine
     virtual void Destroy() override;
     virtual void PollEvents() override;
     virtual bool IsKeyPressed(int keyCode) override;
+    virtual bool IsKeyReleased(int keyCode) override;
     virtual std::pair<float, float> GetMousePosition() override;
     virtual void SetInputMode(int mode, int value) override;
 

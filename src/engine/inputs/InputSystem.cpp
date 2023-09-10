@@ -12,6 +12,12 @@ namespace WEngine
   {
     return window->IsKeyPressed(key);
   }
+
+  bool InputSystem::KeyReleased(int key)
+  {
+    return window->IsKeyReleased(key);
+  }
+
   void InputSystem::Update()
   {
     prevMousePos = currMousePos;

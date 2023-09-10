@@ -52,7 +52,7 @@ namespace WEngine
     {
       moveSpeed -= 1;
     }
-    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_R))
+    if (InputSystem::Instance()->KeyReleased(GLFW_KEY_R))
     {
       enableRotate = !enableRotate;
     }

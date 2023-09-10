@@ -85,6 +85,10 @@ namespace WEngine
   {
     return (glfwGetKey(window, keyCode) == GLFW_PRESS);
   }
+  bool WolfGlfwWindow::IsKeyReleased(int keyCode)
+  {
+    return (glfwGetKey(window, keyCode) == GLFW_RELEASE);
+  }
 
   void WolfGlfwWindow::SetInputMode(int mode, int value)
   {

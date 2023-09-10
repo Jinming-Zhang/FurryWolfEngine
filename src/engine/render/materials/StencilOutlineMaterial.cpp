@@ -33,10 +33,5 @@ namespace WEngine
     glm::mat4 originalModel = tf->GetModel();
     glm::mat4 outlinerModel = glm::scale(originalModel, glm::vec3{1.1f});
     shaderToUse->SetMat4("model", outlinerModel);
-    meshToDraw->DrawMeshOnly();
-
-    glStencilMask(0xFF);
-    glStencilFunc(GL_ALWAYS, 0, 0xFF);
-    glEnable(GL_DEPTH_TEST);
   }
 }
