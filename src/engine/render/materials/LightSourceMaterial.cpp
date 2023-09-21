@@ -1,8 +1,12 @@
 #include "engine/render/materials/LightSourceMaterial.h"
 #include "engine/render/ShaderProgram.h"
+#include "engine/core/ResourceManager.h"
 namespace WEngine
 {
-  LightSourceMaterial::LightSourceMaterial() {}
+  LightSourceMaterial::LightSourceMaterial()
+  {
+    shaderToUse = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::LightSource);
+  }
   LightSourceMaterial::~LightSourceMaterial() {}
 
   void LightSourceMaterial::Use(GameObject *go)

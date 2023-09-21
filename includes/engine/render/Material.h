@@ -20,6 +20,7 @@ namespace WEngine
     Material();
     class ShaderProgram *shaderToUse;
     unsigned int renderPathNeeded = 1;
+    bool isTransparent = false;
 
   public:
     void SetShader(ShaderProgram *shader) { shaderToUse = shader; }

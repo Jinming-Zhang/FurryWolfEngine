@@ -10,6 +10,7 @@ namespace WEngine
   public:
     GameObjectFactory() = delete;
     ~GameObjectFactory();
+    static GameObject *CreateCamera(FurryWolfEngine *engine);
     static GameObject *CreateDirectionalLightGo(FurryWolfEngine *engine);
     static GameObject *CreatePointLightGo(FurryWolfEngine *engine);
     static GameObject *CreatePlaneMeshGO(FurryWolfEngine *engine);

@@ -35,9 +35,10 @@ namespace WEngine
     prevMousePos = std::pair(400.0f, 300.0f);
     firstMouse = true;
   }
+
   CameraComponent::~CameraComponent() {}
 
-  void CameraComponent::Update(float deltaTime)
+  void CameraComponent::LateUpdate(float deltaTime)
   {
     if (InputSystem::Instance()->KeyPressed(GLFW_KEY_P))
     {
@@ -55,6 +56,9 @@ namespace WEngine
     if (InputSystem::Instance()->KeyReleased(GLFW_KEY_R))
     {
       enableRotate = !enableRotate;
+#ifdef VERBOSE
+      std::cout << "Enable rotate: " << enableRotate << "\n";
+#endif
     }
 
     // notice the position is actually the opposite of where we are moving, since we really are moving all the objects in the scene in the opposite direction of where we want to move the camera.
@@ -180,13 +184,13 @@ namespace WEngine
     projection = glm::perspective(glm::radians(fovDeg), ratio, near, far);
   }
 
-  CameraComponent *CameraComponent::instance = nullptr;
+  CameraComponent *CameraComponent::mainCam = nullptr;
   CameraComponent *CameraComponent::Main()
   {
-    if (CameraComponent::instance == nullptr)
+    if (CameraComponent::mainCam == nullptr)
     {
-      CameraComponent::instance = new CameraComponent();
+      CameraComponent::mainCam = new CameraComponent();
     }
-    return CameraComponent::instance;
+    return CameraComponent::mainCam;
   }
 }

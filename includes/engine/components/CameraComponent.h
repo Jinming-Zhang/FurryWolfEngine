@@ -8,13 +8,13 @@ namespace WEngine
 {
   class CameraComponent : public Component
   {
-    // singleton
   private:
-    static CameraComponent *instance;
-    CameraComponent();
+    static CameraComponent *mainCam;
 
   public:
+    CameraComponent();
     static CameraComponent *Main();
+    static void SetMainCamera(CameraComponent *cam) { mainCam = cam; }
     ~CameraComponent();
 
   private:
@@ -48,7 +48,7 @@ namespace WEngine
 
   public:
     // overrides
-    virtual void Update(float deltaTime) override;
+    virtual void LateUpdate(float deltaTime) override;
 
   public:
     // getter and setters

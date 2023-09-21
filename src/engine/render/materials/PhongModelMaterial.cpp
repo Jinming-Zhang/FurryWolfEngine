@@ -50,7 +50,9 @@ namespace WEngine
     shaderToUse->SetInt("material.albedoMapsCount", albedoMaps.size());
     if (albedoMaps.size() == 0)
     {
-      std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture("./assets/defaults/defaultTexture.png");
+      TextureLoadConfig config;
+      config.clapMode = GL_REPEAT;
+      std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture("./assets/defaults/defaultTexture.png", config);
       texture->Use(GL_TEXTURE0 + textureUnitIndex);
       std::string prefix{"material.albedoMap"};
       prefix.append(std::to_string(0));

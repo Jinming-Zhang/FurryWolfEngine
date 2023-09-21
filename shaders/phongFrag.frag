@@ -84,10 +84,12 @@ vec3 calcLightColor(Light baseLight, vec3 direction, float attenuation) {
   vec3 texColor = vec3(0.0f);
   texColor += vec3(texture(material.albedoMap0, texCoord));
   if (material.albedoMapsCount >= 2) {
-    texColor += vec3(texture(material.albedoMap1, texCoord));
+    texColor = mix(texColor, vec3(texture(material.albedoMap1, texCoord)),
+                   1.0f / material.albedoMapsCount);
   }
   if (material.albedoMapsCount >= 3) {
-    texColor += vec3(texture(material.albedoMap2, texCoord));
+    texColor = mix(texColor, vec3(texture(material.albedoMap2, texCoord)),
+                   1.0f / material.albedoMapsCount);
   }
   vec3 specu = vec3(.0f);
   specu += vec3(texture(material.specularMap0, texCoord));
@@ -95,7 +97,10 @@ vec3 calcLightColor(Light baseLight, vec3 direction, float attenuation) {
     specu += vec3(texture(material.specularMap1, texCoord));
   }
 
-  vec3 objAmbient = texColor*baseColor;
+  if (baseColor.r + baseColor.g + baseColor.b > 0.01f) {
+    texColor *= baseColor;
+  }
+  vec3 objAmbient = texColor;
   vec3 objDiffuse = texColor;
   vec3 objSpecular = specu * texColor;
 

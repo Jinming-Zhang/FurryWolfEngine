@@ -1,20 +1,33 @@
+#include "engine/math/glm/glm.hpp"
+
 #include "engine/core/FurryWolfEngine.h"
 #include "engine/core/ResourceManager.h"
 #include "engine/core/GameObject.h"
 #include "engine/core/GameObjectFactory.h"
+#include "engine/core/MeshComponentFactory.h"
 
-#include "engine/math/glm/glm.hpp"
-
+#include "engine/components/CameraComponent.h"
 #include "engine/components/DirectionalLightComponent.h"
 #include "engine/components/PointLightComponent.h"
 
 #include "engine/components/meshes/IndexedDrawMeshComponent.h"
 #include "engine/components/meshes/VerticesDrawMeshComponent.h"
 #include "engine/render/meshes/Mesh.h"
+#include "engine/render/materials/PhongModelMaterial.h"
+#include "engine/render/materials/SimpleUnlitMaterial.h"
 
 namespace WEngine
 {
   GameObjectFactory::~GameObjectFactory() {}
+
+  GameObject *GameObjectFactory::CreateCamera(FurryWolfEngine *engine)
+  {
+    GameObject *go = engine->CreateGameObject("Camera");
+    CameraComponent *camera = go->AddComponent<CameraComponent>();
+    CameraComponent::SetMainCamera(camera);
+    camera->SetPosition(glm::vec3(0.f, 0.f, 3.f));
+    return go;
+  }
 
   GameObject *GameObjectFactory::CreatePointLightGo(FurryWolfEngine *engine)
   {
@@ -22,81 +35,61 @@ namespace WEngine
     go->AddComponent<PointLightComponent>();
     return go;
   }
+
   GameObject *GameObjectFactory::CreateDirectionalLightGo(FurryWolfEngine *engine)
   {
     GameObject *lightGo = engine->CreateGameObject();
     DirectionalLightComponent *dLight = lightGo->AddComponent<DirectionalLightComponent>();
-    dLight->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::LightSource));
+    dLight->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong));
     glm::vec3 dLightColor = glm::vec3(1.f, 1.f, 1.f);
     dLight->SetColor(dLightColor);
     return lightGo;
   }
+
   GameObject *GameObjectFactory::CreatePlaneMeshGO(FurryWolfEngine *engine)
   {
-    // GameObject *go = engine->CreateGameObject();
-    // IndexedDrawMeshComponent *mesh = go->AddComponent<IndexedDrawMeshComponent>();
-    // std::vector<Vertex> planeVertices = {
-    //     Vertex{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.f, .0f, .0f), glm::vec2(1.f, 1.f)},
-    //     Vertex{glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(.0f, 1.f, .0f), glm::vec2(1.f, 0.f)},
-    //     Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
-    //     Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.5f, .5f, .5f), glm::vec2(0.f, 1.f)}};
-    // std::vector<unsigned int> planeIndices = {
-    //     // note that we start from 0!
-    //     0, 1, 3, // first triangle
-    //     1, 2, 3  // second triangle
-    // };
-    // mesh->Init(planeVertices, planeIndices);
-    // mesh->SetMaterial(engine->CreateMaterial<PhongModelMaterial>());
-    // mesh->GetMaterial()->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Default));
-
     GameObject *go = engine->CreateGameObject();
-    VerticesDrawMeshComponent *vmeshcmp = go->AddComponent<VerticesDrawMeshComponent>();
+    IndexedDrawMeshComponent *mesh = go->AddComponent<IndexedDrawMeshComponent>();
     std::vector<Vertex> planeVertices = {
         Vertex{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.f, .0f, .0f), glm::vec2(1.f, 1.f)},
         Vertex{glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(.0f, 1.f, .0f), glm::vec2(1.f, 0.f)},
         Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
-
-        Vertex{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.f, .0f, .0f), glm::vec2(1.f, 1.f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.5f, .5f, .5f), glm::vec2(0.f, 1.f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
+        Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.5f, .5f, .5f), glm::vec2(0.f, 1.f)}};
+    std::vector<unsigned int> planeIndices = {
+        // note that we start from 0!
+        0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
     };
-
-    vmeshcmp->Init(planeVertices);
+    mesh->Init(planeVertices, planeIndices);
     PhongModelMaterial *mat = engine->CreateMaterial<PhongModelMaterial>();
-    mat->SetBaseColor(.0f, 100.f, 100.f);
-    mat->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong));
-    vmeshcmp->SetMaterial(mat);
+    mat->SetBaseColor(0.0f, 100.0f, 100.0f);
+    mesh->SetMaterial(mat);
+
+    // GameObject *go = engine->CreateGameObject();
+    // VerticesDrawMeshComponent *vmeshcmp = go->AddComponent<VerticesDrawMeshComponent>();
+    // std::vector<Vertex> planeVertices = {
+    //     Vertex{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, .0f, 1.0f), glm::vec2(1.f, 1.f)},
+    //     Vertex{glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.f, 0.f)},
+    //     Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
+
+    //     Vertex{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, .0f, 1.0f), glm::vec2(1.f, 1.f)},
+    //     Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 1.f)},
+    //     Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
+    // };
+
+    // vmeshcmp->Init(planeVertices);
+    // // SimpleUnlitMaterial *mat = engine->CreateMaterial<SimpleUnlitMaterial>();
+    // PhongModelMaterial *mat = engine->CreateMaterial<PhongModelMaterial>();
+    // mat->SetBaseColor(.0f, 100.f, 100.f);
+    // vmeshcmp->SetMaterial(mat);
     return go;
   }
 
   GameObject *GameObjectFactory::CreateCubeMeshGO(FurryWolfEngine *engine)
   {
     GameObject *go = engine->CreateGameObject();
-    IndexedDrawMeshComponent *mesh = go->AddComponent<IndexedDrawMeshComponent>();
-
-    std::vector<Vertex> cubeVertices = std::vector<Vertex>{
-        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)},
-
-        Vertex{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)}};
-
-    std::vector<unsigned int> indices = {
-        0, 1, 3, 1, 2, 3, // front
-        4, 5, 7, 5, 6, 7, // back
-        0, 1, 4, 1, 4, 5, // bottom
-        2, 3, 6, 3, 6, 7, // top
-        0, 3, 4, 3, 4, 7, // left
-        1, 2, 5, 2, 5, 6  // right
-    };
-
-    mesh->Init(cubeVertices, indices);
+    MeshComponent *mesh = MeshComponentFactory::AddCubeMeshComponent(go);
     mesh->SetMaterial(engine->CreateMaterial<PhongModelMaterial>());
-    mesh->GetMaterial()->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Default));
     return go;
   }
 
@@ -107,18 +100,18 @@ namespace WEngine
 
     float pi{3.1415926f};
     std::vector<Vertex> vertices{};
-    float deltaTheta{2.f * pi / segments};
-    float deltaPhi = pi / rings;
+    float deltaTheta{2.f * pi / (segments - 1)};
+    float deltaPhi = pi / (rings - 1);
 
     float theta0{0.f};     // segment angle
     float phi0{-pi / 2.f}; // ring angle
-    for (int phiInd{0}; phiInd < rings; ++phiInd)
+    for (int phiInd{0}; phiInd < rings - 1; ++phiInd)
     {
       int nextPhi = (phiInd + 1) % rings;
       float phiSouth = phi0 + deltaPhi * phiInd;
       float phiEast = phi0 + deltaPhi * nextPhi;
 
-      for (int thetaInd = 0; thetaInd < segments; ++thetaInd)
+      for (int thetaInd = 0; thetaInd < segments - 1; ++thetaInd)
       {
         int nextThetaInd = (thetaInd + 1) % segments;
         float thetaSouth = theta0 * thetaInd * deltaTheta;
@@ -135,7 +128,7 @@ namespace WEngine
           vertices.push_back(Vertex{pSE, glm::normalize(pSE), glm::vec2{.0f}});
           vertices.push_back(Vertex{pEE, glm::normalize(pEE), glm::vec2{.0f}});
         }
-        else if (nextPhi == rings)
+        else if (nextPhi == rings - 1)
         {
           vertices.push_back(Vertex{pEE, glm::normalize(pEE), glm::vec2{.0f}});
           vertices.push_back(Vertex{pES, glm::normalize(pES), glm::vec2{.0f}});

@@ -18,6 +18,7 @@ namespace WEngine
     glm::vec3 &GetColor() { return color; }
     void SetColor(glm::vec3 newColor) { color = newColor; }
     void SetShader(ShaderProgram *shader) { this->shader = shader; }
+    void SetIntensity(float newIntensity) { intensity = newIntensity; }
 
     ~LightComponent();
 

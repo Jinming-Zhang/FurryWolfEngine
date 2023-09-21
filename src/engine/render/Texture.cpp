@@ -29,6 +29,7 @@ namespace WEngine
     std::cout << "Texture " << textureId << " destructor called\n";
     Destroy();
   }
+
   bool Texture::LoadTexture(const std::string &path, const TextureLoadConfig &config)
   {
     glGenTextures(1, &textureId);
@@ -40,16 +41,7 @@ namespace WEngine
     stbi_set_flip_vertically_on_load(config.flipY);
     unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 
-    std::string imgExt = path.substr(path.find_last_of('.') + 1);
-    GLint internalFormat;
-    if (imgExt == "jpg")
-    {
-      internalFormat = GL_RGB;
-    }
-    else if (imgExt == "png")
-    {
-      internalFormat = GL_RGBA;
-    }
+    GLint internalFormat = nrChannels == 3 ? GL_RGB : GL_RGBA;
 
     if (!data)
     {
@@ -62,8 +54,10 @@ namespace WEngine
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     // wrap mode
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, config.clapMode);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, config.clapMode);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, config.clapMode);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, config.clapMode);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // texture filtering mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

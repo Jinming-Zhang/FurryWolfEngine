@@ -20,15 +20,16 @@ namespace WEngine
   class VerticesMesh;
   class Material;
   class CameraComponent;
+  class Scene;
 
   class FurryWolfEngine
   {
     friend class SceneMaker;
+    friend class Scene;
 
   private:
     WolfGlfwWindow *window;
-    std::vector<std::unique_ptr<GameObject>> gameobjects;
-    CameraComponent *camera;
+    std::vector<Scene *> scenes;
 
   public:
     FurryWolfEngine();
@@ -48,11 +49,12 @@ namespace WEngine
       if (Material *mat = dynamic_cast<Material *>(obj))
       {
         mat->engine = this;
-        mat->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Default));
       }
       return obj;
     }
+
     GameObject *CreateGameObject(std::string name = "");
+    void LoadScene(Scene *scene);
 
   private:
     void CreateScene();

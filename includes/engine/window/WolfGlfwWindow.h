@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <functional>
+#include <unordered_map>
 #include "IWindow.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -8,6 +9,15 @@ namespace WEngine
 {
   class WolfGlfwWindow : public IWindow
   {
+  public:
+    enum class KeyState
+    {
+      PressedThisFrame,
+      Hold,
+      RelesedThisFrame,
+      Relesed
+    };
+
   private:
     GLFWwindow *window;
     static int WIDTH;
@@ -15,6 +25,11 @@ namespace WEngine
     static double mouseX;
     static double mouseY;
     static void mouse_callback(GLFWwindow *w, double xpos, double ypos);
+    std::unordered_map<int, KeyState> keyStates;
+    void InitKeyState(int keyCode, int glfwKeyState);
+    void UpdateKeyState(int keyCode);
+    void UpdateKeyStateToPressed(int keyCode);
+    void UpdateKeyStateToReleased(int keyCode);
 
   public:
     WolfGlfwWindow();

@@ -26,6 +26,7 @@ namespace WEngine
     GameObject(std::string name = "GameObject_" + std::to_string(++idCounter));
 
   public:
+    static GameObject *CreateGameObject(std::string name = "");
     virtual void Rename(const std::string &name) { this->name = name; }
     virtual void Awake() {}
     virtual void Start() {}
@@ -33,6 +34,7 @@ namespace WEngine
     virtual void FixedUpdate(float fixedDeltaTime);
     virtual void LateUpdate(float deltaTime);
     virtual void Render();
+    virtual void Destroy();
     template <typename T>
     T GetComponent()
     {
@@ -65,7 +67,7 @@ namespace WEngine
       components.push_back(std::move(cmp));
       return (T *)components[components.size() - 1].get();
     }
-    ~GameObject() {}
+    virtual ~GameObject() {}
 
 #ifdef WINDOWS
     template <>

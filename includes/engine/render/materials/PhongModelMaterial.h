@@ -21,10 +21,10 @@ namespace WEngine
 
   public:
     PhongModelMaterial();
+    ~PhongModelMaterial();
     bool AddAlbedoMap(std::shared_ptr<Texture> texture);
     bool LoadNormalMap(const std::string &path, const TextureLoadConfig &config);
     bool AddSpecularMap(std::shared_ptr<Texture> texture);
-    ~PhongModelMaterial();
     void SetBaseColor(float r, float g, float b) { baseColor = glm::vec3(r, g, b); }
     virtual void Use(GameObject *go) override;
   };

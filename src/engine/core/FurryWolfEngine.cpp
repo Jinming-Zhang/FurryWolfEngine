@@ -10,6 +10,7 @@
 #include "engine/core/FurryWolfEngine.h"
 #include "engine/core/SceneMaker.h"
 
+#include "engine/core/Scene.h"
 #include "engine/core/GameObject.h"
 #include "engine/window/IWindow.h"
 #include "engine/window/WolfGlfwWindow.h"
@@ -35,7 +36,7 @@ namespace WEngine
   class TransformComponent;
   FurryWolfEngine::FurryWolfEngine()
   {
-    gameobjects = std::vector<std::unique_ptr<GameObject>>();
+    scenes = std::vector<Scene *>();
   }
 
   FurryWolfEngine::~FurryWolfEngine() {}
@@ -52,7 +53,9 @@ namespace WEngine
     }
 
     WEngine::InputSystem::Instance()->SetWindowContext(window);
-    // WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+#ifndef DEBUG
+    WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+#endif
 
     return true;
   }
@@ -61,22 +64,14 @@ namespace WEngine
   {
     CreateScene();
 
-    for (auto &go : gameobjects)
-    {
-      go->Awake();
-    }
-    for (auto &go : gameobjects)
-    {
-      go->Start();
-    }
     float currTime{(float)glfwGetTime()};
     float prevTime = currTime;
     const float cap{1.f / 60.f};
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    // glDepthFunc(GL_LESS);
+    // glEnable(GL_STENCIL_TEST);
+    // glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    // glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     while (!window->ShouldClose())
     {
       currTime = glfwGetTime();
@@ -93,31 +88,20 @@ namespace WEngine
 
       glClearColor(.2f, .3f, .3f, 1.f);
       glEnable(GL_DEPTH_TEST);
-      glEnable(GL_STENCIL_TEST);
-      glStencilMask(0xFF);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+      // glEnable(GL_STENCIL_TEST);
+      // glStencilMask(0xFF);
+      // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       const ShaderProgram &phongShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
       phongShader.UseProgram();
       phongShader.SetInt("pLightsCount", PointLightComponent::PointLightIndexer);
       phongShader.SetInt("spLightsCount", SpotLightComponent::SpotLightIndexer);
 
-      for (auto &go : gameobjects)
+      for (auto scene : scenes)
       {
-        go->Update(delta);
+        scene->Refresh(delta);
       }
-      for (auto &go : gameobjects)
-      {
-        go->LateUpdate(delta);
-      }
-
-      camera->Update(delta);
-
-      for (auto &go : gameobjects)
-      {
-        go->Render();
-      }
-
       window->SwapBuffers();
     }
   }
@@ -134,18 +118,21 @@ namespace WEngine
       go = new GameObject(name);
     }
 
-    std::unique_ptr<GameObject> goPtr{go};
-    goPtr->AddComponent<TransformComponent>();
-    goPtr->engine = this;
-    gameobjects.push_back(std::move(goPtr));
-
-    return gameobjects[gameobjects.size() - 1].get();
+    go->AddComponent<TransformComponent>();
+    go->engine = this;
+    return go;
   }
 
   void FurryWolfEngine::CreateScene()
   {
     // SceneMaker::MakeLotsCubeScene(this);
-    // SceneMaker::MakeLightScene(this);
-    SceneMaker::MakeDepthVisualizationScene(this);
+    LoadScene(SceneMaker::MakeLightScene(this));
+    // SceneMaker::MakeDepthVisualizationScene(this);
+  }
+  void FurryWolfEngine::LoadScene(Scene *scene)
+  {
+    scenes.push_back(scene);
+    scene->Load();
+    scene->Start();
   }
 }

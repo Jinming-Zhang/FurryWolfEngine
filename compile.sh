@@ -6,7 +6,7 @@ do
   case "${flag}" in
     v) defs="${defs}-DVERBOSE";;
     p) defs="${defs} -DPERFETTO";;
-    d) defs="${defs} -g -O0";;
+    d) defs="${defs} -DDEBUG -g -O0";;
   esac
 done
 

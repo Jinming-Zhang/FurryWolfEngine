@@ -1,3 +1,4 @@
+#include <iostream>
 #include "engine/inputs/InputSystem.h"
 
 namespace WEngine
@@ -10,11 +11,23 @@ namespace WEngine
 
   bool InputSystem::KeyPressed(int key)
   {
+#ifdef VERBOSE
+    if (window->IsKeyPressed(key))
+    {
+      std::cout << "Key " << key << " pressed\n";
+    }
+#endif
     return window->IsKeyPressed(key);
   }
 
   bool InputSystem::KeyReleased(int key)
   {
+#ifdef VERBOSE
+    if (window->IsKeyReleased(key))
+    {
+      std::cout << "Key " << key << " released\n";
+    }
+#endif
     return window->IsKeyReleased(key);
   }
 

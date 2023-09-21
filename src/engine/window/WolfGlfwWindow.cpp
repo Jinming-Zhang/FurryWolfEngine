@@ -45,6 +45,7 @@ namespace WEngine
     glfwSetCursorPosCallback(window, WolfGlfwWindow::mouse_callback);
     WIDTH = width;
     HEIGHT = height;
+    keyStates = std::unordered_map<int, KeyState>();
     return true;
   }
 
@@ -81,13 +82,83 @@ namespace WEngine
     return HEIGHT;
   }
 
+  void WolfGlfwWindow::UpdateKeyState(int keyCode)
+  {
+    int glfwKeyState = glfwGetKey(window, keyCode);
+
+    if (keyStates.find(keyCode) == keyStates.end())
+    {
+      InitKeyState(keyCode, glfwKeyState);
+    }
+    else
+    {
+      if (glfwKeyState == GLFW_PRESS)
+      {
+        UpdateKeyStateToPressed(keyCode);
+      }
+      else
+      {
+        UpdateKeyStateToReleased(keyCode);
+      }
+    }
+  }
+  void WolfGlfwWindow::InitKeyState(int keyCode, int glfwKeyState)
+  {
+    if (glfwKeyState == GLFW_PRESS)
+    {
+      keyStates[keyCode] = KeyState::PressedThisFrame;
+    }
+    else
+    {
+      keyStates[keyCode] = KeyState::RelesedThisFrame;
+    }
+  }
+
+  void WolfGlfwWindow::UpdateKeyStateToPressed(int keyCode)
+  {
+    KeyState prevState = keyStates[keyCode];
+    switch (prevState)
+    {
+    case KeyState::RelesedThisFrame:
+    case KeyState::Relesed:
+      keyStates[keyCode] = KeyState::PressedThisFrame;
+      break;
+    case KeyState::Hold:
+    case KeyState::PressedThisFrame:
+      keyStates[keyCode] = KeyState::Hold;
+    default:
+      break;
+    }
+  }
+
+  void WolfGlfwWindow::UpdateKeyStateToReleased(int keyCode)
+  {
+    KeyState prevState = keyStates[keyCode];
+    switch (prevState)
+    {
+    case KeyState::RelesedThisFrame:
+    case KeyState::Relesed:
+      keyStates[keyCode] = KeyState::Relesed;
+      break;
+    case KeyState::Hold:
+    case KeyState::PressedThisFrame:
+      keyStates[keyCode] = KeyState::RelesedThisFrame;
+    default:
+      break;
+    }
+  }
+
   bool WolfGlfwWindow::IsKeyPressed(int keyCode)
   {
-    return (glfwGetKey(window, keyCode) == GLFW_PRESS);
+    UpdateKeyState(keyCode);
+
+    return keyStates[keyCode] == KeyState::PressedThisFrame;
   }
+
   bool WolfGlfwWindow::IsKeyReleased(int keyCode)
   {
-    return (glfwGetKey(window, keyCode) == GLFW_RELEASE);
+    UpdateKeyState(keyCode);
+    return keyStates[keyCode] == KeyState::RelesedThisFrame;
   }
 
   void WolfGlfwWindow::SetInputMode(int mode, int value)

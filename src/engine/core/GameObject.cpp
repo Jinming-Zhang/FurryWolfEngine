@@ -45,6 +45,9 @@ namespace WEngine
       mesh->Render();
     }
   }
+  void GameObject::Destroy()
+  {
+  }
 
 #ifndef WINDOWS
   template <>

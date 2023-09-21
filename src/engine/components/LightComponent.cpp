@@ -10,7 +10,7 @@ namespace WEngine
   LightComponent::LightComponent()
   {
     color = glm::vec3{1.f};
-    intensity = .1f;
+    intensity = 1.0f;
   }
 
   LightComponent::~LightComponent() {}
