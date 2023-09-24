@@ -63,27 +63,27 @@ namespace WEngine
 
     // notice the position is actually the opposite of where we are moving, since we really are moving all the objects in the scene in the opposite direction of where we want to move the camera.
     const float cameraSpeed{moveSpeed * deltaTime};
-    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_W))
+    if (InputSystem::Instance()->KeyHold(GLFW_KEY_W))
     {
       position += cameraSpeed * cameraFront;
     }
-    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_S))
+    if (InputSystem::Instance()->KeyHold(GLFW_KEY_S))
     {
       position -= cameraSpeed * cameraFront;
     }
-    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_A))
+    if (InputSystem::Instance()->KeyHold(GLFW_KEY_A))
     {
       position -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     }
-    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_D))
+    if (InputSystem::Instance()->KeyHold(GLFW_KEY_D))
     {
       position += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     }
-    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_Q))
+    if (InputSystem::Instance()->KeyHold(GLFW_KEY_Q))
     {
       fov -= fovSpeed * deltaTime;
     }
-    if (InputSystem::Instance()->KeyPressed(GLFW_KEY_E))
+    if (InputSystem::Instance()->KeyHold(GLFW_KEY_E))
     {
       fov += fovSpeed * deltaTime;
     }

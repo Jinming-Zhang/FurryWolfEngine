@@ -25,6 +25,7 @@ namespace WEngine
     void SetInputMode(int mode, int value);
     bool KeyPressed(int key);
     bool KeyReleased(int key);
+    bool KeyHold(int key);
 
     std::pair<float, float> GetMousePosition();
     std::pair<float, float> GetMousePositionDelta();

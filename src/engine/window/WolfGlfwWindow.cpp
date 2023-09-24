@@ -154,6 +154,12 @@ namespace WEngine
 
     return keyStates[keyCode] == KeyState::PressedThisFrame;
   }
+  bool WolfGlfwWindow::IsKeyHolding(int keyCode)
+  {
+    UpdateKeyState(keyCode);
+
+    return keyStates[keyCode] == KeyState::Hold;
+  }
 
   bool WolfGlfwWindow::IsKeyReleased(int keyCode)
   {

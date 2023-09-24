@@ -20,6 +20,11 @@ namespace WEngine
     return window->IsKeyPressed(key);
   }
 
+  bool InputSystem::KeyHold(int key)
+  {
+    return window->IsKeyHolding(key);
+  }
+
   bool InputSystem::KeyReleased(int key)
   {
 #ifdef VERBOSE

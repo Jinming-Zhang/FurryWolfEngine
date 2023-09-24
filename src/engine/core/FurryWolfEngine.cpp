@@ -125,9 +125,9 @@ namespace WEngine
 
   void FurryWolfEngine::CreateScene()
   {
-    // SceneMaker::MakeLotsCubeScene(this);
-    LoadScene(SceneMaker::MakeLightScene(this));
-    // SceneMaker::MakeDepthVisualizationScene(this);
+    // LoadScene(SceneMaker::MakeLotsCubeScene(this));
+    // LoadScene(SceneMaker::MakeLightScene(this));
+    LoadScene(SceneMaker::MakeDepthVisualizationScene(this));
   }
   void FurryWolfEngine::LoadScene(Scene *scene)
   {

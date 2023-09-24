@@ -52,6 +52,7 @@ namespace WEngine
     for (size_t i{0}; i < 10; ++i)
     {
       GameObject *go = GameObjectFactory::CreateCubeMeshGO(engine);
+      s->AddGameObject(go);
       // set transform
       TransformComponent *transform = go->GetComponent<TransformComponent *>();
       glm::vec3 pos = cubePositions[i];
@@ -67,9 +68,6 @@ namespace WEngine
       MeshComponent *mesh = go->GetComponent<MeshComponent *>();
       mesh->SetMaterial(mat);
     }
-    GameObjectFactory::CreateDirectionalLightGo(engine);
-    // engine->camera = CameraComponent::Main();
-    // engine->camera->SetPosition(glm::vec3(.0f, .0f, 3.f));
     return s;
   }
 
@@ -172,6 +170,7 @@ namespace WEngine
     ShaderProgram *lightSourceSp = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::LightSource);
     ShaderProgram *phongShader = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
     GameObject *lightGo = engine->CreateGameObject();
+    s->AddGameObject(lightGo);
     glm::mat4 model = glm::mat4{1.f};
     model = glm::translate(model, glm::vec3(1.2f, 1.f, 2.f));
     model = glm::scale(model, glm::vec3(.2f));
@@ -183,13 +182,18 @@ namespace WEngine
     lightMesh->SetMaterial(lightGoMat);
 
     // light component
-    DirectionalLightComponent *dLight = lightGo->AddComponent<DirectionalLightComponent>();
-    dLight->SetShader(phongShader);
-    glm::vec3 dLightColor = glm::vec3(1.f, 1.f, 1.f);
-    dLight->SetColor(dLightColor);
-    lightGoMat->SetColor(dLightColor);
+    GameObject *dLightGo = s->FindObjectOfType<DirectionalLightComponent *>();
+    if (dLightGo)
+    {
+      DirectionalLightComponent *dLight = dLightGo->GetComponent<DirectionalLightComponent *>();
+      dLight->SetShader(phongShader);
+      glm::vec3 dLightColor = glm::vec3(1.f, 1.f, 1.f);
+      dLight->SetColor(dLightColor);
+      lightGoMat->SetColor(dLightColor);
+    }
 
     GameObject *backpackModel = engine->CreateGameObject("Backpack");
+    s->AddGameObject(backpackModel);
     ModelComponent *modelCmp = backpackModel->AddComponent<ModelComponent>();
     modelCmp->Init("./assets/models/backpack/backpack.obj");
     // modelCmp->Init("./assets/models/obj/Wolf_obj.obj");
@@ -200,11 +204,13 @@ namespace WEngine
     backpackTf->SetModel(backpackModelMat);
 
     GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
+    s->AddGameObject(plane);
     // GameObject *outlinedCube = GameObjectFactory::CreateCubeMeshGO(engine);
     GameObject *cube2 = GameObjectFactory::CreateCubeMeshGO(engine);
+    s->AddGameObject(cube2);
     GameObject *sphere1 = GameObjectFactory::CreateSphereMeshGO(engine);
+    s->AddGameObject(sphere1);
     sphere1->Rename("sphere");
-    GameObjectFactory::CreateDirectionalLightGo(engine);
 
     model = glm::mat4{1.f};
     model = glm::translate(model, glm::vec3(-1.f, 0.f, -1.f));
