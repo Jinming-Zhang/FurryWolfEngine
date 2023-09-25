@@ -33,7 +33,7 @@ namespace WEngine
     virtual void Update(float deltaTime);
     virtual void FixedUpdate(float fixedDeltaTime);
     virtual void LateUpdate(float deltaTime);
-    virtual void Render();
+    virtual void Render(bool transparentPass = false);
     virtual void Destroy();
     template <typename T>
     T GetComponent()

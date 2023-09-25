@@ -144,7 +144,7 @@ namespace WEngine
     return textures;
   }
 
-  void ModelComponent::Render()
+  void ModelComponent::Render(bool transparentPass)
   {
     phongMat->Use(gameObject);
     DrawMeshOnly();

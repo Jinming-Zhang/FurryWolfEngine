@@ -37,7 +37,7 @@ namespace WEngine
       com->LateUpdate(deltaTime);
     }
   }
-  void GameObject::Render()
+  void GameObject::Render(bool transparentPass)
   {
     MeshComponent *mesh = GetComponent<MeshComponent *>();
     if (mesh)
