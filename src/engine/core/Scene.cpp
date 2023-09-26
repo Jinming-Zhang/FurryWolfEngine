@@ -49,9 +49,15 @@ namespace WEngine
       go->LateUpdate(deltaTime);
     }
 
+    // opaque pass
     for (auto &go : gameobjects)
     {
-      go->Render();
+      go->Render(false);
+    }
+    // transparent pass
+    for (auto &go : gameobjects)
+    {
+      go->Render(true);
     }
   }
 

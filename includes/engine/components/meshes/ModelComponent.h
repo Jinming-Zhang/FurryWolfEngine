@@ -15,7 +15,6 @@ namespace WEngine
   {
   private:
     std::vector<IndexedDrawMesh *> meshes;
-    PhongModelMaterial *phongMat;
     // the directory to load textures
     std::string directory;
 

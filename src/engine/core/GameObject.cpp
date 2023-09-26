@@ -42,7 +42,11 @@ namespace WEngine
     MeshComponent *mesh = GetComponent<MeshComponent *>();
     if (mesh)
     {
-      mesh->Render();
+      bool isTransparentPass = mesh->GetMaterial()->IsTransparent();
+      if (isTransparentPass == transparentPass)
+      {
+        mesh->Render(transparentPass);
+      }
     }
   }
   void GameObject::Destroy()

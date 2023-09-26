@@ -121,7 +121,7 @@ namespace WEngine
       }
     }
 
-    phongMat = mat;
+    material = mat;
     return indMesh;
   }
 
@@ -146,7 +146,7 @@ namespace WEngine
 
   void ModelComponent::Render(bool transparentPass)
   {
-    phongMat->Use(gameObject);
+    material->Use(gameObject);
     DrawMeshOnly();
   }
   void ModelComponent::DrawMeshOnly()

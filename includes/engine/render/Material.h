@@ -31,6 +31,8 @@ namespace WEngine
      * @param go
      */
     virtual void Use(GameObject *go);
+    void SetTransparency(bool isTransparent) { this->isTransparent = isTransparent; }
+    bool IsTransparent() { return this->isTransparent; }
     ~Material();
   };
 }
