@@ -62,26 +62,9 @@ namespace WEngine
     };
     mesh->Init(planeVertices, planeIndices);
     PhongModelMaterial *mat = engine->CreateMaterial<PhongModelMaterial>();
-    mat->SetBaseColor(0.0f, 100.0f, 100.0f);
+    mat->SetBaseColor(1.0f, 1.0f, 1.0f);
     mesh->SetMaterial(mat);
 
-    // GameObject *go = engine->CreateGameObject();
-    // VerticesDrawMeshComponent *vmeshcmp = go->AddComponent<VerticesDrawMeshComponent>();
-    // std::vector<Vertex> planeVertices = {
-    //     Vertex{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, .0f, 1.0f), glm::vec2(1.f, 1.f)},
-    //     Vertex{glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.f, 0.f)},
-    //     Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
-
-    //     Vertex{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, .0f, 1.0f), glm::vec2(1.f, 1.f)},
-    //     Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 1.f)},
-    //     Vertex{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(.0f, .0f, 1.f), glm::vec2(0.f, 0.f)},
-    // };
-
-    // vmeshcmp->Init(planeVertices);
-    // // SimpleUnlitMaterial *mat = engine->CreateMaterial<SimpleUnlitMaterial>();
-    // PhongModelMaterial *mat = engine->CreateMaterial<PhongModelMaterial>();
-    // mat->SetBaseColor(.0f, 100.f, 100.f);
-    // vmeshcmp->SetMaterial(mat);
     return go;
   }
 

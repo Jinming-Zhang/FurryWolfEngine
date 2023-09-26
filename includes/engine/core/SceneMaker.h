@@ -43,6 +43,7 @@ namespace WEngine
     static Scene *MakeLotsCubeScene(FurryWolfEngine *engine);
     static Scene *MakeLightScene(FurryWolfEngine *engine);
     static Scene *MakeDepthVisualizationScene(FurryWolfEngine *engine);
+    static Scene *MakeBlendingScene(FurryWolfEngine *engine);
     ~SceneMaker() {}
   };
 
@@ -247,6 +248,38 @@ namespace WEngine
     SpotLightComponent *flashLight = CameraComponent::Main()->gameObject->AddComponent<SpotLightComponent>();
     flashLight->SetShader(&ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong));
     flashLight->SetColor(glm::vec3(1.f));
+    return s;
+  }
+  Scene *SceneMaker::MakeBlendingScene(FurryWolfEngine *engine)
+  {
+    std::vector<glm::vec3> vegetation;
+    vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+    vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+    vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+    vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+    vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+
+    Scene *s = new Scene(engine);
+    glm::mat4 model{1.0f};
+    for (size_t i{0}; i < vegetation.size(); ++i)
+    {
+      model = glm::mat4{1.0f};
+      model = glm::translate(model, vegetation[i]);
+      GameObject *plane = GameObjectFactory::CreatePlaneMeshGO(engine);
+
+      plane->GetComponent<TransformComponent *>()->SetModel(model);
+
+      TextureLoadConfig tConfig;
+      tConfig.clapMode = GL_CLAMP_TO_EDGE;
+      SimpleUnlitMaterial *mat = engine->CreateMaterial<SimpleUnlitMaterial>();
+      mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture("./assets/images/textures/grass.png", tConfig));
+      mat->SetOpaque(false);
+      mat->SetTransparency(0.5f);
+
+      plane->GetComponent<MeshComponent *>()->SetMaterial(mat);
+
+      s->AddGameObject(plane);
+    }
     return s;
   }
 
