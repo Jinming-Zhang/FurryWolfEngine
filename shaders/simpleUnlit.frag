@@ -25,10 +25,10 @@ void main() {
   if (material.albedoMapsCount >= 3) {
     color4 *= texture(material.albedoMap2, texCoord);
   }
-  if (!opaque) {
-    if (color4.a < 0.1) {
-      discard;
-    }
-  }
+ // if (!opaque) {
+//    if (color4.a < 0.1) {
+    //  discard;
+   // }
+  //}
   FragColor = color4;
 }

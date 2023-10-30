@@ -91,6 +91,7 @@ namespace WEngine
 
 			glClearColor(.2f, .3f, .3f, 1.f);
 			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
 			// glEnable(GL_STENCIL_TEST);
 			// glStencilMask(0xFF);
 			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

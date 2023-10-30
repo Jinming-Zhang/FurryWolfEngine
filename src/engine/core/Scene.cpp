@@ -1,5 +1,7 @@
 #include "engine/core/Scene.h"
+#include <map>
 
+#include "engine//math/glm/glm.hpp"
 #include "engine/core/FurryWolfEngine.h"
 #include "engine/core/GameObject.h"
 #include "engine/core/GameObjectFactory.h"
@@ -71,6 +73,16 @@ namespace WEngine
 			go->LateUpdate(deltaTime);
 		}
 
+		//GameObject* newMainCamGO = FindObjectOfType<CameraComponent*>();
+		//CameraComponent* mainCam = newMainCamGO->GetComponent<CameraComponent*>();
+
+		//std::map<float, GameObject*> sorted = std::map<float, GameObject*>();
+		//for (auto& go : gameobjects)
+		//{
+		//	float distance = glm::length(mainCam->transform->Position() - go->GetComponent<TransformComponent*>()->Position());
+		//	sorted[distance] = go;
+		//}
+
 		// opaque pass
 		for (auto& go : gameobjects)
 		{
@@ -81,6 +93,10 @@ namespace WEngine
 		{
 			go->Render(true);
 		}
+		//for (auto it{ sorted.rbegin() }; it != sorted.rend(); ++it)
+		//{
+		//	it->second->Render(true);
+		//}
 	}
 
 	void Scene::DestroyScene()

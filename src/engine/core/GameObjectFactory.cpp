@@ -74,8 +74,8 @@ namespace WEngine
 			Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.5f, .5f, .5f), glm::vec2(0.f, 1.f)} };
 		std::vector<unsigned int> planeIndices = {
 			// note that we start from 0!
-			0, 1, 3, // first triangle
-			1, 2, 3  // second triangle
+			0, 3, 1, // first triangle
+			3, 2, 1  // second triangle
 		};
 		mesh->Init(planeVertices, planeIndices);
 		PhongModelMaterial* mat = engine->CreateMaterial<PhongModelMaterial>();
