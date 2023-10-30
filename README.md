@@ -20,4 +20,4 @@ The scene contains the following objects:
 - A cube that attached with material that uses Phong shading model, and can blend up to 3 base textures and a base object color.
 - A plane uses same material as the cube, with a high cyan object color.
 
-Download the linux and windows built binary from [here](https://github.com/Jinming-Zhang/FurryWolfEngine/releases/tag/0.0.1).
+Download the linux and windows built binary from [here](https://github.com/Jinming-Zhang/FurryWolfEngine/releases).
