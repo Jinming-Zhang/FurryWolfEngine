@@ -8,55 +8,66 @@
 
 namespace WEngine
 {
-  struct WEngineConfig
-  {
-    int MAX_POINT_LIGHTS;
-    int MAX_SPOT_LIGHTS;
-  };
+	class GameObject;
+	class WolfGlfwWindow;
+	class Mesh;
+	class VerticesMesh;
+	class Material;
+	class CameraComponent;
+	class Scene;
 
-  class GameObject;
-  class WolfGlfwWindow;
-  class Mesh;
-  class VerticesMesh;
-  class Material;
-  class CameraComponent;
-  class Scene;
+	struct WEngineConfig
+	{
+		int MAX_POINT_LIGHTS;
+		int MAX_SPOT_LIGHTS;
+	};
 
-  class FurryWolfEngine
-  {
-    friend class SceneMaker;
-    friend class Scene;
+	struct EngineState {
+		std::vector<Scene*> scenes;
+	};
 
-  private:
-    WolfGlfwWindow *window;
-    std::vector<Scene *> scenes;
+	class FurryWolfEngine
+	{
+		friend class SceneMaker;
+		friend class Scene;
+		friend class SceneManager;
 
-  public:
-    FurryWolfEngine();
-    ~FurryWolfEngine();
-    bool Init();
-    void Start();
+	private:
+		WolfGlfwWindow* window;
+		EngineState State;
+		std::vector<Scene*> scenes;
 
-  public:
-    static WEngineConfig engineConfig;
+	public:
+		FurryWolfEngine();
+		~FurryWolfEngine();
+		/// <summary>
+		/// Initialize Engine systems and resources
+		/// Such as ResourceManager and SceneManager
+		/// Must be called before use.
+		/// </summary>
+		/// <returns></returns>
+		bool Init();
+		void Start();
 
-  public:
-    // resource creation methods
-    template <typename T>
-    T *CreateMaterial()
-    {
-      T *obj = new T();
-      if (Material *mat = dynamic_cast<Material *>(obj))
-      {
-        mat->engine = this;
-      }
-      return obj;
-    }
+	public:
+		static WEngineConfig engineConfig;
 
-    GameObject *CreateGameObject(std::string name = "");
-    void LoadScene(Scene *scene);
+	public:
+		// resource creation methods
+		template <typename T>
+		T* CreateMaterial()
+		{
+			T* obj = new T();
+			if (Material* mat = dynamic_cast<Material*>(obj))
+			{
+				mat->engine = this;
+			}
+			return obj;
+		}
 
-  private:
-    void CreateScene();
-  };
+		GameObject* CreateGameObject(std::string name = "");
+
+	private:
+		void CreateScene();
+	};
 }

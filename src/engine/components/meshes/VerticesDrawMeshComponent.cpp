@@ -14,7 +14,7 @@ namespace WEngine
     mesh = new VerticesDrawMesh();
     mesh->Init(vertices);
   }
-  void VerticesDrawMeshComponent::Render()
+  void VerticesDrawMeshComponent::Render(bool transparentPass)
   {
     material->Use(gameObject);
     DrawMeshOnly();

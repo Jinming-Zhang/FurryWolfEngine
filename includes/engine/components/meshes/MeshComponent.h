@@ -19,8 +19,8 @@ namespace WEngine
     MeshComponent();
     virtual ~MeshComponent();
     void SetMaterial(Material *mat) { material = mat; }
-    Material *GetMaterial() { return material; }
-    virtual void Render() = 0;
+    virtual Material *GetMaterial() { return material; }
+    virtual void Render(bool transparentPass = false) = 0;
     virtual void DrawMeshOnly() = 0;
   };
 }

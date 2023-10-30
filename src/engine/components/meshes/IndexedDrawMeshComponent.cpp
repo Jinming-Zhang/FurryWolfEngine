@@ -17,7 +17,7 @@ namespace WEngine
     return mesh->Init(vertices, indices);
   }
 
-  void IndexedDrawMeshComponent::Render()
+  void IndexedDrawMeshComponent::Render(bool transparentPass)
   {
     material->Use(gameObject);
     DrawMeshOnly();

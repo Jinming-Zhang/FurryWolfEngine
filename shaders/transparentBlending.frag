@@ -8,27 +8,19 @@ struct Material {
   sampler2D albedoMap1;
   sampler2D albedoMap2;
 };
-
 uniform vec3 baseColor;
 uniform Material material;
-uniform bool opaque;
-uniform float transparency;
 
 void main() {
-  vec4 color4 = vec4(baseColor, transparency);
+  vec3 color3 = baseColor;
   if (material.albedoMapsCount >= 1) {
-    color4 *= texture(material.albedoMap0, texCoord);
+    color3 *= texture(material.albedoMap0, texCoord).rgb;
   }
   if (material.albedoMapsCount >= 2) {
-    color4 *= texture(material.albedoMap1, texCoord);
+    color3 *= texture(material.albedoMap1, texCoord).rgb;
   }
   if (material.albedoMapsCount >= 3) {
-    color4 *= texture(material.albedoMap2, texCoord);
+    color3 *= texture(material.albedoMap2, texCoord).rgb;
   }
-  if (!opaque) {
-    if (color4.a < 0.1) {
-      discard;
-    }
-  }
-  FragColor = color4;
+  FragColor = vec4(color3, 1.0);
 }

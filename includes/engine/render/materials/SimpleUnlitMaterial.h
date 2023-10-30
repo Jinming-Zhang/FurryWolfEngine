@@ -13,13 +13,21 @@ namespace WEngine
   private:
     std::vector<std::shared_ptr<Texture>> albedoMaps;
     glm::vec3 baseColor;
+    bool opaque;
+    float transparency;
 
   public:
     SimpleUnlitMaterial();
     ~SimpleUnlitMaterial();
+    virtual void Use(GameObject *go) override;
     bool AddAlbedoMap(std::shared_ptr<Texture> texture);
     void SetBaseColor(float r, float g, float b) { baseColor = glm::vec3(r, g, b); }
-    virtual void Use(GameObject *go) override;
+
+    void SetOpaque(bool isOpaque) { this->opaque = isOpaque; }
+    void SetTransparency(float transparency)
+    {
+      this->transparency = transparency;
+    }
   };
 
 }

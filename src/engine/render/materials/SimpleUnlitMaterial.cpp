@@ -48,5 +48,8 @@ namespace WEngine
         ++textureUnitIndex;
       }
     }
+
+    shaderToUse->SetBool("opaque", opaque);
+    shaderToUse->SetFloat("transparency", transparency);
   }
 }

@@ -15,7 +15,6 @@ namespace WEngine
   {
   private:
     std::vector<IndexedDrawMesh *> meshes;
-    PhongModelMaterial *phongMat;
     // the directory to load textures
     std::string directory;
 
@@ -37,7 +36,7 @@ namespace WEngine
      * @return std::vector<Texture>
      */
     std::vector<std::shared_ptr<Texture>> loadMaterialTextures(aiMaterial *mat, aiTextureType type);
-    virtual void Render() override;
+    virtual void Render(bool transparentPass = false) override;
 
   public:
     ModelComponent();
