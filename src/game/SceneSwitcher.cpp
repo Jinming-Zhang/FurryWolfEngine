@@ -28,11 +28,11 @@ void SceneSwitcher::Update(float deltaTime) {
 	if (WEngine::InputSystem::Instance()->KeyPressed(GLFW_KEY_LEFT))
 	{
 		PreviousScene();
-		std::cout << "Switch to next scene\n";
+		std::cout << "Switch to previous scene\n";
 	}
 	else if (WEngine::InputSystem::Instance()->KeyPressed(GLFW_KEY_RIGHT))
 	{
 		NextScene();
-		std::cout << "Switch to previous scene\n";
+		std::cout << "Switch to next scene\n";
 	}
 }

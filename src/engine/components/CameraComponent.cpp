@@ -34,6 +34,7 @@ namespace WEngine
 		moveSpeed = 5.f;
 		prevMousePos = std::pair(400.0f, 300.0f);
 		firstMouse = true;
+		enableRotate = true;
 	}
 
 	CameraComponent::~CameraComponent() {}
