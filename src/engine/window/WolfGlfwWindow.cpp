@@ -110,7 +110,7 @@ namespace WEngine
     }
     else
     {
-      keyStates[keyCode] = KeyState::RelesedThisFrame;
+      keyStates[keyCode] = KeyState::Relesed;
     }
   }
 

@@ -96,13 +96,6 @@ namespace WEngine
 			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			const ShaderProgram& phongShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
-			phongShader.UseProgram();
-			phongShader.SetInt("pLightsCount", PointLightComponent::PointLightIndexer);
-			phongShader.SetInt("spLightsCount", SpotLightComponent::SpotLightIndexer);
-
-			//phongShader.SetInt("pLightsCount", 0);
-			//phongShader.SetInt("spLightsCount", 1);
 			for (auto scene : State.scenes)
 			{
 				scene->Refresh(delta);

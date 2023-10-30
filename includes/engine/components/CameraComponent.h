@@ -19,7 +19,7 @@ namespace WEngine
 		~CameraComponent();
 
 	private:
-		bool enableRotate = false;
+		bool enableRotate = true;
 		// member variables
 		glm::mat4 projection;
 		glm::vec3 cameraTarget;
