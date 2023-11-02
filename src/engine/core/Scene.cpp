@@ -73,15 +73,17 @@ namespace WEngine
 			go->LateUpdate(deltaTime);
 		}
 
-		//GameObject* newMainCamGO = FindObjectOfType<CameraComponent*>();
-		//CameraComponent* mainCam = newMainCamGO->GetComponent<CameraComponent*>();
+		GameObject* newMainCamGO = FindObjectOfType<CameraComponent*>();
+		CameraComponent* mainCam = newMainCamGO->GetComponent<CameraComponent*>();
+		glm::vec3 camPos = mainCam->GetPosition();
 
-		//std::map<float, GameObject*> sorted = std::map<float, GameObject*>();
-		//for (auto& go : gameobjects)
-		//{
-		//	float distance = glm::length(mainCam->transform->Position() - go->GetComponent<TransformComponent*>()->Position());
-		//	sorted[distance] = go;
-		//}
+		std::map<float, GameObject*> sorted = std::map<float, GameObject*>();
+		for (auto& go : gameobjects)
+		{
+			glm::vec3 objPos = go->GetComponent<TransformComponent*>()->Position();
+			float distance = glm::length(objPos - camPos);
+			sorted[distance] = go;
+		}
 
 		// opaque pass
 		for (auto& go : gameobjects)
@@ -89,14 +91,15 @@ namespace WEngine
 			go->Render(false);
 		}
 		// transparent pass
-		for (auto& go : gameobjects)
-		{
-			go->Render(true);
-		}
-		//for (auto it{ sorted.rbegin() }; it != sorted.rend(); ++it)
+		//for (auto& go : gameobjects)
 		//{
-		//	it->second->Render(true);
+		//	go->Render(true);
 		//}
+		for (auto it{ sorted.rbegin() }; it != sorted.rend(); ++it)
+		{
+			float dst = it->first;
+			it->second->Render(true);
+		}
 	}
 
 	void Scene::DestroyScene()

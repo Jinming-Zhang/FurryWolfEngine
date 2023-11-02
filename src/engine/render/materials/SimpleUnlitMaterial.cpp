@@ -9,6 +9,7 @@ namespace WEngine
 		shaderToUse = &ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::SimpleUnlit);
 		albedoMaps = std::vector<std::shared_ptr<Texture>>();
 		baseColor = glm::vec3(1.f);
+		transparency = 1.0f;
 	}
 
 	SimpleUnlitMaterial::~SimpleUnlitMaterial() {}
@@ -51,6 +52,6 @@ namespace WEngine
 
 		shaderToUse->SetBool("opaque", opaque);
 		shaderToUse->SetFloat("transparency", transparency);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 }

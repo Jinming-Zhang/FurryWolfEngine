@@ -253,6 +253,7 @@ namespace WEngine {
 			GameObject* plane = GameObjectFactory::CreatePlaneMeshGO(engine);
 
 			plane->GetComponent<TransformComponent*>()->SetModel(model);
+			plane->GetComponent<TransformComponent*>()->SetPosition(vegetation[i]);
 
 			TextureLoadConfig tConfig;
 			tConfig.clapMode = GL_CLAMP_TO_EDGE;
