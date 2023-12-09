@@ -91,10 +91,6 @@ namespace WEngine
 			go->Render(false);
 		}
 		// transparent pass
-		//for (auto& go : gameobjects)
-		//{
-		//	go->Render(true);
-		//}
 		for (auto it{ sorted.rbegin() }; it != sorted.rend(); ++it)
 		{
 			float dst = it->first;

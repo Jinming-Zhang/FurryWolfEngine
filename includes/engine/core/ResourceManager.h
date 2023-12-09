@@ -16,7 +16,8 @@ namespace WEngine
     LightSource,
     DepthVisualizer,
     Outliner,
-    SimpleUnlit
+    SimpleUnlit,
+    UIBasicScreen
   };
 
   template <typename T>

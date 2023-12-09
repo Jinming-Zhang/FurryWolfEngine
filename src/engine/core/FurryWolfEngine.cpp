@@ -7,18 +7,21 @@
 #include "engine/math/glm/glm.hpp"
 #include "engine/math/glm/gtc/matrix_transform.hpp"
 
+#include "engine/window/IWindow.h"
+#include "engine/window/WolfGlfwWindow.h"
+
 #include "engine/core/FurryWolfEngine.h"
 #include "engine/core/SceneMaker.h"
+#include "engine/core/SceneManager.h"
 
 #include "engine/core/Scene.h"
 #include "engine/core/GameObject.h"
-#include "engine/window/IWindow.h"
-#include "engine/window/WolfGlfwWindow.h"
+
 #include "engine/inputs/InputSystem.h"
-#include "engine/core/SceneManager.h"
 
 #include "engine/render/Texture.h"
-
+#include "engine/render/FrameBuffer.h"
+#include "engine/render/UI/ScreenQuad.h"
 #include "engine/render/Shader.h"
 #include "engine/render/PhongShader.h"
 #include "engine/render/LightSourceShaderProgram.h"
@@ -27,16 +30,14 @@
 
 #include "engine/components/SpotLightComponent.h"
 #include "engine/components/PointLightComponent.h"
-
 #include "engine/components/CameraComponent.h"
-
 #include "engine/components/TransformComponent.h"
 
 namespace WEngine
 {
 	WEngineConfig FurryWolfEngine::engineConfig = WEngineConfig{ 4, 4 };
 	class TransformComponent;
-	FurryWolfEngine::FurryWolfEngine()
+	FurryWolfEngine::FurryWolfEngine() :window{ nullptr }
 	{
 		scenes = std::vector<Scene*>();
 		State = EngineState();
@@ -75,6 +76,10 @@ namespace WEngine
 		// glEnable(GL_STENCIL_TEST);
 		// glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		// glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		ScreenQuad screenQuad{};
+		FrameBuffer screenBuffer{ window->GetWidth(), window->GetHeight() };
+
 		while (!window->ShouldClose())
 		{
 			currTime = glfwGetTime();
@@ -89,18 +94,30 @@ namespace WEngine
 			window->PollEvents();
 			InputSystem::Instance()->Update();
 
-			glClearColor(.2f, .3f, .3f, 1.f);
+			screenBuffer.Use();
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);
+			glClearColor(.2f, .3f, .3f, 1.f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			// glEnable(GL_STENCIL_TEST);
 			// glStencilMask(0xFF);
 			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			for (auto scene : State.scenes)
 			{
 				scene->Refresh(delta);
 			}
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glClearColor(.2f, .3f, .3f, 1.f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			ShaderProgram screenShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::UIBasicScreen);
+			screenShader.UseProgram();
+			screenShader.SetInt("screenTexture", 0);
+			glDisable(GL_DEPTH_TEST);
+			screenBuffer.UseTexture(GL_TEXTURE0);
+			screenQuad.Render();
+
 			window->SwapBuffers();
 		}
 	}
