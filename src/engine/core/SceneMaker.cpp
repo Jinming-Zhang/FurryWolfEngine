@@ -253,11 +253,12 @@ namespace WEngine {
 			GameObject* plane = GameObjectFactory::CreatePlaneMeshGO(engine);
 
 			plane->GetComponent<TransformComponent*>()->SetModel(model);
+			plane->GetComponent<TransformComponent*>()->SetPosition(vegetation[i]);
 
 			TextureLoadConfig tConfig;
 			tConfig.clapMode = GL_CLAMP_TO_EDGE;
 			SimpleUnlitMaterial* mat = engine->CreateMaterial<SimpleUnlitMaterial>();
-			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture("./assets/images/textures/grass.png", tConfig));
+			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture("./assets/images/textures/blending_transparent_window.png", tConfig));
 			mat->SetOpaque(false);
 			mat->SetTransparency(0.5f);
 

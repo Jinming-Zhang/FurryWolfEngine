@@ -1,6 +1,7 @@
 #include "engine/math/glm/glm.hpp"
 
 #include "engine/core/FurryWolfEngine.h"
+#include "engine/core/Scene.h"
 #include "engine/core/ResourceManager.h"
 #include "engine/core/GameObject.h"
 #include "engine/core/GameObjectFactory.h"
@@ -9,6 +10,7 @@
 #include "engine/components/CameraComponent.h"
 #include "engine/components/DirectionalLightComponent.h"
 #include "engine/components/PointLightComponent.h"
+#include "engine/components/SpotLightComponent.h"
 
 #include "engine/components/meshes/IndexedDrawMeshComponent.h"
 #include "engine/components/meshes/VerticesDrawMeshComponent.h"
@@ -29,10 +31,24 @@ namespace WEngine
 		return go;
 	}
 
-	GameObject* GameObjectFactory::CreatePointLightGo(FurryWolfEngine* engine)
+	GameObject* GameObjectFactory::CreatePointLightGo(FurryWolfEngine* engine, Scene* s)
 	{
 		GameObject* go = engine->CreateGameObject();
 		go->AddComponent<PointLightComponent>();
+		if (s != nullptr)
+		{
+			s->AddPointLight();
+		}
+		return go;
+	}
+	GameObject* GameObjectFactory::CreateSpotLightGo(FurryWolfEngine* engine, Scene* s)
+	{
+		GameObject* go = engine->CreateGameObject();
+		go->AddComponent<SpotLightComponent>();
+		if (s != nullptr)
+		{
+			s->AddSpotLight();
+		}
 		return go;
 	}
 
@@ -58,8 +74,8 @@ namespace WEngine
 			Vertex{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(.5f, .5f, .5f), glm::vec2(0.f, 1.f)} };
 		std::vector<unsigned int> planeIndices = {
 			// note that we start from 0!
-			0, 1, 3, // first triangle
-			1, 2, 3  // second triangle
+			0, 3, 1, // first triangle
+			3, 2, 1  // second triangle
 		};
 		mesh->Init(planeVertices, planeIndices);
 		PhongModelMaterial* mat = engine->CreateMaterial<PhongModelMaterial>();
