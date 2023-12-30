@@ -14,6 +14,6 @@ namespace WEngine
   void CubeMap::LoadTexture(GLuint side, std::string path)
   {
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
-    ResourceManager::Instance()->LoadTexture(path);
+    ResourceManager::Instance()->LoadTexture<Texture>(path);
   }
 }

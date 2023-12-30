@@ -3,6 +3,7 @@
 #include <memory>
 #include <typeindex>
 #include <string>
+#include <iostream>
 
 #include "engine/render/textures/Texture.h"
 #include "engine/render/ShaderProgram.h"
@@ -45,7 +46,27 @@ namespace WEngine
 
   public:
     // Resources
-    const std::shared_ptr<Texture> LoadTexture(std::string path, TextureLoadConfig config = TextureLoadConfig{});
+    template <typename T>
+    const std::shared_ptr<Texture> LoadTexture(std::string path, TextureLoadConfig config = TextureLoadConfig{})
+    {
+      auto result = textures.find(path);
+      if (result == textures.end())
+      {
+        std::shared_ptr<Texture> texture = std::make_shared<T>();
+        config.flipY = true;
+        if (!texture->LoadTexture(path, config))
+        {
+          if (!texture->LoadTexture(defaultResourcesPath[typeid(Texture)], config))
+          {
+            std::cout << "Error loading texture and failed to load default texture!\n";
+            return nullptr;
+          }
+        }
+        textures.insert({path, Resource<Texture>{texture, 0}});
+      }
+      ++textures.at(path).useCount;
+      return textures.at(path).resource;
+    }
     bool UnloadTexture(std::string path);
     ShaderProgram &GetShaderProgram(ShaderProgramType type);
     void PrintResourcesUsage();

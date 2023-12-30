@@ -42,9 +42,9 @@ namespace WEngine {
 			transform->SetModel(model);
 			// set material
 			SimpleUnlitMaterial* mat = engine->CreateMaterial<SimpleUnlitMaterial>();
-			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture("assets/images/textures/container2.png"));
-			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture("assets/images/textures/awesomeface.png"));
-			//mat->AddSpecularMap(ResourceManager::Instance()->LoadTexture("assets/images/textures/container2_specular.png"));
+			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture<Texture>("assets/images/textures/container2.png"));
+			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture<Texture>("assets/images/textures/awesomeface.png"));
+			//mat->AddSpecularMap(ResourceManager::Instance()->LoadTexture<Texture>("assets/images/textures/container2_specular.png"));
 			MeshComponent* mesh = go->GetComponent<MeshComponent*>();
 			mesh->SetMaterial(mat);
 		}
@@ -111,8 +111,8 @@ namespace WEngine {
 		PhongModelMaterial* phongMat = engine->CreateMaterial<PhongModelMaterial>();
 		std::string albedoPath{"assets/images/textures/container2.png"};
 		std::string specularPath{"assets/images/textures/container2_specular.png"};
-		auto albedoMap1 = ResourceManager::Instance()->LoadTexture(albedoPath);
-		auto specularMap1 = ResourceManager::Instance()->LoadTexture(specularPath);
+		auto albedoMap1 = ResourceManager::Instance()->LoadTexture<Texture>(albedoPath);
+		auto specularMap1 = ResourceManager::Instance()->LoadTexture<Texture>(specularPath);
 		phongMat->AddAlbedoMap(albedoMap1);
 		phongMat->AddSpecularMap(specularMap1);
 		phongMat->SetBaseColor(0.0f, 1.0f, 1.0f);
@@ -258,7 +258,7 @@ namespace WEngine {
 			TextureLoadConfig tConfig;
 			tConfig.clapMode = GL_CLAMP_TO_EDGE;
 			SimpleUnlitMaterial* mat = engine->CreateMaterial<SimpleUnlitMaterial>();
-			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture("./assets/images/textures/blending_transparent_window.png", tConfig));
+			mat->AddAlbedoMap(ResourceManager::Instance()->LoadTexture<Texture>("./assets/images/textures/blending_transparent_window.png", tConfig));
 			mat->SetOpaque(false);
 			mat->SetTransparency(0.5f);
 
