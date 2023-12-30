@@ -47,19 +47,22 @@ namespace WEngine
   public:
     // Resources
     template <typename T>
-    const std::shared_ptr<Texture> LoadTexture(std::string path, TextureLoadConfig config = TextureLoadConfig{})
+    const std::shared_ptr<Texture> LoadTexture(std::string path, TextureLoadConfig config = TextureLoadConfig{}, bool donotInitialize = false)
     {
       auto result = textures.find(path);
       if (result == textures.end())
       {
         std::shared_ptr<Texture> texture = std::make_shared<T>();
-        config.flipY = true;
-        if (!texture->LoadTexture(path, config))
+        if (!donotInitialize)
         {
-          if (!texture->LoadTexture(defaultResourcesPath[typeid(Texture)], config))
+          config.flipY = true;
+          if (!texture->LoadTexture(path, config))
           {
-            std::cout << "Error loading texture and failed to load default texture!\n";
-            return nullptr;
+            if (!texture->LoadTexture(defaultResourcesPath[typeid(Texture)], config))
+            {
+              std::cout << "Error loading texture and failed to load default texture!\n";
+              return nullptr;
+            }
           }
         }
         textures.insert({path, Resource<Texture>{texture, 0}});
