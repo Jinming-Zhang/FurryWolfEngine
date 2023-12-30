@@ -19,7 +19,7 @@
 
 #include "engine/inputs/InputSystem.h"
 
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 #include "engine/render/FrameBuffer.h"
 #include "engine/render/UI/ScreenQuad.h"
 #include "engine/render/Shader.h"

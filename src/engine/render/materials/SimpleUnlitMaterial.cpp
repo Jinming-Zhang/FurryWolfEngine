@@ -1,7 +1,7 @@
 #include "engine/core/ResourceManager.h"
 #include "engine/render/materials/SimpleUnlitMaterial.h"
 #include "engine/render/ShaderProgram.h"
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 namespace WEngine
 {
 	SimpleUnlitMaterial::SimpleUnlitMaterial()

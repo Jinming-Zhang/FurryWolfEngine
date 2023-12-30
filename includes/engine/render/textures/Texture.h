@@ -7,7 +7,12 @@ namespace WEngine
   struct TextureLoadConfig
   {
     bool flipY = true;
+    bool genMipmap = true;
     GLint clapMode = GL_REPEAT;
+    GLint filterMode = GL_LINEAR;
+    GLuint TextureType = GL_TEXTURE_2D;
+    GLuint TexImageTarget = GL_TEXTURE_2D;
+    GLuint TexParameteriTarget = GL_TEXTURE_2D;
   };
 
   /**
@@ -19,20 +24,26 @@ namespace WEngine
   class Texture
   {
   private:
+    GLuint textureType;
+
+  protected:
     unsigned int textureId;
+    virtual void ConfigTexParameteri(const TextureLoadConfig &config);
 
   public:
     Texture();
+
     Texture(const Texture &texture) = delete;
     Texture &operator=(const Texture &texture) = delete;
+
     Texture(const Texture &&texture);
     Texture &operator=(Texture &&texture);
+
     void Destroy();
-    ~Texture();
+    virtual ~Texture();
 
     bool LoadTexture(const std::string &path, const TextureLoadConfig &config);
     void Use(int textureUnit);
-
     operator std::string() const;
   };
 }

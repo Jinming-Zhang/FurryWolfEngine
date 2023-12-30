@@ -93,7 +93,7 @@ namespace WEngine
 		// transparent pass
 		for (auto it{ sorted.rbegin() }; it != sorted.rend(); ++it)
 		{
-			float dst = it->first;
+			// float dst = it->first;
 			it->second->Render(true);
 		}
 	}

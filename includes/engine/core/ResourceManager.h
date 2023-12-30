@@ -4,7 +4,7 @@
 #include <typeindex>
 #include <string>
 
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 #include "engine/render/ShaderProgram.h"
 
 namespace WEngine

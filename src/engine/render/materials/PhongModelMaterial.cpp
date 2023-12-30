@@ -1,7 +1,7 @@
 #include <memory>
 #include <iostream>
 #include <vector>
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 #include "engine/render/materials/PhongModelMaterial.h"
 #include "engine/render/ShaderProgram.h"
 #include "engine/components/CameraComponent.h"

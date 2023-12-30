@@ -3,7 +3,7 @@
 #include <string>
 
 #include "engine/render/ShaderProgram.h"
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 
 namespace WEngine
 {
