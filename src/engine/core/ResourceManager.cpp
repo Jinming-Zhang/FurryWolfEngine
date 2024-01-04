@@ -1,5 +1,6 @@
 #include <iostream>
 #include "engine/core/ResourceManager.h"
+#include "engine/includeHeaders/TextureHeaders.h"
 
 namespace WEngine
 {
@@ -22,12 +23,42 @@ namespace WEngine
     defaultResourcesPath[typeid(Texture)] =
         ("./assets/defaults/missing_texture.png");
     LoadTexture<Texture>("./assets/defaults/defaultTexture.png", config);
+    // load default skybox cubemap texture
+    config.filterMode = GL_LINEAR;
+    config.flipY = true;
+    config.genMipmap = false;
+    config.TextureType = GL_TEXTURE_CUBE_MAP;
+    config.TexParameteriTarget = GL_TEXTURE_CUBE_MAP;
+
+    const std::shared_ptr<CubeMapTexture> defaultSkyboxCubemap = LoadTexture<CubeMapTexture>("defaultSkyboxCubemap", config, true);
+
+    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/front.jpg", config);
+
+    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/back.jpg", config);
+
+    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/right.jpg", config);
+
+    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/left.jpg", config);
+
+    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/top.jpg", config);
+
+    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/bottom.jpg", config);
 
     // load shader programs
     // load and compile vertex shaders
     WEngine::Shader vertexShader{};
     vertexShader.CompileShader("./shaders/phongVert.vert", GL_VERTEX_SHADER);
+    WEngine::Shader cubemapSkyboxVert{};
+    cubemapSkyboxVert.CompileShader("./shaders/skybox/skyCube.vert", GL_VERTEX_SHADER);
     // load and compile fragment shaders
+    WEngine::Shader cubemapSkyboxFrag{};
+    cubemapSkyboxFrag.CompileShader("./shaders/skybox/skyCube.frag", GL_FRAGMENT_SHADER);
     WEngine::Shader phongFrag{};
     phongFrag.CompileShader("./shaders/phongFrag.frag", GL_FRAGMENT_SHADER);
     WEngine::Shader simpleUnlitFrag{};
@@ -87,6 +118,13 @@ namespace WEngine
     screenShader->AddShader(screenFragShader);
     screenShader->LinkShaders();
     shaders[ShaderProgramType::UIBasicScreen] = std::move(screenShader);
+
+    std::unique_ptr<ShaderProgram> skyboxCubeShader{std::make_unique<ShaderProgram>()};
+    skyboxCubeShader->Initialize();
+    skyboxCubeShader->AddShader(cubemapSkyboxVert);
+    skyboxCubeShader->AddShader(cubemapSkyboxFrag);
+    skyboxCubeShader->LinkShaders();
+    shaders[ShaderProgramType::CubemapSkybox] = std::move(skyboxCubeShader);
   }
 
   ResourceManager *ResourceManager::Instance()

@@ -18,7 +18,8 @@ namespace WEngine
     DepthVisualizer,
     Outliner,
     SimpleUnlit,
-    UIBasicScreen
+    UIBasicScreen,
+    CubemapSkybox
   };
 
   template <typename T>
@@ -47,7 +48,7 @@ namespace WEngine
   public:
     // Resources
     template <typename T>
-    const std::shared_ptr<Texture> LoadTexture(std::string path, TextureLoadConfig config = TextureLoadConfig{}, bool donotInitialize = false)
+    const std::shared_ptr<T> LoadTexture(std::string path, TextureLoadConfig config = TextureLoadConfig{}, bool donotInitialize = false)
     {
       auto result = textures.find(path);
       if (result == textures.end())
@@ -68,7 +69,7 @@ namespace WEngine
         textures.insert({path, Resource<Texture>{texture, 0}});
       }
       ++textures.at(path).useCount;
-      return textures.at(path).resource;
+      return std::static_pointer_cast<T>(textures.at(path).resource);
     }
     bool UnloadTexture(std::string path);
     ShaderProgram &GetShaderProgram(ShaderProgramType type);

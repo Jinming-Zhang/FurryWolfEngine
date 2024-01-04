@@ -21,5 +21,4 @@ namespace WEngine
     glTexParameteri(config.TexParameteriTarget, GL_TEXTURE_MIN_FILTER, config.filterMode);
     glTexParameteri(config.TexParameteriTarget, GL_TEXTURE_MAG_FILTER, config.filterMode);
   }
-
 }

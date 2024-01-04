@@ -9,102 +9,106 @@
 namespace WEngine
 {
 
-	Scene::Scene(FurryWolfEngine* engine)
-	{
-		this->engine = engine;
-		CreateDefaultScene();
-	}
-	Scene::~Scene() { DestroyScene(); }
+  Scene::Scene(FurryWolfEngine *engine)
+  {
+    this->engine = engine;
+    CreateDefaultScene();
+    loaded = false;
+  }
 
-	void Scene::CreateDefaultScene()
-	{
-		AddGameObject(GameObjectFactory::CreateDirectionalLightGo(this->engine));
-		AddGameObject(GameObjectFactory::CreateCamera(this->engine));
-	}
+  Scene::~Scene() { DestroyScene(); }
 
-	void Scene::AddGameObject(GameObject* gameobject)
-	{
-		gameobjects.push_back(gameobject);
-	}
+  void Scene::CreateDefaultScene()
+  {
+    AddGameObject(GameObjectFactory::CreateDirectionalLightGo(this->engine));
+    AddGameObject(GameObjectFactory::CreateCamera(this->engine));
+  }
 
-	int Scene::GetPointLightsCount() {
-		return pointLightsCount;
-	}
+  void Scene::AddGameObject(GameObject *gameobject)
+  {
+    gameobjects.push_back(gameobject);
+  }
 
-	int Scene::GetSpotLightsCount() {
-		return spointLightsCount;
-	}
+  int Scene::GetPointLightsCount()
+  {
+    return pointLightsCount;
+  }
 
-	void Scene::Load()
-	{
-		for (auto go : gameobjects)
-		{
-			go->Awake();
-		}
-	}
-	void Scene::Start()
-	{
-		for (auto go : gameobjects)
-		{
-			go->Start();
-		}
-		GameObject* newMainCamGO = FindObjectOfType<CameraComponent*>();
-		if (newMainCamGO != nullptr)
-		{
-			CameraComponent* newMainCamCmp = newMainCamGO->GetComponent<CameraComponent*>();
-			CameraComponent::SetMainCamera(newMainCamCmp);
-			newMainCamCmp->EnableRotation(true);
-		}
-	}
-	void Scene::Refresh(float deltaTime)
-	{
-		const ShaderProgram& phongShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
-		phongShader.UseProgram();
-		int pLightsCount = GetPointLightsCount();
-		int spLightsCount = GetSpotLightsCount();
-		phongShader.SetInt("pLightsCount", pLightsCount);
-		phongShader.SetInt("spLightsCount", spLightsCount);
-		for (auto& go : gameobjects)
-		{
-			go->Update(deltaTime);
-		}
-		for (auto& go : gameobjects)
-		{
-			go->LateUpdate(deltaTime);
-		}
+  int Scene::GetSpotLightsCount()
+  {
+    return spointLightsCount;
+  }
 
-		GameObject* newMainCamGO = FindObjectOfType<CameraComponent*>();
-		CameraComponent* mainCam = newMainCamGO->GetComponent<CameraComponent*>();
-		glm::vec3 camPos = mainCam->GetPosition();
+  void Scene::Load()
+  {
+    for (auto go : gameobjects)
+    {
+      go->Awake();
+    }
+  }
+  void Scene::Start()
+  {
+    for (auto go : gameobjects)
+    {
+      go->Start();
+    }
+    GameObject *newMainCamGO = FindObjectOfType<CameraComponent *>();
+    if (newMainCamGO != nullptr)
+    {
+      CameraComponent *newMainCamCmp = newMainCamGO->GetComponent<CameraComponent *>();
+      CameraComponent::SetMainCamera(newMainCamCmp);
+      newMainCamCmp->EnableRotation(true);
+    }
+  }
+  void Scene::Refresh(float deltaTime)
+  {
+    const ShaderProgram &phongShader = ResourceManager::Instance()->GetShaderProgram(ShaderProgramType::Phong);
+    phongShader.UseProgram();
+    int pLightsCount = GetPointLightsCount();
+    int spLightsCount = GetSpotLightsCount();
+    phongShader.SetInt("pLightsCount", pLightsCount);
+    phongShader.SetInt("spLightsCount", spLightsCount);
+    for (auto &go : gameobjects)
+    {
+      go->Update(deltaTime);
+    }
+    for (auto &go : gameobjects)
+    {
+      go->LateUpdate(deltaTime);
+    }
 
-		std::map<float, GameObject*> sorted = std::map<float, GameObject*>();
-		for (auto& go : gameobjects)
-		{
-			glm::vec3 objPos = go->GetComponent<TransformComponent*>()->Position();
-			float distance = glm::length(objPos - camPos);
-			sorted[distance] = go;
-		}
+    GameObject *newMainCamGO = FindObjectOfType<CameraComponent *>();
+    CameraComponent *mainCam = newMainCamGO->GetComponent<CameraComponent *>();
+    glm::vec3 camPos = mainCam->GetPosition();
 
-		// opaque pass
-		for (auto& go : gameobjects)
-		{
-			go->Render(false);
-		}
-		// transparent pass
-		for (auto it{ sorted.rbegin() }; it != sorted.rend(); ++it)
-		{
-			// float dst = it->first;
-			it->second->Render(true);
-		}
-	}
+    std::map<float, GameObject *> sorted = std::map<float, GameObject *>();
+    for (auto &go : gameobjects)
+    {
+      glm::vec3 objPos = go->GetComponent<TransformComponent *>()->Position();
+      float distance = glm::length(objPos - camPos);
+      sorted[distance] = go;
+    }
 
-	void Scene::DestroyScene()
-	{
-		for (auto go : this->gameobjects)
-		{
-			go->Destroy();
-			delete go;
-		}
-		gameobjects.clear();
-	}
+    // opaque pass
+    for (auto &go : gameobjects)
+    {
+      go->Render(false);
+    }
+    // transparent pass
+    for (auto it{sorted.rbegin()}; it != sorted.rend(); ++it)
+    {
+      // float dst = it->first;
+      it->second->Render(true);
+    }
+  }
+
+  void Scene::DestroyScene()
+  {
+    for (auto go : this->gameobjects)
+    {
+      go->Destroy();
+      delete go;
+    }
+    gameobjects.clear();
+  }
 }

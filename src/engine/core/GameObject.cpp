@@ -15,7 +15,21 @@ namespace WEngine
     components = std::vector<std::unique_ptr<Component>>();
     this->name = name;
   }
+  void GameObject::Awake()
+  {
+    for (auto &com : components)
+    {
+      com->Awake();
+    }
+  }
 
+  void GameObject::Start()
+  {
+    for (auto &com : components)
+    {
+      com->Start();
+    }
+  }
   void GameObject::Update(float deltaTime)
   {
     for (auto &com : components)

@@ -28,8 +28,8 @@ namespace WEngine
   public:
     static GameObject *CreateGameObject(std::string name = "");
     virtual void Rename(const std::string &name) { this->name = name; }
-    virtual void Awake() {}
-    virtual void Start() {}
+    virtual void Awake();
+    virtual void Start();
     virtual void Update(float deltaTime);
     virtual void FixedUpdate(float fixedDeltaTime);
     virtual void LateUpdate(float deltaTime);

@@ -4,20 +4,26 @@
 #include <sstream>
 #include "engine/components/Component.h"
 #include "engine/includeHeaders/TextureHeaders.h"
+#include "engine/render/Material.h"
+#include "engine/components/meshes/MeshComponent.h"
+#include "engine/render/materials/CubemapSkyboxMaterial.h"
 #include "engine/includeHeaders/ResourceManagementHeaders.h"
 
 namespace WEngine
 {
-  class SkyboxComponent
+  class SkyboxComponent : public MeshComponent
   {
   private:
-    std::shared_ptr<Texture> cubemap;
+    std::unique_ptr<CubemapSkyboxMaterial> skyboxMaterial;
+    MeshComponent *skyCubeMeshComponent;
 
   public:
     SkyboxComponent();
     ~SkyboxComponent();
+    virtual void Awake() override;
     bool LoadSkyCubeFace(GLuint side, const std::string &path);
-    void Render();
+    virtual void Render(bool transparentPass = false) override;
+    virtual void DrawMeshOnly() override;
   };
 
 }

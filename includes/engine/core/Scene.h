@@ -15,6 +15,7 @@ namespace WEngine
 		void CreateDefaultScene();
 		int pointLightsCount = 0;
 		int spointLightsCount = 0;
+    bool loaded;
 
 	public:
 		Scene(FurryWolfEngine* engine);
