@@ -36,7 +36,7 @@ namespace WEngine
     glDepthMask(GL_FALSE);
     material->Use(gameObject);
     skyCubeMeshComponent->DrawMeshOnly();
-    glDepthMask(GL_FALSE);
+    glDepthMask(GL_TRUE);
   }
   void SkyboxComponent::DrawMeshOnly()
   {

@@ -45,10 +45,10 @@ namespace WEngine
     defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/left.jpg", config);
 
     config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/top.jpg", config);
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/bottom.jpg", config);
 
     config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/bottom.jpg", config);
+    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/top.jpg", config);
 
     // load shader programs
     // load and compile vertex shaders

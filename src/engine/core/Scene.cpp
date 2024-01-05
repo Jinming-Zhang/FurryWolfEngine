@@ -57,7 +57,6 @@ namespace WEngine
     {
       CameraComponent *newMainCamCmp = newMainCamGO->GetComponent<CameraComponent *>();
       CameraComponent::SetMainCamera(newMainCamCmp);
-      newMainCamCmp->EnableRotation(true);
     }
   }
   void Scene::Refresh(float deltaTime)
@@ -80,6 +79,7 @@ namespace WEngine
     GameObject *newMainCamGO = FindObjectOfType<CameraComponent *>();
     CameraComponent *mainCam = newMainCamGO->GetComponent<CameraComponent *>();
     glm::vec3 camPos = mainCam->GetPosition();
+    // std::cout << "Camera Position:" << camPos.x << " ," << camPos.y << " ," << camPos.z << "\n";
 
     std::map<float, GameObject *> sorted = std::map<float, GameObject *>();
     for (auto &go : gameobjects)
