@@ -31,24 +31,35 @@ namespace WEngine
     config.TexParameteriTarget = GL_TEXTURE_CUBE_MAP;
 
     const std::shared_ptr<CubeMapTexture> defaultSkyboxCubemap = LoadTexture<CubeMapTexture>("defaultSkyboxCubemap", config, true);
+    defaultSkyboxCubemap->LoadCubemapTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, "./assets/defaults/cubemaps/skybox/front.jpg");
 
-    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/front.jpg", config);
+    defaultSkyboxCubemap->LoadCubemapTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, "./assets/defaults/cubemaps/skybox/back.jpg");
 
-    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/back.jpg", config);
+    defaultSkyboxCubemap->LoadCubemapTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X, "./assets/defaults/cubemaps/skybox/right.jpg");
 
-    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/right.jpg", config);
+    defaultSkyboxCubemap->LoadCubemapTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, "./assets/defaults/cubemaps/skybox/left.jpg");
 
-    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/left.jpg", config);
+    defaultSkyboxCubemap->LoadCubemapTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, "./assets/defaults/cubemaps/skybox/top.jpg");
 
-    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/bottom.jpg", config);
+    defaultSkyboxCubemap->LoadCubemapTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, "./assets/defaults/cubemaps/skybox/bottom.jpg");
 
-    config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-    defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/top.jpg", config);
+    // config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+    // defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/front.jpg", config);
+
+    // config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+    // defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/back.jpg", config);
+
+    // config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+    // defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/right.jpg", config);
+
+    // config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+    // defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/left.jpg", config);
+
+    // config.TexImageTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+    // defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/top.jpg", config);
+
+    // config.TexImageTarget = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+    // defaultSkyboxCubemap->LoadTexture("./assets/defaults/cubemaps/skybox/bottom.jpg", config);
 
     // load shader programs
     // load and compile vertex shaders

@@ -19,7 +19,10 @@ namespace WEngine
   {
     for (auto &com : components)
     {
-      com->Awake();
+      if (com != nullptr)
+      {
+        com->Awake();
+      }
     }
   }
 

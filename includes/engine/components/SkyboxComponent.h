@@ -14,14 +14,12 @@ namespace WEngine
   class SkyboxComponent : public MeshComponent
   {
   private:
-    std::unique_ptr<CubemapSkyboxMaterial> skyboxMaterial;
     MeshComponent *skyCubeMeshComponent;
 
   public:
     SkyboxComponent();
     ~SkyboxComponent();
     virtual void Awake() override;
-    bool LoadSkyCubeFace(GLuint side, const std::string &path);
     virtual void Render(bool transparentPass = false) override;
     virtual void DrawMeshOnly() override;
   };

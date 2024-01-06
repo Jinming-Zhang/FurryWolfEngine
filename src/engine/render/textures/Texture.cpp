@@ -37,8 +37,8 @@ namespace WEngine
 
   bool Texture::LoadTexture(const std::string &path, const TextureLoadConfig &config)
   {
-    glBindTexture(config.TextureType, textureId);
     textureType = config.TextureType;
+    glBindTexture(textureType, textureId);
     ImageLoader::ImageLoaderConfig imgLoaderConfig;
     imgLoaderConfig.FlipY = config.flipY;
     ImageLoader loader{};

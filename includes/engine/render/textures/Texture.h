@@ -23,11 +23,9 @@ namespace WEngine
    */
   class Texture
   {
-  private:
-    GLuint textureType;
-
   protected:
     unsigned int textureId;
+    GLuint textureType;
     virtual void ConfigTexParameteri(const TextureLoadConfig &config);
 
   public:

@@ -13,5 +13,6 @@ namespace WEngine
   public:
     CubeMapTexture();
     virtual ~CubeMapTexture();
+    void LoadCubemapTexture(GLuint side, std::string path);
   };
 }

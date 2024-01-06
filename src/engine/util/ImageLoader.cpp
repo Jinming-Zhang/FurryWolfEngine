@@ -44,8 +44,10 @@ namespace WEngine
     {
       stbi_image_free(data);
     }
-
-    stbi_set_flip_vertically_on_load(config.FlipY);
+    if (config.FlipY)
+    {
+      stbi_set_flip_vertically_on_load(true);
+    }
     data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
     if (!data)
     {

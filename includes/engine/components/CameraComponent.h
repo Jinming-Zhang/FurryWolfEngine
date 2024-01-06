@@ -19,6 +19,11 @@ namespace WEngine
 
   private:
     // member variables
+    glm::vec3 position;
+    glm::vec3 camRight;
+    glm::vec3 camUp;
+    glm::vec3 camForward;
+
     glm::mat4 projection;
     glm::vec3 cameraTarget;
 
@@ -36,29 +41,20 @@ namespace WEngine
     // move ment
     float moveSpeed;
 
-  private:
-    glm::mat4 calculateViewMatrix() const;
-    glm::mat4 calculateViewMatrixManual(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp) const;
-
   public:
     // overrides
     virtual void LateUpdate(float deltaTime) override;
 
   public:
     // getter and setters
-    const glm::mat4 GetClippedViewMatrix() const
-    {
-      return projection * calculateViewMatrix();
-      // return glm::ortho(.0f, 800.f, .0f, 600.f, .01f, 100.f) * calculateViewMatrix();
-    }
+    const glm::mat4 GetClippedViewMatrix() const;
     const glm::mat4 GetProjectionMatrix() const;
-    const glm::mat4 GetViewMatrix() const;
+    glm::mat4 GetViewMatrix() const;
+
     const glm::vec3 GetPosition() const;
     const glm::vec3 GetFront() const;
 
     void SetPosition(glm::vec3 pos);
-
     void SetProjection(float fovDeg, float ratio, float near, float far);
   };
-
 }
