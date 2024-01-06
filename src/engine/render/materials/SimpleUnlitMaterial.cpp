@@ -1,7 +1,7 @@
 #include "engine/core/ResourceManager.h"
 #include "engine/render/materials/SimpleUnlitMaterial.h"
 #include "engine/render/ShaderProgram.h"
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 namespace WEngine
 {
 	SimpleUnlitMaterial::SimpleUnlitMaterial()
@@ -31,7 +31,7 @@ namespace WEngine
 
 		if (albedoMaps.size() == 0)
 		{
-			std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture("./assets/defaults/defaultTexture.png");
+			std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture<Texture>("./assets/defaults/defaultTexture.png");
 			texture->Use(GL_TEXTURE0 + textureUnitIndex);
 			std::string prefix{"material.albedoMap"};
 			prefix.append(std::to_string(0));

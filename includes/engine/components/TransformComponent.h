@@ -23,7 +23,7 @@ namespace WEngine
     glm::vec3 &Rotation();
     glm::vec3 &Scale();
     glm::mat4 &GetRotationMatrix();
-    glm::mat4 &GetModel();
+    glm::mat4 GetModel();
     void SetModel(glm::mat4 model);
     void SetPosition(glm::vec3 position);
     void SetPosition(float x, float y, float z);

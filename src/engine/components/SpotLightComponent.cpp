@@ -58,6 +58,7 @@ namespace WEngine
       shader->SetVec3(std::string{prefix + ".basePtLight.position"}, pos.x, pos.y, pos.z);
 
       direction = camera->GetFront();
+
     }
     shader->SetVec3(std::string{prefix + ".direction"}, direction.x, direction.y, direction.z);
     shader->SetFloat(std::string{prefix + ".innerCutoffAngle"}, cosf(glm::radians(innerCutOffAngle)));

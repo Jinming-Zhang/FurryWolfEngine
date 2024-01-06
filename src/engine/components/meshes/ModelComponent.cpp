@@ -135,7 +135,7 @@ namespace WEngine
       std::string texturePath = std::string(ais.C_Str());
       texturePath = texturePath.substr(texturePath.find_last_of('\\') + 1);
 
-      const std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture(directory + "/" + texturePath);
+      const std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture<Texture>(directory + "/" + texturePath);
       if (texture)
       {
         textures.push_back(texture);

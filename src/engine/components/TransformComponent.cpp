@@ -56,7 +56,7 @@ namespace WEngine
     return rotationMatix;
   }
 
-  glm::mat4 &TransformComponent::GetModel()
+  glm::mat4 TransformComponent::GetModel()
   {
     return model;
   }

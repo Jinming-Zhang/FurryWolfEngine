@@ -6,7 +6,8 @@
 
 #include "engine/components/meshes/MeshComponent.h"
 #include "engine/render/meshes/IndexedDrawMesh.h"
-#include "engine/render/Texture.h"
+// #include "engine/render/textures/Texture.h"
+#include "engine/includeHeaders/TextureHeaders.h"
 
 #include "engine/render/materials/PhongModelMaterial.h"
 namespace WEngine

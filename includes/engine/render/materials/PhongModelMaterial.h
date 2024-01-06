@@ -2,7 +2,7 @@
 #include <memory>
 #include <vector>
 #include "engine/math/glm/glm.hpp"
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 #include "engine/render/Material.h"
 namespace WEngine
 {

@@ -1,7 +1,7 @@
 #include <memory>
 #include <iostream>
 #include <vector>
-#include "engine/render/Texture.h"
+#include "engine/render/textures/Texture.h"
 #include "engine/render/materials/PhongModelMaterial.h"
 #include "engine/render/ShaderProgram.h"
 #include "engine/components/CameraComponent.h"
@@ -52,7 +52,7 @@ namespace WEngine
     {
       TextureLoadConfig config;
       config.clapMode = GL_REPEAT;
-      std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture("./assets/defaults/defaultTexture.png", config);
+      std::shared_ptr<Texture> texture = ResourceManager::Instance()->LoadTexture<Texture>("./assets/defaults/defaultTexture.png", config);
       texture->Use(GL_TEXTURE0 + textureUnitIndex);
       std::string prefix{"material.albedoMap"};
       prefix.append(std::to_string(0));
