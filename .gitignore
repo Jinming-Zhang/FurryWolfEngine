@@ -408,3 +408,5 @@ FodyWeavers.xsd
 **/*.sln
 **/*.vcxproj
 **/*.vcxproj.filters
+
+!./assets/models/backpack/backpack.obj
