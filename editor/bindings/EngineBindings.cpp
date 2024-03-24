@@ -3,7 +3,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(FurryWolfEngine, m)
+PYBIND11_MODULE(FurrywolfEngine, m)
 {
   m.doc() = "C++ binding for FurryWolfEngine";
   m.def("start", &Ravup, "Rav up the Engine!");
