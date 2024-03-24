@@ -12,4 +12,5 @@ int Ravup()
   WEngine::FurryWolfEngine engine{};
   engine.Init();
   engine.Start();
+  return 0;
 }
