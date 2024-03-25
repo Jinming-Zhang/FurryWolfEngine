@@ -43,7 +43,10 @@ namespace WEngine
     State = EngineState();
   }
 
-  FurryWolfEngine::~FurryWolfEngine() {}
+  FurryWolfEngine::~FurryWolfEngine()
+  {
+    glfwTerminate();
+  }
 
   bool FurryWolfEngine::Init()
   {

@@ -13,9 +13,13 @@ file(GLOB_RECURSE SRS_FILES CONFIGURE_DEPENDS
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR})
 
-# add_executable(FurrywolfEngine ${SRS_FILES})
+
+set(PYBIND_SRC "./editor/bindings/src/EngineBindings.cpp")
 add_subdirectory(editor/bindings/pybind11)
-pybind11_add_module(FurrywolfEngine ${SRS_FILES} editor/bindings/EngineBindings.cpp)
+pybind11_add_module(FurrywolfEngine ${SRS_FILES} ${PYBIND_SRC})
+
+add_executable(FurrywolfEngineExe ${SRS_FILES})
+set_property(TARGET FurrywolfEngineExe PROPERTY OUTPUT_NAME FurrywolfEngine)
 
 if(WIN32)
   add_definitions(-DWINDOWS)
@@ -38,6 +42,8 @@ if(WIN32)
   endif()
 
   target_link_libraries(FurrywolfEngine PRIVATE opengl32.lib ${GLFW} ${ZLib} ${ASSIMP} kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib)
+
+  target_link_libraries(FurrywolfEngineExe opengl32.lib ${GLFW} ${ZLib} ${ASSIMP} kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib)
 else()
   find_library(GLFW NAMES glfw3 PATHS "${PROJECT_SOURCE_DIR}/lib/linux/")
 
@@ -51,5 +57,6 @@ else()
     message(FATAL_ERROR "GLFW not found")
   endif()
 
-  target_link_libraries(FurrywolfEngine ${GLFW} dl m GL X11 ${ASSIMP} z)
+  target_link_libraries(FurrywolfEngine PRIVATE ${GLFW} dl m GL X11 ${ASSIMP} z)
+  target_link_libraries(FurrywolfEngineExe ${GLFW} dl m GL X11 ${ASSIMP} z)
 endif()

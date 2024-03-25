@@ -1,9 +1,15 @@
 import sys
+import os
+import threading
 
-from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QWidget
+from PyQt6.QtCore import QSize, QThreadPool
+
+from PyQt6.QtWidgets import QMainWindow, QPushButton
 
 from utils.WolfUtils import TryGetDictWithDefault as tryGet
+
+from bindings.modules import FurrywolfEngine
+from utils.Worker import Worker
 
 
 class FurryWolfWindow(QMainWindow):
@@ -35,4 +41,24 @@ class FurryWolfWindow(QMainWindow):
         self.setCentralWidget(self.igniteButton)
 
     def __runEngine(self):
-        print("Ravup the Wolf Engine!")
+        self.igniteButton.setText("Engine Running...")
+        self.igniteButton.setEnabled(False)
+        self.threadpool = QThreadPool()
+        self.worker = Worker()
+        self.worker.setup(self.__startEngineThread, None)
+        self.threadpool.start(self.worker)
+        # try:
+        #     os.chdir("C:\\Users\\wolfy\\Projects\\CppProjects\\FurryWolfEngine")
+        #     FurrywolfEngine.RavUp(
+        #         "C:\\Users\\wolfy\\Projects\\CppProjects\\FurryWolfEngine")
+        #     self.igniteButton.setText("Ravup the Wolf Engine!")
+        #     self.igniteButton.setEnabled(True)
+        # except:
+        #     print("Engine failed...")
+
+    def __startEngineThread(self):
+        os.chdir("C:\\Users\\wolfy\\Projects\\CppProjects\\FurryWolfEngine")
+        FurrywolfEngine.RavUp(
+            "C:\\Users\\wolfy\\Projects\\CppProjects\\FurryWolfEngine")
+        self.igniteButton.setText("Ravup the Wolf Engine!")
+        self.igniteButton.setEnabled(True)
