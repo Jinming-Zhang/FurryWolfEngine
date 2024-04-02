@@ -48,6 +48,7 @@ namespace WEngine
 		/// <returns></returns>
 		bool Init();
 		void Start();
+    void Reset();
 
 	public:
 		static WEngineConfig engineConfig;

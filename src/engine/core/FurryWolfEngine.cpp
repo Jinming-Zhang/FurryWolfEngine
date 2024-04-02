@@ -131,6 +131,12 @@ namespace WEngine
     }
   }
 
+  void FurryWolfEngine::Reset()
+  {
+    PointLightComponent::Reset();
+    SpotLightComponent::Reset();
+  }
+
   GameObject *FurryWolfEngine::CreateGameObject(std::string name)
   {
     GameObject *go;

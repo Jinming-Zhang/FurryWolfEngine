@@ -22,6 +22,7 @@ namespace WEngine
     void SetConstTerm(float constTerm) { constant = constTerm; }
     void SetLinearTerm(float linearTerm) { linear = linearTerm; }
     void SetQuadraticTerm(float quadraticTerm) { quadratic = quadraticTerm; }
+    static void Reset();
   };
 
 }

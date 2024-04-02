@@ -1,4 +1,18 @@
 {
+  "app": {
+    "id": "Furry Wolf Engine",
+    "version": "0.0.4",
+    "assetsLocation": "./assets/",
+    "icon": "./assets/Furrywolf.jpg"
+  },
+  "launcher": {
+    "title": "Wolf Luncher",
+    "minWidth": "760",
+    "minHeight": "430",
+    "engineResourceDirs": ["../assets", "../shaders"],
+    "icon":"./assets/Furrywolf.jpg"
+  },
+
   "window": {
     "title": "Furry Wolf Engine Aww",
     "minWidth": "1080",

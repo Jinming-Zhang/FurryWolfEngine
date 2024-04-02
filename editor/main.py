@@ -1,18 +1,25 @@
 import sys
 import os
-from FurryWolfEditor import FurryWolfEditor
 import json
+
+from views.FurrywolfApp import FurrywolfApp
+from models.data.DataCenter import DataCenter
 
 
 configPath = "./EditorSettings/EditorConfig.json"
 
 
-def main():
+def initData():
     config = {}
     if os.path.exists(configPath):
         f = open(configPath)
         config = json.load(f)
-    app = FurryWolfEditor(sys.argv, config=config)
+    DataCenter.initialize(config)
+
+
+def main():
+    initData()
+    app = FurrywolfApp(sys.argv)
     app.start()
 
 

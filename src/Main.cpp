@@ -30,6 +30,7 @@ int Ravup(std::string path)
   WEngine::FurryWolfEngine engine{};
   engine.Init();
   engine.Start();
+  engine.Reset();
   std::cout << "Engine Down...\n";
 
   return 0;
