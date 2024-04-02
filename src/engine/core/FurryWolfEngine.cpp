@@ -75,19 +75,9 @@ namespace WEngine
     float prevTime = currTime;
     const float cap{1.f / 60.f};
     glEnable(GL_DEPTH_TEST);
-    // glDepthFunc(GL_LESS);
-    // glEnable(GL_STENCIL_TEST);
-    // glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    // glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
     ScreenQuad screenQuad{};
     FrameBuffer screenBuffer{window->GetWidth(), window->GetHeight()};
-
-    // for (auto scene : State.scenes)
-    // {
-    //   scene->Load();
-    //   scene->Start();
-    // }
 
     while (!window->ShouldClose())
     {
