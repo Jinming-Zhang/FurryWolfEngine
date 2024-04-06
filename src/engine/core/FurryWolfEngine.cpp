@@ -16,6 +16,9 @@
 
 #include "engine/core/Scene.h"
 #include "engine/core/GameObject.h"
+#include "engine/core/services/ServiceLocator.h"
+#include "engine/core/services/ILogger.h"
+#include "engine/core/services/Logger.h"
 
 #include "engine/inputs/InputSystem.h"
 
@@ -57,6 +60,18 @@ namespace WEngine
     {
       std::cout << "Error loading gl\n";
       return false;
+    }
+
+    std::shared_ptr<IServiceProvider> logger = std::make_shared<Logger>();
+    WEngine::ServiceLocator::RegisterService(typeid(ILogger).name(), logger);
+    ILogger *theLogger = WEngine::ServiceLocator::GetService<ILogger *>(typeid(ILogger).name());
+    if (theLogger != nullptr)
+    {
+      theLogger->Log("Wow");
+    }
+    else
+    {
+      std::cout << "No Logger Found\n";
     }
 
     WEngine::InputSystem::Instance()->SetWindowContext(window);

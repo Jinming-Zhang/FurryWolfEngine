@@ -3,7 +3,6 @@
 #include "engine/core/services/ILogger.h"
 namespace WEngine
 {
-
   class Logger : public ILogger
   {
   private:

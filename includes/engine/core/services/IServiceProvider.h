@@ -4,14 +4,6 @@ class IServiceProvider
 private:
   /* data */
 public:
-  IServiceProvider(/* args */);
-  ~IServiceProvider();
+  IServiceProvider(/* args */) {}
+  virtual ~IServiceProvider() {}
 };
-
-IServiceProvider::IServiceProvider(/* args */)
-{
-}
-
-IServiceProvider::~IServiceProvider()
-{
-}
