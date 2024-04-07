@@ -1,17 +1,12 @@
-import sys
-import os
-import threading
-
-from PyQt6.QtCore import QSize, QThreadPool
+from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget
 
 from models.data.DataCenter import DataCenter
+from models.ProcessManager import ProcessManager
+
 
 from utils.WolfUtils import TryGetDictWithDefault as tryGet
-
-from bindings.modules import FurrywolfEngine
-from utils.Worker import Worker
 
 
 class FurryWolfEditor(QMainWindow):
@@ -46,15 +41,9 @@ class FurryWolfEditor(QMainWindow):
     def __runEngine(self):
         self.igniteButton.setText("Engine Running...")
         self.igniteButton.setEnabled(False)
-        self.threadpool = QThreadPool()
-        self.worker = Worker()
-        self.worker.setup(self.__startEngineThread, None)
-        self.threadpool.start(self.worker)
+        ProcessManager.RunEngine(self.projectDir, self)
 
-    def __startEngineThread(self):
-        os.chdir(self.projectDir)
-        FurrywolfEngine.RavUp(self.projectDir)
-
+    def engineClosed(self):
         self.igniteButton.setText("Ravup the Wolf Engine!")
         self.igniteButton.setEnabled(True)
 
