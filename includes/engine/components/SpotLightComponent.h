@@ -18,6 +18,7 @@ namespace WEngine
     SpotLightComponent();
     virtual void Update(float deltaTime) override;
     ~SpotLightComponent();
+    static void Reset();
   };
 
 }

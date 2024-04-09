@@ -16,6 +16,9 @@
 
 #include "engine/core/Scene.h"
 #include "engine/core/GameObject.h"
+#include "engine/core/services/ServiceLocator.h"
+#include "engine/core/services/ILogger.h"
+#include "engine/core/services/Logger.h"
 
 #include "engine/inputs/InputSystem.h"
 
@@ -43,7 +46,10 @@ namespace WEngine
     State = EngineState();
   }
 
-  FurryWolfEngine::~FurryWolfEngine() {}
+  FurryWolfEngine::~FurryWolfEngine()
+  {
+    glfwTerminate();
+  }
 
   bool FurryWolfEngine::Init()
   {
@@ -54,6 +60,18 @@ namespace WEngine
     {
       std::cout << "Error loading gl\n";
       return false;
+    }
+
+    std::shared_ptr<IServiceProvider> logger = std::make_shared<Logger>();
+    WEngine::ServiceLocator::RegisterService(typeid(ILogger).name(), logger);
+    ILogger *theLogger = WEngine::ServiceLocator::GetService<ILogger *>(typeid(ILogger).name());
+    if (theLogger != nullptr)
+    {
+      theLogger->Log("Logging Service Initialized");
+    }
+    else
+    {
+      std::cout << "No Logger Found\n";
     }
 
     WEngine::InputSystem::Instance()->SetWindowContext(window);
@@ -72,19 +90,9 @@ namespace WEngine
     float prevTime = currTime;
     const float cap{1.f / 60.f};
     glEnable(GL_DEPTH_TEST);
-    // glDepthFunc(GL_LESS);
-    // glEnable(GL_STENCIL_TEST);
-    // glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    // glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
     ScreenQuad screenQuad{};
     FrameBuffer screenBuffer{window->GetWidth(), window->GetHeight()};
-
-    // for (auto scene : State.scenes)
-    // {
-    //   scene->Load();
-    //   scene->Start();
-    // }
 
     while (!window->ShouldClose())
     {
@@ -126,6 +134,12 @@ namespace WEngine
 
       window->SwapBuffers();
     }
+  }
+
+  void FurryWolfEngine::Reset()
+  {
+    PointLightComponent::Reset();
+    SpotLightComponent::Reset();
   }
 
   GameObject *FurryWolfEngine::CreateGameObject(std::string name)

@@ -410,3 +410,7 @@ FodyWeavers.xsd
 **/*.vcxproj.filters
 
 !./assets/models/backpack/backpack.obj
+
+# pyinstaller artifacts
+**/dist/
+**/*.spec

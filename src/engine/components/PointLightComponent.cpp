@@ -50,4 +50,9 @@ namespace WEngine
     shader->SetFloat(std::string{prefix + ".linear"}, linear);
     shader->SetFloat(std::string{prefix + ".quadratic"}, quadratic);
   }
+
+  void PointLightComponent::Reset()
+  {
+    PointLightComponent::PointLightIndexer = 0;
+  }
 }

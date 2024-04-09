@@ -1,0 +1,10 @@
+class AppConfigs:
+    APP_KEY = 'app'
+    APPID_KEY='id'
+    LAUNCHER_KEY = 'launcher'
+    EDITOR_KEY = 'editor'
+    WINDOW_TITLE_KEY = 'title'
+    MIN_WIDTH_KEY = 'minWidth'
+    MIN_HEIGHT_KEY = 'minHeight'
+    APP_KEY = 'app'
+    WINDOW_ICON_KEY = 'icon'
