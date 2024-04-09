@@ -67,7 +67,7 @@ namespace WEngine
     ILogger *theLogger = WEngine::ServiceLocator::GetService<ILogger *>(typeid(ILogger).name());
     if (theLogger != nullptr)
     {
-      theLogger->Log("Wow");
+      theLogger->Log("Logging Service Initialized");
     }
     else
     {

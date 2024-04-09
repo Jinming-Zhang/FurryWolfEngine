@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import multiprocessing
 
 from views.FurrywolfApp import FurrywolfApp
 from models.data.DataCenter import DataCenter
@@ -24,4 +25,5 @@ def main():
 
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     main()

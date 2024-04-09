@@ -33,5 +33,6 @@ class ProcessManager:
 
 def RunEngineProcess(projectDir, conn):
     os.chdir(projectDir)
+    print(projectDir)
     FurrywolfEngine.RavUp(projectDir)
     conn.send([0])
