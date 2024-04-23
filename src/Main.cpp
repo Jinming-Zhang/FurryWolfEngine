@@ -6,32 +6,27 @@
 #include "engine/core/FurryWolfEngine.h"
 #include "Main.h"
 
-int main(int argc, char const *argv[])
-{
-  std::cout << "Engine Main, args: " << argc << "\n";
-  std::string projectDir{"./"};
-  if (argc >= 2)
-  {
-    projectDir = argv[1];
-  }
-  Ravup(projectDir);
-  return 0;
+int main(const int argc, char const *argv[]) {
+    std::string projectDir{"./"};
+    if (argc >= 2) {
+        projectDir = argv[1];
+    }
+    std::cout << "FurrywolfEngine, args: " << projectDir << "\n";
+    Ravup(projectDir);
+    return 0;
 }
 
-int Ravup(std::string path)
-{
-  std::ifstream test{path};
-  if (test)
-  {
-    std::filesystem::current_path(path);
-  }
-  std::cout << "Current working path: " << std::filesystem::current_path() << std::endl;
+int Ravup(std::string path) {
+    std::ifstream test{path};
+    if (test) {
+        std::filesystem::current_path(path);
+    }
+    std::cout << "Current working path: " << std::filesystem::current_path() << std::endl;
 
-  WEngine::FurryWolfEngine engine{};
-  engine.Init();
-  engine.Start();
-  engine.Reset();
-  std::cout << "Engine Down...\n";
-
-  return 0;
+    WEngine::FurryWolfEngine engine{};
+    engine.Init();
+    engine.Start();
+    engine.Reset();
+    std::cout << "Engine Down...\n";
+    return 0;
 }
