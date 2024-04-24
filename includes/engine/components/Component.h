@@ -22,7 +22,7 @@ namespace WEngine
     virtual void Update(float deltaTime) {}
     virtual void FixedUpdate(float fixedDeltaTime) {}
     virtual void LateUpdate(float deltaTime) {}
-    ~Component() {}
+    virtual ~Component() {}
 
     // template <typename T>
     // T *AddComponent()

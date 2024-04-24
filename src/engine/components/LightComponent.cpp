@@ -1,5 +1,4 @@
 #include "engine/math/glm/glm.hpp"
-#include "engine/core/GameObject.h"
 #include "engine/components/LightComponent.h"
 #include "engine/components/TransformComponent.h"
 #include "engine/render/ShaderProgram.h"

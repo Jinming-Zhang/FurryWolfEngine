@@ -1,5 +1,4 @@
 #include "game/SceneSwitcher.h"
-#include <cmath>
 #include <iostream>
 
 

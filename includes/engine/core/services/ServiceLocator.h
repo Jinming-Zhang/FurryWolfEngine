@@ -5,53 +5,43 @@
 #include <string>
 
 #include "engine/core/services/IServiceProvider.h"
-namespace WEngine
-{
-  class ServiceLocator
-  {
-  private:
-    static std::unordered_map<std::string, std::shared_ptr<IServiceProvider>> servicesMap;
 
-  public:
-    ServiceLocator() = delete;
-    ~ServiceLocator() = delete;
+namespace WEngine {
+    class ServiceLocator {
+    private:
+        static std::unordered_map<std::string, std::shared_ptr<IServiceProvider> > servicesMap;
 
-    template <typename T>
-    static void RegisterService(std::string key, T service)
-    {
-      // static_assert(std::is_base_of<IServiceProvider, std::remove_pointer<T>>::value, "T must inherit from IServiceProvider");
-      if (!servicesMap.contains(key))
-      {
-        printf("Registering service of  type: ");
-        printf(key.c_str());
-        printf("\n");
-        servicesMap.insert(std::make_pair(key, service));
-        // servicesMap[key] = service;
-      }
-    }
+    public:
+        ServiceLocator() = delete;
 
-    template <typename T>
-    static void SwapService(T service)
-    {
-    }
+        ~ServiceLocator() = delete;
 
-    template <typename T>
-    static T GetService(std::string key)
-    {
-      // static_assert(std::is_base_of<IServiceProvider, std::remove_pointer<T>>::value, "T must inherit from IServiceProvider");
-      printf("Finding service of  type: ");
-      printf(key.c_str());
-      printf("\n");
-      // auto result = std::find(servicesMap.begin(), servicesMap.end(), key);
-      if (servicesMap.contains(key))
-      {
-        printf("Found Logger Service\n");
-        return (dynamic_cast<T>(servicesMap.at(key).get()));
-      }
-      printf("No Service Found\n");
-      return nullptr;
-    }
+        template<typename T>
+        static void RegisterService(std::string key, T service) {
+            // static_assert(std::is_base_of<IServiceProvider, std::remove_pointer<T>>::value, "T must inherit from IServiceProvider");
+            if (!servicesMap.contains(key)) {
+                printf("Registering service of  type: ");
+                printf(key.c_str());
+                printf("\n");
+                servicesMap.insert(std::make_pair(key, service));
+                // servicesMap[key] = service;
+            }
+        }
 
-    static void Shutdown();
-  };
+        template<typename T>
+        static void SwapService(T service) {
+        }
+
+        template<typename T>
+        static T GetService(std::string key) {
+            // static_assert(std::is_base_of<IServiceProvider, std::remove_pointer<T>>::value, "T must inherit from IServiceProvider");
+            if (servicesMap.contains(key)) {
+                return (dynamic_cast<T>(servicesMap.at(key).get()));
+            }
+            printf("No Service Found\n");
+            return nullptr;
+        }
+
+        static void Shutdown();
+    };
 }

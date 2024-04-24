@@ -1,8 +1,5 @@
 #pragma once
-#include <utility>
-#include "glad/glad.h"
 #include "engine/math/glm/glm.hpp"
-#include "engine/math/glm/gtc/matrix_transform.hpp"
 #include "engine/components/Component.h"
 namespace WEngine
 {
@@ -10,6 +7,8 @@ namespace WEngine
   {
   private:
     static CameraComponent *mainCam;
+    glm::vec3 GetMovementInput(float deltaTime);
+    glm::vec3 GetRotationInput(float deltaTime);
 
   public:
     CameraComponent();

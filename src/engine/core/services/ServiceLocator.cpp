@@ -1,6 +1,5 @@
 #include "engine/core/services/ServiceLocator.h"
 #include <unordered_map>
-#include <typeinfo>
 
 namespace WEngine
 {
