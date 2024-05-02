@@ -22,18 +22,12 @@
 
 #include "engine/inputs/InputSystem.h"
 
-#include "engine/render/textures/Texture.h"
 #include "engine/render/FrameBuffer.h"
 #include "engine/render/UI/ScreenQuad.h"
-#include "engine/render/Shader.h"
 #include "engine/render/PhongShader.h"
-#include "engine/render/LightSourceShaderProgram.h"
-#include "engine/render/Material.h"
-#include "engine/render/materials/PhongModelMaterial.h"
 
 #include "engine/components/SpotLightComponent.h"
 #include "engine/components/PointLightComponent.h"
-#include "engine/components/CameraComponent.h"
 #include "engine/components/TransformComponent.h"
 
 namespace WEngine
@@ -54,7 +48,7 @@ namespace WEngine
   bool FurryWolfEngine::Init()
   {
     std::cout << "Wolf Engine\n";
-    window = new WEngine::WolfGlfwWindow{};
+    window = new WolfGlfwWindow{};
 
     if (!window->Init(800, 600, "0w0"))
     {
@@ -63,8 +57,8 @@ namespace WEngine
     }
 
     std::shared_ptr<IServiceProvider> logger = std::make_shared<Logger>();
-    WEngine::ServiceLocator::RegisterService(typeid(ILogger).name(), logger);
-    ILogger *theLogger = WEngine::ServiceLocator::GetService<ILogger *>(typeid(ILogger).name());
+    ServiceLocator::RegisterService(typeid(ILogger).name(), logger);
+    ILogger *theLogger = ServiceLocator::GetService<ILogger *>(typeid(ILogger).name());
     if (theLogger != nullptr)
     {
       theLogger->Log("Logging Service Initialized");
@@ -74,12 +68,12 @@ namespace WEngine
       std::cout << "No Logger Found\n";
     }
 
-    WEngine::InputSystem::Instance()->SetWindowContext(window);
+    InputSystem::Instance()->SetWindowContext(window);
 #ifndef DEBUG
-    WEngine::InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    InputSystem::Instance()->SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 #endif
-    WEngine::SceneManager::Init(this);
-    WEngine::SceneMaker::InitScenes(this);
+    SceneManager::Init(this);
+    SceneMaker::InitScenes(this);
     SceneManager::Instance().LoadScene(SceneMaker::GetSceneAt(0));
     return true;
   }

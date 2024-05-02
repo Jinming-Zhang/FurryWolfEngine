@@ -2,7 +2,6 @@
 #include "engine/util/stb_image.h"
 #include <string>
 #include <iostream>
-#include <cassert>
 
 namespace WEngine
 {

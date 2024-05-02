@@ -1,4 +1,3 @@
-#include "engine/math/glm/gtc/type_ptr.hpp"
 #include "engine/render/LightSourceShaderProgram.h"
 namespace WEngine
 {

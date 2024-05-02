@@ -4,10 +4,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 include_directories("./includes")
-
 file(GLOB_RECURSE SRS_FILES CONFIGURE_DEPENDS
-  "${PROJECT_SOURCE_DIR}/src/*.cpp"
-  "${PROJECT_SOURCE_DIR}/src/*.c"
+        "${PROJECT_SOURCE_DIR}/src/engine/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/game/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/glad.c"
 )
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
@@ -16,47 +16,69 @@ file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR})
 
 set(PYBIND_SRC "./editor/bindings/src/EngineBindings.cpp")
 add_subdirectory(editor/bindings/pybind11)
-pybind11_add_module(FurrywolfEngine ${SRS_FILES} ${PYBIND_SRC})
+pybind11_add_module(FurrywolfEngine ${SRS_FILES} ${PYBIND_SRC} "${PROJECT_SOURCE_DIR}/src/Main.cpp")
 
-add_executable(FurrywolfEngineExe ${SRS_FILES})
+add_executable(FurrywolfEngineExe ${SRS_FILES} "${PROJECT_SOURCE_DIR}/src/Main.cpp")
 set_property(TARGET FurrywolfEngineExe PROPERTY OUTPUT_NAME FurrywolfEngine)
 
-if(WIN32)
-  add_definitions(-DWINDOWS)
-  find_library(GLFW NAMES glfw3.lib PATHS "${PROJECT_SOURCE_DIR}/lib/windows/")
+#google test
+add_subdirectory(tests/googletest)
+add_executable(
+        engine_tests
+        ${SRS_FILES}
+        "tests/math/TransformTest.cpp"
+)
 
-  if(NOT GLFW)
-    message(FATAL_ERROR "GLFW not found on Windows")
-  endif()
+if (WIN32)
+    add_definitions(-DWINDOWS)
+    find_library(GLFW NAMES glfw3.lib PATHS "${PROJECT_SOURCE_DIR}/lib/windows/")
 
-  find_library(ASSIMP NAMES assimp-vc143-mtd.lib PATHS "${PROJECT_SOURCE_DIR}/lib/windows/")
+    if (NOT GLFW)
+        message(FATAL_ERROR "GLFW not found on Windows")
+    endif ()
 
-  if(NOT ASSIMP)
-    message(FATAL_ERROR "Assimp not found on Windows")
-  endif()
+    find_library(ASSIMP NAMES assimp-vc143-mtd.lib PATHS "${PROJECT_SOURCE_DIR}/lib/windows/")
 
-  find_library(ZLib NAMES zlibstaticd.lib PATHS "${PROJECT_SOURCE_DIR}/lib/windows/")
+    if (NOT ASSIMP)
+        message(FATAL_ERROR "Assimp not found on Windows")
+    endif ()
 
-  if(NOT ZLib)
-    message(FATAL_ERROR "zlibstaticd not found on Windows")
-  endif()
+    find_library(ZLib NAMES zlibstaticd.lib PATHS "${PROJECT_SOURCE_DIR}/lib/windows/")
 
-  target_link_libraries(FurrywolfEngine PRIVATE opengl32.lib ${GLFW} ${ZLib} ${ASSIMP} kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib)
+    if (NOT ZLib)
+        message(FATAL_ERROR "zlibstaticd not found on Windows")
+    endif ()
 
-  target_link_libraries(FurrywolfEngineExe opengl32.lib ${GLFW} ${ZLib} ${ASSIMP} kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib)
-else()
-  find_library(GLFW NAMES glfw3 PATHS "${PROJECT_SOURCE_DIR}/lib/linux/")
+    target_link_libraries(FurrywolfEngine PRIVATE opengl32.lib ${GLFW} ${ZLib} ${ASSIMP} kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib)
 
-  if(NOT GLFW)
-    message(FATAL_ERROR "GLFW not found")
-  endif()
+    target_link_libraries(FurrywolfEngineExe opengl32.lib ${GLFW} ${ZLib} ${ASSIMP} kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib)
 
-  find_library(ASSIMP NAMES assimp PATHS "${PROJECT_SOURCE_DIR}/lib/linux/")
+    target_link_libraries(engine_tests
+            GTest::gtest_main
+            opengl32.lib ${GLFW} ${ZLib} ${ASSIMP} kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+    )
+else ()
+    find_library(GLFW NAMES glfw3 PATHS "${PROJECT_SOURCE_DIR}/lib/linux/")
 
-  if(NOT ASSIMP)
-    message(FATAL_ERROR "GLFW not found")
-  endif()
+    if (NOT GLFW)
+        message(FATAL_ERROR "GLFW not found")
+    endif ()
 
-  target_link_libraries(FurrywolfEngine PRIVATE ${GLFW} dl m GL X11 ${ASSIMP} z)
-  target_link_libraries(FurrywolfEngineExe ${GLFW} dl m GL X11 ${ASSIMP} z)
-endif()
+    find_library(ASSIMP NAMES assimp PATHS "${PROJECT_SOURCE_DIR}/lib/linux/")
+
+    if (NOT ASSIMP)
+        message(FATAL_ERROR "GLFW not found")
+    endif ()
+
+    target_link_libraries(FurrywolfEngine PRIVATE ${GLFW} dl m GL X11 ${ASSIMP} z)
+    target_link_libraries(FurrywolfEngineExe ${GLFW} dl m GL X11 ${ASSIMP} z)
+    target_link_libraries(engine_tests
+            GTest::gtest_main
+            ${GLFW} dl m GL X11 ${ASSIMP} z
+    )
+endif ()
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+enable_testing()
+include(GoogleTest)
+gtest_discover_tests(engine_tests)

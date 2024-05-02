@@ -1,5 +1,3 @@
-#include "glad/glad.h"
-
 #include "engine/components/meshes/IndexedDrawMeshComponent.h"
 
 namespace WEngine

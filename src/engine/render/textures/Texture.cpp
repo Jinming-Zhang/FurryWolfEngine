@@ -1,6 +1,5 @@
 #include <iostream>
 #include "glad/glad.h"
-#include "engine/util/stb_image.h"
 #include "engine/render/textures/Texture.h"
 #include "engine/util/ImageLoader.h"
 
