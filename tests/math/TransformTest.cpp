@@ -12,7 +12,7 @@ protected:
 };
 
 
-TEST_F(TransformTest, TestInitialization) {
+TEST_F(TransformTest, Initialization) {
     glm::vec3 forward{transform.GetForward()};
     glm::vec3 left{transform.GetLeft()};
     glm::vec3 up{transform.GetUp()};
@@ -43,7 +43,7 @@ TEST_F(TransformTest, Translation) {
     EXPECT_FLOAT_EQ(pos2.z, 1.0f);
 }
 
-TEST_F(TransformTest, RotationUp90) {
+TEST_F(TransformTest, RotationForward90Y) {
     transform.Rotate(glm::vec3{0.0f, 1.0f, 0.0f}, 90.0f);
     glm::vec3 forward{transform.GetForward()};
     glm::vec3 left{transform.GetLeft()};
@@ -59,4 +59,110 @@ TEST_F(TransformTest, RotationUp90) {
     EXPECT_NEAR(up.x, 0.0f, FLT_EPSILON);
     EXPECT_NEAR(up.y, 1.0f, FLT_EPSILON);
     EXPECT_NEAR(up.z, 0.0f, FLT_EPSILON);
+}
+
+TEST_F(TransformTest, RotationPositive90X) {
+    transform.Rotate(glm::vec3{1.0f, 0.0f, 0.0f}, 90.0f);
+    glm::vec3 forward{transform.GetForward()};
+    glm::vec3 left{transform.GetLeft()};
+    glm::vec3 up{transform.GetUp()};
+    EXPECT_NEAR(forward.x, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(forward.y, -1.0f, FLT_EPSILON);
+    EXPECT_NEAR(forward.z, 0.0f, FLT_EPSILON) << "current rotation" << glm::to_string(transform.GetBasis());
+
+    EXPECT_NEAR(left.x, 1.0f, FLT_EPSILON);
+    EXPECT_NEAR(left.y, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(left.z, 0.0f, FLT_EPSILON);
+
+    EXPECT_NEAR(up.x, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(up.y, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(up.z, 1.0f, FLT_EPSILON);
+}
+
+TEST_F(TransformTest, RotationPositive90Z) {
+    transform.Rotate(glm::vec3{0.0f, 0.0f, 1.0f}, 90.0f);
+    glm::vec3 forward{transform.GetForward()};
+    glm::vec3 left{transform.GetLeft()};
+    glm::vec3 up{transform.GetUp()};
+    EXPECT_NEAR(forward.x, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(forward.y, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(forward.z, 1.0f, FLT_EPSILON);
+
+    EXPECT_NEAR(left.x, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(left.y, 1.0f, FLT_EPSILON);
+    EXPECT_NEAR(left.z, 0.0f, FLT_EPSILON);
+
+    EXPECT_NEAR(up.x, -1.0f, FLT_EPSILON);
+    EXPECT_NEAR(up.y, 0.0f, FLT_EPSILON);
+    EXPECT_NEAR(up.z, 0.0f, FLT_EPSILON);
+}
+
+TEST_F(TransformTest, RotationPositiveAxis) {
+    transform.Rotate(glm::vec3{1.0f}, 90.0f);
+
+    glm::vec3 forward{transform.GetForward()};
+    glm::vec3 left{transform.GetLeft()};
+    glm::vec3 up{transform.GetUp()};
+
+    EXPECT_NEAR(forward.x, 0.91f, 0.01f);
+    EXPECT_NEAR(forward.y, -0.24f, 0.01f);
+    EXPECT_NEAR(forward.z, 0.33f, 0.01f);
+
+    EXPECT_NEAR(left.x, 0.33f, 0.01f);
+    EXPECT_NEAR(left.y, 0.91f, 0.01f);
+    EXPECT_NEAR(left.z, -0.24f, 0.01f);
+
+    EXPECT_NEAR(up.x, -0.24f, 0.01f);
+    EXPECT_NEAR(up.y, 0.33f, 0.01f);
+    EXPECT_NEAR(up.z, 0.91f, 0.01f);
+}
+
+TEST_F(TransformTest, RotationMatrixAfterTranslation) {
+    transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
+    transform.Rotate(glm::vec3{1.0f}, 90.0f);
+    transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
+
+    glm::vec3 forward{transform.GetForward()};
+    glm::vec3 left{transform.GetLeft()};
+    glm::vec3 up{transform.GetUp()};
+
+    EXPECT_NEAR(forward.x, 0.91f, 0.01f);
+    EXPECT_NEAR(forward.y, -0.24f, 0.01f);
+    EXPECT_NEAR(forward.z, 0.33f, 0.01f);
+
+    EXPECT_NEAR(left.x, 0.33f, 0.01f);
+    EXPECT_NEAR(left.y, 0.91f, 0.01f);
+    EXPECT_NEAR(left.z, -0.24f, 0.01f);
+
+    EXPECT_NEAR(up.x, -0.24f, 0.01f);
+    EXPECT_NEAR(up.y, 0.33f, 0.01f);
+    EXPECT_NEAR(up.z, 0.91f, 0.01f);
+}
+
+TEST_F(TransformTest, ModelMatrix) {
+    transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
+    transform.Rotate(glm::vec3{1.0f}, 90.0f);
+    transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
+
+    glm::mat4 mod = transform.GetTransformationMatrix();
+    glm::vec4 point1{1.0f, 0.0f, 0.0f, 0.0f};
+    glm::vec4 point2{0.0f, 1.0f, 0.0f, 0.0f};
+    glm::vec4 point3{0.0f, 0.0f, 1.0f, 0.0f};
+
+
+    glm::vec4 forward{mod * point3};
+    glm::vec4 left{mod * point1};
+    glm::vec4 up{mod * point2};
+
+    EXPECT_NEAR(forward.x, 0.91f+2, 0.01f);
+    EXPECT_NEAR(forward.y, -0.24f+4, 0.01f);
+    EXPECT_NEAR(forward.z, 0.33f+6, 0.01f);
+
+    EXPECT_NEAR(left.x, 0.33f+2, 0.01f);
+    EXPECT_NEAR(left.y, 0.91f+4, 0.01f);
+    EXPECT_NEAR(left.z, -0.24f+6, 0.01f);
+
+    EXPECT_NEAR(up.x, -0.24f+2, 0.01f);
+    EXPECT_NEAR(up.y, 0.33f+4, 0.01f);
+    EXPECT_NEAR(up.z, 0.91f+6, 0.01f);
 }
