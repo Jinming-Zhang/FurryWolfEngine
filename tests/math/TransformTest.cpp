@@ -145,16 +145,21 @@ TEST_F(TransformTest, ModelMatrix) {
     transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
 
     glm::mat4 mod = transform.GetTransformationMatrix();
-    glm::vec4 point1{1.0f, 0.0f, 0.0f, 0.0f};
-    glm::vec4 point2{0.0f, 1.0f, 0.0f, 0.0f};
-    glm::vec4 point3{0.0f, 0.0f, 1.0f, 0.0f};
+    glm::vec4 point1{1.0f, 0.0f, 0.0f, 1.0f};
+    glm::vec4 point2{0.0f, 1.0f, 0.0f, 1.0f};
+    glm::vec4 point3{0.0f, 0.0f, 1.0f, 1.0f};
 
 
     glm::vec4 forward{mod * point3};
     glm::vec4 left{mod * point1};
     glm::vec4 up{mod * point2};
 
-    EXPECT_NEAR(forward.x, 0.91f+2, 0.01f);
+    glm::vec3 position{transform.Position()};
+    EXPECT_FLOAT_EQ(position.x, 2.0f, FLT_EPSILON);
+    EXPECT_FLOAT_EQ(position.y, 4.0f, FLT_EPSILON);
+    EXPECT_FLOAT_EQ(position.z, 6.0f, FLT_EPSILON);
+
+    EXPECT_NEAR(forward.x, 0.91f+2, 0.01f) << glm::to_string(mod);
     EXPECT_NEAR(forward.y, -0.24f+4, 0.01f);
     EXPECT_NEAR(forward.z, 0.33f+6, 0.01f);
 

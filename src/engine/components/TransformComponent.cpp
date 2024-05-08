@@ -108,10 +108,12 @@ namespace WEngine {
     }
 
     glm::mat4 TransformComponent::GetTransformationMatrix() const {
-        glm::mat4 mod{1.0f};
+        glm::mat4 mod{orientationMat};
         mod = glm::scale(mod, scale);
-        mod = orientationMat * mod;
-        mod = glm::translate(mod, position);
+        mod[3][0] = position.x;
+        mod[3][1] = position.y;
+        mod[3][2] = position.z;
+        mod[3][3] = 1.0f;
         return mod;
     }
 }
