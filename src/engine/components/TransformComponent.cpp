@@ -1,94 +1,67 @@
 #include "engine/components/TransformComponent.h"
+
+#include <engine/math/glm/detail/type_quat.hpp>
+#include <engine/math/glm/gtx/quaternion.hpp>
+
 #include "engine/math/glm/glm.hpp"
 #include "engine/math/glm/gtc/matrix_transform.hpp"
 
 namespace WEngine {
-    TransformComponent::TransformComponent(/* args */) {
+    TransformComponent::TransformComponent() {
         position = glm::vec3{0.0f};
-        rotationMatix = glm::mat4{1.f};
-        orientationMat = glm::mat4{1.0f};
         rotation = glm::vec3{1.f};
         scale = glm::vec3{1.f};
-        model = glm::mat4{1.f};
+
+        orientationMat = glm::mat4{1.0f};
     }
 
-    TransformComponent::~TransformComponent() {
+    TransformComponent::~TransformComponent() = default;
+
+    glm::vec3 TransformComponent::GetLocalPosition() const {
+        return position;
     }
 
-
-    void TransformComponent::SetPosition(glm::vec3 position) {
+    void TransformComponent::SetLocalPosition(glm::vec3 position) {
         this->position = position;
     }
 
-    void TransformComponent::SetPosition(float x, float y, float z) {
+    void TransformComponent::SetLocalPosition(float x, float y, float z) {
         this->position = glm::vec3{x, y, z};
-    }
-
-    void TransformComponent::SetRotation(glm::vec3 rotation) {
-        this->rotation = rotation;
-    }
-
-    void TransformComponent::SetRotation(float x, float y, float z) {
-        this->rotation = glm::vec3{x, y, z};
-    }
-
-    void TransformComponent::SetScale(glm::vec3 scale) {
-        this->scale = scale;
-    }
-
-    void TransformComponent::SetScale(float x, float y, float z) {
-        this->scale = glm::vec3{x, y, z};
-    }
-
-
-    glm::mat4 &TransformComponent::GetRotationMatrix() {
-        return rotationMatix;
-    }
-
-    glm::mat4 TransformComponent::GetModel() {
-        return model;
-    }
-
-    void TransformComponent::SetModel(glm::mat4 model) {
-        this->model = model;
-    }
-
-    glm::mat4 TransformComponent::CalcModelMat() {
-        return model;
-        model = glm::mat4{1.f};
-        model = glm::translate(model, position);
-
-        model = glm::scale(model, scale);
-
-        // model = glm::rotate(model, glm::radians(scale.x), glm::vec3(1.f, .0f, .0f));
-        // model = glm::rotate(model, glm::radians(scale.y), glm::vec3(.0f, 1.f, .0f));
-        // model = glm::rotate(model, glm::radians(scale.z), glm::vec3(.0f, .0f, 1.f));
-
-        model = model * rotationMatix;
-        return model;
     }
 
     void TransformComponent::Translate(const glm::vec3 &offset) {
         position += offset;
     }
 
-    void TransformComponent::Rotate(const glm::vec3 &axis, float degree) {
+    void TransformComponent::SetLocalRotation(glm::vec3 eulerAngles) {
+        this->rotation = eulerAngles;
+        this->orientationMat = glm::toMat4(glm::quat{eulerAngles});
+    }
+
+    void TransformComponent::SetLocalRotation(float x, float y, float z) {
+        this->SetLocalRotation(glm::vec3{x, y, z});
+    }
+
+    void TransformComponent::RotateAroundAxis(const glm::vec3 &axis, float degree) {
         orientationMat = glm::rotate(orientationMat, glm::radians(degree), glm::normalize(axis));
     }
 
-    void TransformComponent::Scale(const glm::vec3 &scalars) {
+    void TransformComponent::RotateEulerAngles(glm::vec3 eulerAngle) {
+        glm::quat q1{glm::toQuat(orientationMat)};
+        glm::quat q2{eulerAngle};
+        orientationMat = glm::toMat4(q2 * q1);
     }
 
-    const glm::vec3 &TransformComponent::Position() const {
-        return position;
+    void TransformComponent::RotateEulerAngles(float pitch, float yaw, float roll) {
+        this->RotateEulerAngles(glm::vec3{pitch, yaw, roll});
     }
 
-    glm::vec3 &TransformComponent::Rotation() {
-        return rotation;
+    void TransformComponent::SetLocalScale(glm::vec3 scale) {
+        this->scale = scale;
     }
 
-    glm::vec3 &TransformComponent::Scale() {
-        return scale;
+    void TransformComponent::SetLocalScale(float x, float y, float z) {
+        this->scale = glm::vec3{x, y, z};
     }
 
     glm::vec3 TransformComponent::GetForward() const {
@@ -107,7 +80,7 @@ namespace WEngine {
         return glm::mat3{orientationMat};
     }
 
-    glm::mat4 TransformComponent::GetTransformationMatrix() const {
+    glm::mat4 TransformComponent::GetModel() const {
         glm::mat4 mod{orientationMat};
         mod = glm::scale(mod, scale);
         mod[3][0] = position.x;

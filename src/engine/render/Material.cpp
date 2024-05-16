@@ -13,7 +13,7 @@ namespace WEngine
   {
     shaderToUse->UseProgram();
     TransformComponent *tf = go->GetComponent<TransformComponent *>();
-    shaderToUse->SetMat4("model", tf->CalcModelMat());
+    shaderToUse->SetMat4("model", tf->GetModel());
 
     glm::mat4 view = CameraComponent::Main()->GetClippedViewMatrix();
     shaderToUse->SetMat4("cameraMatrix", view);

@@ -31,20 +31,20 @@ TEST_F(TransformTest, Initialization) {
 
 TEST_F(TransformTest, Translation) {
     transform.Translate(glm::vec3{1.0f});
-    const glm::vec3 pos{transform.Position()};
+    const glm::vec3 pos{transform.GetLocalPosition()};
     EXPECT_FLOAT_EQ(pos.x, 1.0f);
     EXPECT_FLOAT_EQ(pos.y, 1.0f);
     EXPECT_FLOAT_EQ(pos.z, 1.0f);
 
     transform.Translate(glm::vec3{1.0f, -1.0f, 0.0f});
-    const glm::vec3 pos2{transform.Position()};
+    const glm::vec3 pos2{transform.GetLocalPosition()};
     EXPECT_FLOAT_EQ(pos2.x, 2.0f);
     EXPECT_FLOAT_EQ(pos2.y, 0.0f);
     EXPECT_FLOAT_EQ(pos2.z, 1.0f);
 }
 
 TEST_F(TransformTest, RotationForward90Y) {
-    transform.Rotate(glm::vec3{0.0f, 1.0f, 0.0f}, 90.0f);
+    transform.RotateAroundAxis(glm::vec3{0.0f, 1.0f, 0.0f}, 90.0f);
     glm::vec3 forward{transform.GetForward()};
     glm::vec3 left{transform.GetLeft()};
     glm::vec3 up{transform.GetUp()};
@@ -62,7 +62,7 @@ TEST_F(TransformTest, RotationForward90Y) {
 }
 
 TEST_F(TransformTest, RotationPositive90X) {
-    transform.Rotate(glm::vec3{1.0f, 0.0f, 0.0f}, 90.0f);
+    transform.RotateAroundAxis(glm::vec3{1.0f, 0.0f, 0.0f}, 90.0f);
     glm::vec3 forward{transform.GetForward()};
     glm::vec3 left{transform.GetLeft()};
     glm::vec3 up{transform.GetUp()};
@@ -80,7 +80,7 @@ TEST_F(TransformTest, RotationPositive90X) {
 }
 
 TEST_F(TransformTest, RotationPositive90Z) {
-    transform.Rotate(glm::vec3{0.0f, 0.0f, 1.0f}, 90.0f);
+    transform.RotateAroundAxis(glm::vec3{0.0f, 0.0f, 1.0f}, 90.0f);
     glm::vec3 forward{transform.GetForward()};
     glm::vec3 left{transform.GetLeft()};
     glm::vec3 up{transform.GetUp()};
@@ -98,7 +98,7 @@ TEST_F(TransformTest, RotationPositive90Z) {
 }
 
 TEST_F(TransformTest, RotationPositiveAxis) {
-    transform.Rotate(glm::vec3{1.0f}, 90.0f);
+    transform.RotateAroundAxis(glm::vec3{1.0f}, 90.0f);
 
     glm::vec3 forward{transform.GetForward()};
     glm::vec3 left{transform.GetLeft()};
@@ -119,7 +119,7 @@ TEST_F(TransformTest, RotationPositiveAxis) {
 
 TEST_F(TransformTest, RotationMatrixAfterTranslation) {
     transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
-    transform.Rotate(glm::vec3{1.0f}, 90.0f);
+    transform.RotateAroundAxis(glm::vec3{1.0f}, 90.0f);
     transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
 
     glm::vec3 forward{transform.GetForward()};
@@ -141,10 +141,10 @@ TEST_F(TransformTest, RotationMatrixAfterTranslation) {
 
 TEST_F(TransformTest, ModelMatrix) {
     transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
-    transform.Rotate(glm::vec3{1.0f}, 90.0f);
+    transform.RotateAroundAxis(glm::vec3{1.0f}, 90.0f);
     transform.Translate(glm::vec3{1.0f, 2.0f, 3.0f});
 
-    glm::mat4 mod = transform.GetTransformationMatrix();
+    glm::mat4 mod = transform.GetModel();
     glm::vec4 point1{1.0f, 0.0f, 0.0f, 1.0f};
     glm::vec4 point2{0.0f, 1.0f, 0.0f, 1.0f};
     glm::vec4 point3{0.0f, 0.0f, 1.0f, 1.0f};
@@ -154,7 +154,7 @@ TEST_F(TransformTest, ModelMatrix) {
     glm::vec4 left{mod * point1};
     glm::vec4 up{mod * point2};
 
-    glm::vec3 position{transform.Position()};
+    glm::vec3 position{transform.GetLocalPosition()};
     EXPECT_FLOAT_EQ(position.x, 2.0f, FLT_EPSILON);
     EXPECT_FLOAT_EQ(position.y, 4.0f, FLT_EPSILON);
     EXPECT_FLOAT_EQ(position.z, 6.0f, FLT_EPSILON);

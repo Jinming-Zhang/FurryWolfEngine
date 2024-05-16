@@ -7,53 +7,38 @@
 namespace WEngine {
     class TransformComponent : public Component {
     private:
-        glm::vec3 position;
-        glm::vec3 rotation;
-        glm::vec3 scale;
+        glm::vec3 position{};
+        glm::vec3 rotation{};
+        glm::vec3 scale{};
 
-        glm::mat4 orientationMat;
-        glm::mat4 rotationMatix;
-        glm::mat4 model;
+        glm::mat4 orientationMat{};
 
     public:
         TransformComponent();
 
         ~TransformComponent() override;
 
-        const glm::vec3 &Position() const;
+        glm::vec3 GetLocalPosition() const;
 
-        glm::vec3 &Rotation();
+        void SetLocalPosition(glm::vec3 position);
 
-        glm::vec3 &Scale();
+        void SetLocalPosition(float x, float y, float z);
 
-        glm::mat4 &GetRotationMatrix();
-
-        glm::mat4 GetModel();
-
-        void SetModel(glm::mat4 model);
-
-        void SetPosition(glm::vec3 position);
-
-        void SetPosition(float x, float y, float z);
-
-        void SetRotation(glm::vec3 rotation);
-
-        void SetRotation(float x, float y, float z);
-
-        void SetScale(glm::vec3 scale);
-
-        void SetScale(float x, float y, float z);
-
-        // new functions
-        // operations
         void Translate(const glm::vec3 &offset);
 
-        void Rotate(const glm::vec3 &axis, float degree);
+        void SetLocalRotation(glm::vec3 eulerAngles);
 
-        void Scale(const glm::vec3 &scalars);
+        void SetLocalRotation(float x, float y, float z);
 
-        // getters
-        glm::mat4 CalcModelMat();
+        void RotateAroundAxis(const glm::vec3 &axis, float degree);
+
+        void RotateEulerAngles(glm::vec3 eulerAngle);
+
+        void RotateEulerAngles(float pitch, float yaw, float roll);
+
+        void SetLocalScale(glm::vec3 scale);
+
+        void SetLocalScale(float x, float y, float z);
 
         glm::vec3 GetForward() const;
 
@@ -63,6 +48,6 @@ namespace WEngine {
 
         glm::mat3 GetBasis() const;
 
-        glm::mat4 GetTransformationMatrix() const;
+        glm::mat4 GetModel() const;
     };
 }

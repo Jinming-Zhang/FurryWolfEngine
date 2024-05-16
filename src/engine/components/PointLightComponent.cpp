@@ -44,7 +44,7 @@ namespace WEngine
 
     // point light
     TransformComponent *transform = gameObject->GetComponent<TransformComponent *>();
-    glm::vec3 pos = transform->Position();
+    glm::vec3 pos = transform->GetLocalPosition();
     shader->SetVec3(std::string{prefix + ".position"}, pos.x, pos.y, pos.z);
     shader->SetFloat(std::string{prefix + ".constant"}, constant);
     shader->SetFloat(std::string{prefix + ".linear"}, linear);

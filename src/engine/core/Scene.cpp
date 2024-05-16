@@ -84,7 +84,7 @@ namespace WEngine
     std::map<float, GameObject *> sorted = std::map<float, GameObject *>();
     for (auto &go : gameobjects)
     {
-      glm::vec3 objPos = go->GetComponent<TransformComponent *>()->Position();
+      glm::vec3 objPos = go->GetComponent<TransformComponent *>()->GetLocalPosition();
       float distance = glm::length(objPos - camPos);
       sorted[distance] = go;
     }
